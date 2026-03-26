@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quant Finance Bootcamp — Days 1-4 Progress Report</title>
+<title>Quant Finance Bootcamp — Days 1-5 Progress Report</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -460,7 +460,7 @@
         <div class="label">Hours Invested</div>
       </div>
       <div class="header-stat">
-        <div class="num">Day 5</div>
+        <div class="num">Day 6</div>
         <div class="label">Up Next</div>
       </div>
     </div>
@@ -471,7 +471,8 @@
     <div class="nav-btn" onclick="showPage('day1')">Day 1</div>
     <div class="nav-btn" onclick="showPage('day2')">Day 2</div>
     <div class="nav-btn" onclick="showPage('day3')">Day 3</div>
-    <div class="nav-btn" onclick="showPage('day4')">Day 4 (Today)</div>
+    <div class="nav-btn" onclick="showPage('day4')">Day 4</div>
+    <div class="nav-btn" onclick="showPage('day5')">Day 5 (Today)</div>
     <div class="nav-btn" onclick="showPage('skills')">Skills Tracker</div>
     <div class="nav-btn" onclick="showPage('cheatsheet')">Cheat Sheet</div>
     <div class="nav-btn" onclick="showPage('quiz')">Quiz (10 Qs)</div>
@@ -484,7 +485,7 @@
       <h2>The Story So Far</h2>
       <p>This bootcamp started from absolute zero — no Python experience, no finance background. The goal: learn what quantitative finance is and start building the foundational skills (math, statistics, and programming) needed to explore it seriously.</p>
       <p>The student already had strong math skills through Algebra 2 and Geometry, so the plan was restructured to skip basic math review and accelerate into probability, statistics, and Python — the tools quants actually use.</p>
-      <p>Here's what happened in the first three days.</p>
+      <p>Here's what happened in the first five days.</p>
     </div>
 
     <div class="card">
@@ -1070,37 +1071,126 @@ print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "
     </div>
   </div>
 
+  <!-- DAY 5 -->
+  <div id="day5" class="page">
+    <div class="card">
+      <h2>Day 5 — Statistics: Mean, Variance, Standard Deviation & Sharpe Ratio</h2>
+      <span class="tag tag-math">Statistics</span>
+      <span class="tag tag-finance">Risk Analysis</span>
+      <span class="tag tag-python">Functions</span>
+      <p>The day we learned how quants actually measure risk. Not "this stock feels risky" — actual numbers that tell you exactly how much a stock bounces around and whether the reward justifies the ride.</p>
+    </div>
+
+    <div class="card">
+      <h3>Part 1: Mean — The Center of Your Data</h3>
+      <p>Started with a list of 5 daily stock returns and calculated the mean (average) by hand using code — <code>sum()</code> divided by <code>len()</code>.</p>
+      <pre>returns = [0.02, -0.01, 0.03, -0.005, 0.015]
+total = sum(returns)
+count = len(returns)
+mean = total / count
+print("Mean daily return:", mean)
+print("That's", round(mean * 100, 2), "% per day")</pre>
+      <div class="output">Mean daily return: 0.01
+That's 1.0 % per day</div>
+      <p><strong>Quant insight:</strong> If a stock has a mean daily return of 1%, you'd <em>expect</em> it to go up about 1% on any given day. But "expect" doesn't mean "guarantee."</p>
+    </div>
+
+    <div class="card">
+      <h3>Part 2: Variance & Standard Deviation — Measuring Risk</h3>
+      <p>The key question: how much does the stock bounce <em>around</em> that mean? Built the full calculation step by step:</p>
+      <pre># Step 1: Differences from mean
+differences = [r - mean for r in returns]
+# Step 2: Square each difference
+squared_diffs = [d ** 2 for d in differences]
+# Step 3: Variance = average of squared differences
+variance = sum(squared_diffs) / len(squared_diffs)
+# Step 4: Standard deviation = square root of variance
+std_dev = variance ** 0.5</pre>
+      <div class="output">Variance: 0.00023
+Standard deviation: 0.0152
+That means returns typically vary by 1.52% from the mean</div>
+      <p><strong>Key lesson:</strong> Why square the differences? Without squaring, positives and negatives cancel out and you get zero — which tells you nothing. Squaring makes everything positive, then the square root brings it back to the original scale.</p>
+      <p><strong>Mental model:</strong> Mean ± 1 std dev = the range where ~68% of days land. For this stock: between -0.52% and +2.52%.</p>
+    </div>
+
+    <div class="card">
+      <h3>Part 3: Comparing Stocks — The Sharpe Ratio</h3>
+      <p>Compared two stocks that both average 1% daily return:</p>
+      <pre>stock_a = [0.01, 0.01, 0.01, 0.01, 0.01]   # steady
+stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
+      <p>Built a <code>calc_stats()</code> function that computes mean, std dev, and a simplified <strong>Sharpe Ratio</strong> (mean ÷ std dev):</p>
+      <div class="output">--- Stock A (Steady) ---
+  Mean return: 1.0%
+  Std deviation: 0.0%
+  Risk/Reward ratio: inf
+  Verdict: GREAT - reward beats the risk
+
+--- Stock B (Wild) ---
+  Mean return: 1.0%
+  Std deviation: 10.28%
+  Risk/Reward ratio: 0.1
+  Verdict: BAD - too much risk for the reward</div>
+      <p><strong>Breakthrough concept:</strong> The <strong>Sharpe Ratio</strong> = reward per unit of risk. Every hedge fund in the world obsesses over this number. Stock A has infinite Sharpe (no risk, all reward). Stock B has 0.1 (terrible — 10% swings for 1% expected gain).</p>
+      <p><strong>The mean alone never tells you the full story — you always need the standard deviation too.</strong></p>
+    </div>
+
+    <div class="card">
+      <h3>Part 4: Stock Analyzer — Ran 3 Times</h3>
+      <p>Built a full stock analyzer using <code>random.gauss()</code> to generate bell-curve-distributed returns. Created three stocks with different risk profiles and ran the analyzer multiple times:</p>
+      <table>
+        <tr><th>Stock</th><th>Programmed Mean</th><th>Programmed Vol</th><th>Run 1 Grade</th><th>Run 2 Grade</th><th>Run 3 Grade</th></tr>
+        <tr><td>SAFE Corp</td><td>0.1%/day</td><td>0.5%</td><td>C (Sharpe 0.27)</td><td>C (Sharpe 0.28)</td><td>C (Sharpe 0.24)</td></tr>
+        <tr><td>GROWTH Inc</td><td>0.2%/day</td><td>3.0%</td><td>C (Sharpe 0.27)</td><td>F (Sharpe 0.04)</td><td>F (Sharpe 0.04)</td></tr>
+        <tr><td>MEME Token</td><td>0.05%/day</td><td>5.0%</td><td>F (Sharpe 0.09)</td><td>F (Sharpe -0.19)</td><td>F (Sharpe 0.01)</td></tr>
+      </table>
+      <p><strong>Key observations:</strong></p>
+      <p>• SAFE Corp was consistently C — reliable but not exciting. Low volatility = predictable grades.</p>
+      <p>• GROWTH Inc swung between C and F across runs — 3% daily volatility means randomness dominates with only 100 days of data.</p>
+      <p>• MEME Token got F every time. In Run 2 it even went <em>negative</em> (-0.897% mean). 5% daily swings for 0.05% expected gain = terrible risk/reward.</p>
+      <p><strong>Connection to Day 4:</strong> This is the Law of Large Numbers again — 100 days isn't enough for the actual mean to settle near the true mean when volatility is high.</p>
+    </div>
+
+    <div class="card">
+      <h2>Day 5 Summary</h2>
+      <p><strong>Programs written:</strong> 4 (mean calculator, variance/std dev calculator, stock comparison with Sharpe ratio, full stock analyzer with grading)</p>
+      <p><strong>Python concepts learned:</strong> list comprehensions <code>[expression for item in list]</code>, <code>random.gauss()</code> for bell-curve random numbers, <code>float('inf')</code>, f-strings with formatting</p>
+      <p><strong>Finance concepts learned:</strong> Mean (expected return), variance, standard deviation (volatility/risk), Sharpe ratio (reward per unit of risk), why high-volatility stocks need proportionally higher returns</p>
+      <p><strong>Experiments run:</strong> 3 runs of the stock analyzer showing how randomness affects high-vol stocks more than low-vol stocks</p>
+      <p><strong>Time spent:</strong> ~20 minutes (speed run!)</p>
+    </div>
+  </div>
+
   <!-- SKILLS TRACKER -->
   <div id="skills" class="page">
     <div class="card">
       <h2>Skills Development Tracker</h2>
-      <p>Progress across the three pillars of quant finance. These represent Day 3 levels — there's a long way to go, and that's the point.</p>
+      <p>Progress across the three pillars of quant finance. Updated through Day 5.</p>
     </div>
 
     <div class="skills-grid">
       <div class="skill-card">
         <div class="skill-icon">🐍</div>
         <div class="skill-name">Python Basics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 30%; background: linear-gradient(90deg, #4fc3f7, #29b6f6);"></div></div>
-        <div class="skill-level">Beginner — variables, input/output, conditionals, loops, lists, functions, imports, nested loops, simulations</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 35%; background: linear-gradient(90deg, #4fc3f7, #29b6f6);"></div></div>
+        <div class="skill-level">Beginner+ — variables, input/output, conditionals, loops, lists, functions, imports, nested loops, simulations, list comprehensions, f-strings</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">📊</div>
         <div class="skill-name">Statistics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 18%; background: linear-gradient(90deg, #ce93d8, #ab47bc);"></div></div>
-        <div class="skill-level">Growing — probability basics, Law of Large Numbers, Monte Carlo simulation. Standard deviation and distributions next.</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 28%; background: linear-gradient(90deg, #ce93d8, #ab47bc);"></div></div>
+        <div class="skill-level">Growing — probability, Law of Large Numbers, Monte Carlo simulation, mean, variance, standard deviation, Sharpe ratio. Normal distribution next.</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">💹</div>
         <div class="skill-name">Finance</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 22%; background: linear-gradient(90deg, #66bb6a, #43a047);"></div></div>
-        <div class="skill-level">Foundation — returns, compound interest, risk, Value at Risk, volatility drag, edge sizing. Real data next.</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 28%; background: linear-gradient(90deg, #66bb6a, #43a047);"></div></div>
+        <div class="skill-level">Foundation — returns, compound interest, risk, VaR, volatility drag, edge sizing, Sharpe ratio, risk-adjusted returns. Real data next.</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">📈</div>
         <div class="skill-name">Data Analysis</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 8%; background: linear-gradient(90deg, #ffb74d, #ff9800);"></div></div>
-        <div class="skill-level">Pre-beginner — can process lists of numbers. CSV files, pandas, matplotlib coming in Phase 2.</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 12%; background: linear-gradient(90deg, #ffb74d, #ff9800);"></div></div>
+        <div class="skill-level">Early — can process and compare lists of returns, compute stats, grade stocks. CSV files, pandas, matplotlib coming in Phase 2.</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">🧮</div>
@@ -1130,6 +1220,13 @@ print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "
         <tr><td><code>for</code> loops and <code>range()</code></td><td>Day 2</td><td>Daily return calculator</td></tr>
         <tr><td><code>def</code>, parameters, <code>return</code></td><td>Day 3</td><td>All three functions</td></tr>
         <tr><td>Function composition</td><td>Day 3</td><td>Chaining daily_returns() → average()</td></tr>
+        <tr><td><code>import random</code>, <code>random.random()</code>, <code>random.choice()</code></td><td>Day 4</td><td>Monte Carlo simulation</td></tr>
+        <tr><td>Nested loops (loop inside a loop)</td><td>Day 4</td><td>10,000-run Monte Carlo</td></tr>
+        <tr><td><code>.sort()</code>, <code>//</code> (integer division)</td><td>Day 4</td><td>VaR percentile calculation</td></tr>
+        <tr><td>List comprehensions <code>[expr for x in list]</code></td><td>Day 5</td><td>Squared differences, stock generation</td></tr>
+        <tr><td><code>random.gauss(mean, std)</code></td><td>Day 5</td><td>Bell-curve random returns</td></tr>
+        <tr><td><code>float('inf')</code></td><td>Day 5</td><td>Infinite Sharpe ratio (zero risk)</td></tr>
+        <tr><td>f-strings <code>f"text {var}"</code></td><td>Day 5</td><td>Stock analyzer output formatting</td></tr>
       </table>
     </div>
 
@@ -1171,6 +1268,13 @@ print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "
         <tr><td>Return value</td><td><code>return</code></td><td><code>return a + b</code></td></tr>
         <tr><td>Round number</td><td><code>round()</code></td><td><code>round(3.14159, 2)</code> → 3.14</td></tr>
         <tr><td>Convert to string</td><td><code>str()</code></td><td><code>str(42)</code> → "42"</td></tr>
+        <tr><td>Import a module</td><td><code>import random</code></td><td>Gives access to random.random(), random.gauss(), etc.</td></tr>
+        <tr><td>Random 0-1</td><td><code>random.random()</code></td><td>Returns a float between 0 and 1</td></tr>
+        <tr><td>Bell curve random</td><td><code>random.gauss(mean, std)</code></td><td><code>random.gauss(0.01, 0.05)</code></td></tr>
+        <tr><td>List comprehension</td><td><code>[expr for x in list]</code></td><td><code>[r**2 for r in returns]</code></td></tr>
+        <tr><td>F-string</td><td><code>f"text {var}"</code></td><td><code>f"Mean: {round(m*100,2)}%"</code></td></tr>
+        <tr><td>Square root</td><td><code>x ** 0.5</code></td><td><code>variance ** 0.5</code></td></tr>
+        <tr><td>Infinity</td><td><code>float('inf')</code></td><td>Used when dividing by zero risk</td></tr>
       </table>
     </div>
 
@@ -1183,6 +1287,9 @@ print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "
         <tr><td>Average</td><td><code>sum(list) / len(list)</code></td><td>Central tendency of a dataset</td></tr>
         <tr><td>Daily return</td><td><code>(prices[i] - prices[i-1]) / prices[i-1]</code></td><td>How much a stock moved in one day</td></tr>
         <tr><td>Target price</td><td><code>price * (1 + gain/100)</code></td><td>What price a stock needs to hit for a desired gain</td></tr>
+        <tr><td>Variance</td><td><code>sum([(r-mean)**2 for r in returns]) / len(returns)</code></td><td>How spread out the returns are (squared units)</td></tr>
+        <tr><td>Standard Deviation</td><td><code>variance ** 0.5</code></td><td>How much returns typically deviate from the mean (risk)</td></tr>
+        <tr><td>Sharpe Ratio</td><td><code>mean / std_dev</code></td><td>Reward per unit of risk — higher is better</td></tr>
       </table>
     </div>
 
@@ -1249,18 +1356,18 @@ print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "
           <div class="rt-desc">Probability in Python, coin flip simulator, Monte Carlo stock simulation, volatility drag experiments</div>
         </div>
       </div>
+      <div class="roadmap-item completed">
+        <div class="roadmap-check">✅</div>
+        <div class="roadmap-text">
+          <div class="rt-title">Day 5 — Statistics: Mean, Variance, Std Dev & Sharpe Ratio</div>
+          <div class="rt-desc">Calculated mean, variance, std dev by hand in code. Built stock analyzer with Sharpe ratio grading. Compared 3 stock types across multiple runs.</div>
+        </div>
+      </div>
       <div class="roadmap-item current">
         <div class="roadmap-check">▶</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 5 — Statistics: Mean, Variance, Standard Deviation</div>
-          <div class="rt-desc">The numbers that describe risk — calculated by hand and in code</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 6 — Monte Carlo Simulation</div>
-          <div class="rt-desc">Simulate random processes with Python to estimate probabilities</div>
+          <div class="rt-title">Day 6 — Normal Distribution & Histograms</div>
+          <div class="rt-desc">The bell curve that stock returns follow, and visualizing data distributions</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
