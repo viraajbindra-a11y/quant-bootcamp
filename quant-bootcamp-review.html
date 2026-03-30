@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quant Finance Bootcamp — Days 1-5 Progress Report</title>
+<title>Quant Finance Bootcamp — Days 1-6 Progress Report</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -448,19 +448,19 @@
     <p class="subtitle">A 7th grader's journey into quantitative finance — Spring Break 2026</p>
     <div class="header-stats">
       <div class="header-stat">
-        <div class="num">4</div>
+        <div class="num">5</div>
         <div class="label">Days Completed</div>
       </div>
       <div class="header-stat">
-        <div class="num">15</div>
+        <div class="num">19</div>
         <div class="label">Programs Written</div>
       </div>
       <div class="header-stat">
-        <div class="num">7.5+</div>
+        <div class="num">10+</div>
         <div class="label">Hours Invested</div>
       </div>
       <div class="header-stat">
-        <div class="num">Day 6</div>
+        <div class="num">Day 7</div>
         <div class="label">Up Next</div>
       </div>
     </div>
@@ -472,10 +472,11 @@
     <div class="nav-btn" onclick="showPage('day2')">Day 2</div>
     <div class="nav-btn" onclick="showPage('day3')">Day 3</div>
     <div class="nav-btn" onclick="showPage('day4')">Day 4</div>
-    <div class="nav-btn" onclick="showPage('day5')">Day 5 (Today)</div>
+    <div class="nav-btn" onclick="showPage('day5')">Day 5</div>
+    <div class="nav-btn" onclick="showPage('day6')">Day 6 (Today)</div>
     <div class="nav-btn" onclick="showPage('skills')">Skills Tracker</div>
     <div class="nav-btn" onclick="showPage('cheatsheet')">Cheat Sheet</div>
-    <div class="nav-btn" onclick="showPage('quiz')">Quiz (10 Qs)</div>
+    <div class="nav-btn" onclick="showPage('quiz')">Quiz (15 Qs)</div>
     <div class="nav-btn" onclick="showPage('roadmap')">90-Day Roadmap</div>
   </div>
 
@@ -485,7 +486,7 @@
       <h2>The Story So Far</h2>
       <p>This bootcamp started from absolute zero — no Python experience, no finance background. The goal: learn what quantitative finance is and start building the foundational skills (math, statistics, and programming) needed to explore it seriously.</p>
       <p>The student already had strong math skills through Algebra 2 and Geometry, so the plan was restructured to skip basic math review and accelerate into probability, statistics, and Python — the tools quants actually use.</p>
-      <p>Here's what happened in the first five days.</p>
+      <p>Here's what happened in the first six days.</p>
     </div>
 
     <div class="card">
@@ -1160,36 +1161,181 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
     </div>
   </div>
 
+  <!-- DAY 6 -->
+  <div id="day6" class="page">
+    <div class="card">
+      <h2>Day 6 — Normal Distribution, Z-Scores & Value at Risk</h2>
+      <span class="tag tag-math">Statistics</span>
+      <span class="tag tag-finance">Risk Analysis</span>
+      <span class="tag tag-python">Simulation</span>
+      <p>The day we learned the bell curve — the mathematical shape that stock returns actually follow — and used it to predict the probability of crashes, calculate Value at Risk, and verify theory against simulation.</p>
+    </div>
+
+    <div class="card">
+      <h3>Part 1: The 68-95-99.7 Rule</h3>
+      <p>Generated 100,000 random returns using <code>random.gauss()</code> and verified one of the most important rules in statistics:</p>
+      <div class="concept-grid">
+        <div class="concept-item">
+          <div class="clabel">68% Rule</div>
+          <div class="cdesc">~68% of data falls within 1 standard deviation of the mean</div>
+        </div>
+        <div class="concept-item">
+          <div class="clabel">95% Rule</div>
+          <div class="cdesc">~95% of data falls within 2 standard deviations</div>
+        </div>
+        <div class="concept-item">
+          <div class="clabel">99.7% Rule</div>
+          <div class="cdesc">~99.7% of data falls within 3 standard deviations</div>
+        </div>
+        <div class="concept-item">
+          <div class="clabel">Why It Matters</div>
+          <div class="cdesc">Tells you how rare extreme events are — a 3-sigma move happens only 0.3% of the time</div>
+        </div>
+      </div>
+      <pre>mean = 0.001
+std = 0.02
+data = [random.gauss(mean, std) for _ in range(100000)]
+
+within_1 = sum(1 for x in data if mean-std <= x <= mean+std)
+within_2 = sum(1 for x in data if mean-2*std <= x <= mean+2*std)
+within_3 = sum(1 for x in data if mean-3*std <= x <= mean+3*std)</pre>
+      <div class="output">Within 1 std dev: 68.17% (theory: 68.27%)
+Within 2 std devs: 95.39% (theory: 95.45%)
+Within 3 std devs: 99.73% (theory: 99.73%)</div>
+      <div class="breakthrough-box">
+        <div class="bt-title">Key Insight</div>
+        <p>The simulation matched the theory almost exactly — confirming that <code>random.gauss()</code> truly generates bell-curve distributed data. This is the Law of Large Numbers in action: 100,000 data points is enough for the pattern to emerge.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Part 2: Z-Scores — How Extreme Is This Day?</h3>
+      <p>A z-score converts any return into "how many standard deviations from normal is this?" Formula: <code>z = (return - mean) / std</code></p>
+      <pre>def z_score(ret, mean, std):
+    return (ret - mean) / std
+
+# Black Monday (Oct 19, 1987): -22.6% drop
+z = z_score(-0.226, 0.001, 0.02)
+# z = -11.35 → "11 standard deviations below normal"</pre>
+      <p>Z-score table for tested days:</p>
+      <table>
+        <tr><th>Event</th><th>Return</th><th>Z-Score</th><th>Meaning</th></tr>
+        <tr><td>Normal up day</td><td>+1.5%</td><td>+0.70</td><td>Totally normal</td></tr>
+        <tr><td>Good day</td><td>+3%</td><td>+1.45</td><td>Above average but not rare</td></tr>
+        <tr><td>Bad day</td><td>-2%</td><td>-1.05</td><td>Within 1 std dev — happens often</td></tr>
+        <tr><td>Flash crash</td><td>-5%</td><td>-2.55</td><td>Beyond 2 sigma — rare (~1% chance)</td></tr>
+        <tr><td>Black Monday</td><td>-22.6%</td><td>-11.35</td><td>Should "never" happen — but it did</td></tr>
+      </table>
+      <div class="lesson">
+        <div class="lesson-title">Why Black Monday Matters</div>
+        <p>A z-score of -11.35 is so extreme that the normal distribution says it should happen once every 10<sup>28</sup> years. But it happened. This means stock returns have "fat tails" — extreme events are more common than the bell curve predicts. Every quant knows this.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Part 3: Risk Calculator with normal_cdf</h3>
+      <p>Built a function to approximate the cumulative normal distribution (using the Abramowitz and Stegun method) — calculating the exact probability that a return falls below any threshold.</p>
+      <pre>def normal_cdf(z):
+    if z < -8: return 0.0
+    if z > 8: return 1.0
+    t = 1 / (1 + 0.2316419 * abs(z))
+    d = 0.3989422804 * math.exp(-z * z / 2)
+    p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 +
+        t * (-1.821256 + t * 1.330274))))
+    if z > 0: return 1 - p
+    return p</pre>
+      <p>Used this to build a <code>risk_report()</code> function that answers: what's the probability of loss? Of a 5% crash? What's the Value at Risk?</p>
+      <div class="output">--- Risk Report for SAFE_STOCK (mean=0.1%, std=1.5%) ---
+Probability of ANY loss: 47.3%
+Probability of 5% crash: 0.04%
+Value at Risk (95%): -2.37%
+Expected daily range: -2.87% to 3.07%</div>
+      <div class="lesson">
+        <div class="lesson-title">Value at Risk (VaR)</div>
+        <p>VaR at 95% confidence answers: "What's the worst daily return I should expect 95% of the time?" If VaR is -2.37%, that means on 95% of days, losses won't exceed 2.37%. The other 5%? That's where the risk lives. Banks are legally required to calculate and report their VaR.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Part 4: Theory vs. Simulation — Do They Match?</h3>
+      <p>The ultimate test: does the mathematical formula agree with running 100,000 simulated days?</p>
+      <div class="output">--- Comparison: VOLATILE_STOCK ---
+Metric          | Theory  | Simulation | Match?
+P(loss)         | 48.0%   | 47.7%      | MATCH
+P(5% crash)     | 2.28%   | 2.26%      | MATCH
+VaR 95%         | -6.23%  | -6.18%     | MATCH
+
+Verdict: Theory and simulation AGREE</div>
+      <div class="breakthrough-box">
+        <div class="bt-title">Why This Is Powerful</div>
+        <p>When theory and simulation agree, it means the math formula works — you don't need to run 100,000 simulations every time. You can just plug numbers into the formula and get an instant answer. The tiny differences (like 48.0% vs 47.7%) are expected from randomness and actually PROVE the math is correct — if it were wrong, the gap would be huge.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Concept Review Session</h3>
+      <span class="tag tag-insight">Self-Assessment</span>
+      <p>After completing the code, took a step back to honestly assess retention. The pace had been too fast — running code without fully understanding each line. Switched from writing new code to reviewing ALL concepts from Days 1-6 via Q&amp;A testing.</p>
+      <p><strong>Review quiz results across 3 rounds:</strong></p>
+      <table>
+        <tr><th>Concept</th><th>Status</th><th>Notes</th></tr>
+        <tr><td>Variables</td><td style="color:#3fb950">SOLID</td><td>Understood immediately</td></tr>
+        <tr><td>Return formula</td><td style="color:#3fb950">SOLID</td><td>Got 25% correct on the spot</td></tr>
+        <tr><td>Std dev meaning</td><td style="color:#3fb950">SOLID</td><td>"How spread out the data is"</td></tr>
+        <tr><td>Sharpe ratio</td><td style="color:#3fb950">SOLID</td><td>Correctly calculated 1%/1% = 1.0</td></tr>
+        <tr><td>return vs print</td><td style="color:#3fb950">SOLID</td><td>Knew the difference</td></tr>
+        <tr><td>For loops</td><td style="color:#ffb74d">RE-LEARNED</td><td>No clue initially, re-taught with "hallway doors" metaphor</td></tr>
+        <tr><td>range(3) = 0,1,2</td><td style="color:#3fb950">SOLID</td><td>Got correct after re-learning loops</td></tr>
+        <tr><td>List indexing</td><td style="color:#ffb74d">IN PROGRESS</td><td>Got prices[0] and prices[3] correct, but missed names[2] (said Tesla, answer was Google)</td></tr>
+        <tr><td>Law of Large Numbers</td><td style="color:#ffb74d">IN PROGRESS</td><td>Understands "more runs = better" but initially thought small difference means "math is wrong"</td></tr>
+      </table>
+      <div class="mistake-box">
+        <div class="mistake-title">Critical Learning Moment — Pace vs. Understanding</div>
+        <p>The biggest lesson of Day 6 wasn't about statistics — it was about learning itself. Running code and getting correct output doesn't mean you understand what happened. Slowing down to explain concepts in plain English and testing with quizzes revealed gaps that would have compounded into bigger problems later. Quality of understanding beats quantity of material.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Day 6 Summary</h2>
+      <p><strong>Programs written:</strong> 4 (68-95-99.7 verifier, z-score calculator, risk report with normal_cdf, theory vs simulation comparison)</p>
+      <p><strong>Python concepts learned:</strong> <code>math.exp()</code>, cumulative distribution function approximation, large-scale simulation verification</p>
+      <p><strong>Finance concepts learned:</strong> Normal distribution / bell curve, 68-95-99.7 rule, z-scores, Value at Risk (VaR), fat tails (Black Monday), theory vs simulation validation</p>
+      <p><strong>Meta-learning:</strong> Identified that pace was too fast. Pivoted to concept review. Proved that slowing down to test understanding catches gaps before they compound.</p>
+      <p><strong>Review results:</strong> 5 concepts solid, 3 re-learned or in progress, 0 completely lost</p>
+      <p><strong>Time spent:</strong> ~2.5 hours (including review session)</p>
+    </div>
+  </div>
+
   <!-- SKILLS TRACKER -->
   <div id="skills" class="page">
     <div class="card">
       <h2>Skills Development Tracker</h2>
-      <p>Progress across the three pillars of quant finance. Updated through Day 5.</p>
+      <p>Progress across the three pillars of quant finance. Updated through Day 6.</p>
     </div>
 
     <div class="skills-grid">
       <div class="skill-card">
         <div class="skill-icon">🐍</div>
         <div class="skill-name">Python Basics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 35%; background: linear-gradient(90deg, #4fc3f7, #29b6f6);"></div></div>
-        <div class="skill-level">Beginner+ — variables, input/output, conditionals, loops, lists, functions, imports, nested loops, simulations, list comprehensions, f-strings</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 38%; background: linear-gradient(90deg, #4fc3f7, #29b6f6);"></div></div>
+        <div class="skill-level">Beginner+ — variables, input/output, conditionals, loops, lists, functions, imports, nested loops, simulations, list comprehensions, f-strings, math.exp(), CDF approximation</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">📊</div>
         <div class="skill-name">Statistics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 28%; background: linear-gradient(90deg, #ce93d8, #ab47bc);"></div></div>
-        <div class="skill-level">Growing — probability, Law of Large Numbers, Monte Carlo simulation, mean, variance, standard deviation, Sharpe ratio. Normal distribution next.</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 35%; background: linear-gradient(90deg, #ce93d8, #ab47bc);"></div></div>
+        <div class="skill-level">Growing — probability, Law of Large Numbers, Monte Carlo, mean, variance, std dev, Sharpe ratio, normal distribution, z-scores, 68-95-99.7 rule, VaR</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">💹</div>
         <div class="skill-name">Finance</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 28%; background: linear-gradient(90deg, #66bb6a, #43a047);"></div></div>
-        <div class="skill-level">Foundation — returns, compound interest, risk, VaR, volatility drag, edge sizing, Sharpe ratio, risk-adjusted returns. Real data next.</div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 33%; background: linear-gradient(90deg, #66bb6a, #43a047);"></div></div>
+        <div class="skill-level">Foundation — returns, compound interest, risk, volatility drag, edge sizing, Sharpe ratio, risk-adjusted returns, z-scores, VaR, fat tails. Real data next.</div>
       </div>
       <div class="skill-card">
         <div class="skill-icon">📈</div>
         <div class="skill-name">Data Analysis</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 12%; background: linear-gradient(90deg, #ffb74d, #ff9800);"></div></div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 15%; background: linear-gradient(90deg, #ffb74d, #ff9800);"></div></div>
         <div class="skill-level">Early — can process and compare lists of returns, compute stats, grade stocks. CSV files, pandas, matplotlib coming in Phase 2.</div>
       </div>
       <div class="skill-card">
@@ -1227,6 +1373,9 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
         <tr><td><code>random.gauss(mean, std)</code></td><td>Day 5</td><td>Bell-curve random returns</td></tr>
         <tr><td><code>float('inf')</code></td><td>Day 5</td><td>Infinite Sharpe ratio (zero risk)</td></tr>
         <tr><td>f-strings <code>f"text {var}"</code></td><td>Day 5</td><td>Stock analyzer output formatting</td></tr>
+        <tr><td><code>import math</code>, <code>math.exp()</code></td><td>Day 6</td><td>Normal CDF approximation</td></tr>
+        <tr><td>Cumulative distribution function</td><td>Day 6</td><td>Risk probability calculator</td></tr>
+        <tr><td>Large-scale verification (100K sims)</td><td>Day 6</td><td>Theory vs simulation comparison</td></tr>
       </table>
     </div>
 
@@ -1239,6 +1388,8 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
         <tr><td>$1.47×10²⁰ result</td><td>Entered rate as 8 instead of 0.08</td><td>Interest rates must be decimals: 7% = 0.07</td><td>1</td></tr>
         <tr><td>Mental math mismatch (0.2 vs 0.5)</td><td>Incorrect mental division</td><td>Walk through formula step by step: 25/50 = 0.5</td><td>3</td></tr>
         <tr><td><code>SyntaxError: 'return' outside function</code></td><td>return line not indented inside function</td><td>Indent to match other lines in the function body</td><td>3</td></tr>
+        <tr><td>Ran wrong file (day5 instead of day6)</td><td>Named new code day6 but ran old file</td><td>Always check you're running the right file in Thonny</td><td>6</td></tr>
+        <tr><td>Pace too fast for retention</td><td>Running code without understanding each line</td><td>Pause, review concepts, test with quizzes before moving on</td><td>6</td></tr>
       </table>
     </div>
   </div>
@@ -1275,6 +1426,9 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
         <tr><td>F-string</td><td><code>f"text {var}"</code></td><td><code>f"Mean: {round(m*100,2)}%"</code></td></tr>
         <tr><td>Square root</td><td><code>x ** 0.5</code></td><td><code>variance ** 0.5</code></td></tr>
         <tr><td>Infinity</td><td><code>float('inf')</code></td><td>Used when dividing by zero risk</td></tr>
+        <tr><td>Import math</td><td><code>import math</code></td><td><code>math.exp(-2)</code> for e^(-2)</td></tr>
+        <tr><td>Z-score</td><td><code>(value - mean) / std</code></td><td>How many std devs from normal</td></tr>
+        <tr><td>CDF (approx)</td><td><code>normal_cdf(z)</code></td><td>Probability of being below z</td></tr>
       </table>
     </div>
 
@@ -1290,6 +1444,9 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
         <tr><td>Variance</td><td><code>sum([(r-mean)**2 for r in returns]) / len(returns)</code></td><td>How spread out the returns are (squared units)</td></tr>
         <tr><td>Standard Deviation</td><td><code>variance ** 0.5</code></td><td>How much returns typically deviate from the mean (risk)</td></tr>
         <tr><td>Sharpe Ratio</td><td><code>mean / std_dev</code></td><td>Reward per unit of risk — higher is better</td></tr>
+        <tr><td>Z-Score</td><td><code>(return - mean) / std_dev</code></td><td>How extreme a return is (in std devs)</td></tr>
+        <tr><td>Value at Risk (95%)</td><td><code>mean - 1.645 * std_dev</code></td><td>Worst expected loss, 95% of the time</td></tr>
+        <tr><td>Normal CDF</td><td><code>normal_cdf(z)</code></td><td>Probability that a return falls below z</td></tr>
       </table>
     </div>
 
@@ -1306,7 +1463,7 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
   <!-- QUIZ -->
   <div id="quiz" class="page">
     <div class="card" style="margin-bottom: 20px;">
-      <h2>Knowledge Check — 10 Questions</h2>
+      <h2>Knowledge Check — Days 1-6 (15 Questions)</h2>
       <p>Test everything from Days 1–3. Each question has an explanation. No time limit.</p>
       <div class="progress" id="progress"></div>
     </div>
@@ -1363,31 +1520,31 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
           <div class="rt-desc">Calculated mean, variance, std dev by hand in code. Built stock analyzer with Sharpe ratio grading. Compared 3 stock types across multiple runs.</div>
         </div>
       </div>
+      <div class="roadmap-item completed">
+        <div class="roadmap-check">✅</div>
+        <div class="roadmap-text">
+          <div class="rt-title">Day 6 — Normal Distribution, Z-Scores & Value at Risk</div>
+          <div class="rt-desc">The bell curve that stock returns follow. Z-scores measure how extreme an event is. VaR quantifies tail risk. Theory vs simulation validation.</div>
+        </div>
+      </div>
       <div class="roadmap-item current">
         <div class="roadmap-check">▶</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 6 — Normal Distribution & Histograms</div>
-          <div class="rt-desc">The bell curve that stock returns follow, and visualizing data distributions</div>
+          <div class="rt-title">Day 7 — Moving Averages & Trend Analysis</div>
+          <div class="rt-desc">Identify trends and support/resistance levels in price data</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
         <div class="roadmap-check">○</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 7 — Rest / Catch-Up</div>
-          <div class="rt-desc">Review, revisit confusing topics, or take a break</div>
+          <div class="rt-title">Day 8 — Correlation & Portfolio Theory</div>
+          <div class="rt-desc">How stocks move together; building diversified portfolios</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
         <div class="roadmap-check">○</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 8 — Statistics: Mean, Variance, Standard Deviation</div>
-          <div class="rt-desc">The numbers that describe risk — calculated by hand and in code</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 9 — Real Stock Data (CSV files)</div>
+          <div class="rt-title">Day 9 — Real Stock Data (CSV files + pandas intro)</div>
           <div class="rt-desc">Download and analyze actual market data from Yahoo Finance</div>
         </div>
       </div>
@@ -1511,6 +1668,36 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
       options: ["Give the same result (Python auto-converts)", "Give a slightly different answer", "Give an astronomically huge wrong number", "Cause a Python error"],
       correct: 2,
       explain: "8 means 800% interest, not 8%. The formula explodes exponentially — this actually happened on Day 1, producing $1.47×10²⁰ (147 quintillion dollars). Always enter rates as decimals."
+    },
+    {
+      q: "What does the 68-95-99.7 rule tell you?",
+      options: ["68% of data is always positive", "~68% of data falls within 1 std dev, ~95% within 2, ~99.7% within 3", "Stock prices follow a 68% up, 95% down pattern", "The rule only works for financial data"],
+      correct: 1,
+      explain: "The 68-95-99.7 rule (or empirical rule) describes how normal distributions spread: about 68% within 1 std dev of the mean, 95% within 2, and 99.7% within 3. We verified this on Day 6 by simulating 100,000 data points."
+    },
+    {
+      q: "Black Monday (Oct 19, 1987) had a return of -22.6%. Its z-score is -11.35. What does that mean?",
+      options: ["The loss was -11.35%", "It was 11.35 standard deviations below normal — should basically never happen under the normal distribution", "The stock recovered by 11.35%", "It means the standard deviation was 11.35%"],
+      correct: 1,
+      explain: "A z-score of -11.35 means the event was 11.35 standard deviations below the mean. The normal distribution says such an event should happen once every 10^28 years. But it did. This shows stock returns have 'fat tails' — extreme events are more common than the bell curve predicts."
+    },
+    {
+      q: "A stock has Value at Risk (VaR) of -2.37% at 95% confidence. What does this mean?",
+      options: ["The stock always loses 2.37%", "On 95% of days, losses won't exceed 2.37%. The other 5% is where tail risk lives.", "The stock is guaranteed to lose at most 2.37%", "95% of traders lose 2.37% on average"],
+      correct: 1,
+      explain: "VaR at 95% answers: 'What's the worst daily return I should expect 95% of the time?' If VaR is -2.37%, that means 95% of days stay within that loss threshold. Banks are legally required to calculate and report their VaR."
+    },
+    {
+      q: "You run a simulation 100,000 times and get 68.0% success rate. Theory says 68.27%. What does this tell you?",
+      options: ["The simulation has too much error and should be ignored", "The math formula is wrong", "The math works — the tiny difference (0.27%) proves the formula is correct via Law of Large Numbers", "100,000 runs isn't enough data"],
+      correct: 2,
+      explain: "When theory and simulation closely agree, it proves the math formula works. The tiny differences (like 68.0% vs 68.27%) are expected from randomness and actually CONFIRM the formula is correct. This is the power of the Law of Large Numbers: with enough trials, randomness reveals the true pattern."
+    },
+    {
+      q: "What is a z-score of 0?",
+      options: ["The value is below the mean", "The value equals the mean — perfectly average", "The value is the standard deviation", "Z-scores can never be zero"],
+      correct: 1,
+      explain: "A z-score of 0 means the value is exactly at the mean. Positive z-scores are above the mean, negative are below. In investing, a z-score of 0 is just an ordinary day."
     }
   ];
 
@@ -1562,10 +1749,11 @@ stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
       bar.classList.add('show');
       document.getElementById('score-num').textContent = score;
       let msg = '';
-      if (score === 10) msg = "Perfect. You've nailed everything from Days 1-3. Ready for Day 4.";
-      else if (score >= 8) msg = "Solid understanding. Review the ones you missed, then move forward.";
-      else if (score >= 6) msg = "Good start. Go back through the day summaries for topics you missed.";
-      else msg = "Worth re-reading the Day 1-3 review tabs before continuing. No rush — mastery matters more than speed.";
+      if (score === 15) msg = "Perfect. You've mastered Days 1-6. Ready for Day 7 and beyond.";
+      else if (score >= 13) msg = "Excellent. You've got the fundamentals solid. Review any you missed, then move forward.";
+      else if (score >= 11) msg = "Very good. Strong grasp of the material. Review the ones you missed.";
+      else if (score >= 9) msg = "Good start. Go back through the day summaries for topics you missed.";
+      else msg = "Worth reviewing the Day summaries before continuing. No rush — mastery matters more than speed.";
       document.getElementById('score-message').textContent = msg;
       bar.scrollIntoView({ behavior: 'smooth' });
     }

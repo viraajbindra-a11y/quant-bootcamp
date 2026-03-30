@@ -23,7 +23,6 @@ body{font-family:'SF Mono','Fira Code','Consolas',monospace;background:#0a0e17;c
 .preset:hover{border-color:#4fc3f7;color:#fff}
 .preset.active{background:#1a237e;border-color:#7c4dff;color:#fff}
 
-/* Difficulty cards */
 .diff-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .diff-card{background:#0d1117;border:2px solid #1f2937;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.15s;text-align:center}
 .diff-card:hover{border-color:#4fc3f7}
@@ -68,6 +67,11 @@ body{font-family:'SF Mono','Fira Code','Consolas',monospace;background:#0a0e17;c
 .game-title{font-size:1.4rem;letter-spacing:6px;background:linear-gradient(135deg,#ff0055,#ff4488);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header-right{display:flex;gap:8px;align-items:center}
 
+.market-status{padding:6px 12px;border-radius:6px;background:#0d1117;border:1px solid #1f2937;font-size:0.7rem;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.market-dot{width:8px;height:8px;border-radius:50%;background:#00e676;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.market-dot.closed{background:#ff1744;animation:none}
+
 /* Top bar */
 .top-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#111827;border:1px solid #1f2937;border-radius:10px;margin-bottom:10px;flex-wrap:wrap;gap:6px}
 .stat-box{text-align:center;min-width:70px}
@@ -79,6 +83,7 @@ body{font-family:'SF Mono','Fira Code','Consolas',monospace;background:#0a0e17;c
 .stat-value.total.down{color:#ff1744}
 .stat-value.day{color:#ffab00}
 .stat-value.diff{color:#ce93d8}
+.stat-value.streak{color:#ff6b6b}
 
 /* Controls */
 .controls{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
@@ -90,6 +95,8 @@ body{font-family:'SF Mono','Fira Code','Consolas',monospace;background:#0a0e17;c
 .btn.reset:hover{background:#ff1744;color:#fff}
 .btn.train{border-color:#4fc3f7;color:#4fc3f7}
 .btn.train:hover{background:#4fc3f7;color:#000}
+.btn.bot{border-color:#9c27b0;color:#ce93d8}
+.btn.bot.active{background:#9c27b0;color:#fff}
 .btn-sm{padding:4px 8px;font-size:0.6rem}
 .speed-label{font-size:0.6rem;color:#555}
 
@@ -103,6 +110,17 @@ body{font-family:'SF Mono','Fira Code','Consolas',monospace;background:#0a0e17;c
 
 /* Grid */
 .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Market indicators */
+.indicators-panel{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;grid-column:1/3}
+.indicators-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.indicator-box{background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:9px;text-align:center}
+.indicator-label{font-size:0.52rem;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.indicator-value{font-size:0.95rem;font-weight:700;color:#4fc3f7}
+.indicator-gauge{width:100%;height:6px;background:#0a0e17;border-radius:3px;margin-top:4px;overflow:hidden}
+.indicator-fill{height:100%;border-radius:3px;width:50%;background:#4fc3f7}
+.gauge-bullish .indicator-fill{background:#00e676;width:75%}
+.gauge-bearish .indicator-fill{background:#ff1744;width:25%}
 
 /* Chart */
 .chart-panel{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;grid-column:1/3}
@@ -134,8 +152,16 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 .stock-sector{font-size:0.48rem;padding:1px 6px;border-radius:8px;display:inline-block}
 .stock-vol{font-size:0.52rem;color:#555}
 
-/* Portfolio */
-.portfolio-panel{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;max-height:400px;overflow-y:auto}
+/* Portfolio heatmap */
+.portfolio-panel{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px}
+.heatmap-container{display:flex;flex-wrap:wrap;gap:6px;min-height:80px}
+.heatmap-block{border-radius:6px;padding:6px;font-size:0.6rem;display:flex;flex-direction:column;justify-content:center;align-items:center;flex:1;min-width:60px;border:1px solid rgba(255,255,255,0.1);transition:all 0.2s}
+.heatmap-block:hover{border-color:#4fc3f7}
+.heatmap-label{font-weight:700}
+.heatmap-value{font-size:0.5rem;color:#aaa;margin-top:2px}
+
+/* Portfolio list */
+.portfolio-list-view{max-height:350px;overflow-y:auto}
 .holding{background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:9px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
 .holding.short{border-left:3px solid #ff1744}
 .holding-info .h-name{font-weight:700;font-size:0.75rem}
@@ -172,6 +198,15 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 .lo-type.buy-limit{background:#1a3a2a;color:#66bb6a}
 .lo-type.sell-limit{background:#3a1a1a;color:#ff5252}
 
+/* Trade history */
+.history-section{grid-column:1/3;background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;max-height:250px;overflow-y:auto}
+.history-item{background:#0d1117;border:1px solid #1f2937;border-radius:6px;padding:7px;margin-bottom:4px;font-size:0.68rem;display:flex;justify-content:space-between;align-items:center}
+.history-label{color:#888;flex:1}
+.history-value{color:#4fc3f7;font-weight:700}
+.history-pnl{font-weight:700}
+.history-pnl.gain{color:#00e676}
+.history-pnl.loss{color:#ff1744}
+
 /* News */
 .news-bar{background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:7px 14px;margin-top:10px;font-size:0.65rem;color:#ffab00;overflow:hidden;white-space:nowrap}
 .news-bar span{display:inline-block;animation:scroll 25s linear infinite}
@@ -184,11 +219,36 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 .event-card h3{color:#ffab00;font-size:1rem;margin-bottom:8px;letter-spacing:2px}
 .event-card p{color:#ccc;font-size:0.8rem;line-height:1.5;margin-bottom:12px}
 
+.earnings-popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:120;justify-content:center;align-items:center}
+.earnings-popup.show{display:flex}
+.earnings-card{background:#111827;border:3px solid #ffab00;border-radius:14px;padding:32px;max-width:380px;text-align:center;animation:pop 0.3s ease}
+@keyframes pop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.earnings-card h3{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.earnings-beat{color:#00e676}
+.earnings-miss{color:#ff1744}
+.earnings-detail{color:#aaa;font-size:0.8rem;line-height:1.6;margin:12px 0}
+
 .achievement-popup{position:fixed;top:16px;right:16px;background:#111827;border:2px solid #ffab00;border-radius:12px;padding:14px 20px;z-index:150;transform:translateX(400px);transition:transform 0.4s ease;max-width:280px}
 .achievement-popup.show{transform:translateX(0)}
 .ach-title{color:#ffab00;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase}
 .ach-name{font-size:0.9rem;font-weight:700;color:#fff;margin:3px 0}
 .ach-desc{font-size:0.65rem;color:#888}
+
+/* Stock detail popup */
+.stock-detail-popup{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:110;justify-content:center;align-items:center}
+.stock-detail-popup.show{display:flex}
+.stock-detail-card{background:#111827;border:2px solid #4fc3f7;border-radius:14px;padding:24px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
+.stock-detail-header{border-bottom:1px solid #1f2937;padding-bottom:12px;margin-bottom:12px}
+.stock-detail-header h3{color:#4fc3f7;font-size:1.1rem;margin-bottom:4px}
+.stock-detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1a1a2e;font-size:0.8rem}
+.stock-detail-label{color:#888}
+.stock-detail-value{color:#fff;font-weight:700}
+.rating-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:0.7rem;font-weight:700;margin-top:4px}
+.rating-strong-buy{background:#00e676;color:#000}
+.rating-buy{background:#66bb6a;color:#fff}
+.rating-hold{background:#4fc3f7;color:#000}
+.rating-sell{background:#ff9100;color:#000}
+.rating-strong-sell{background:#ff1744;color:#fff}
 
 /* Achievements */
 .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
@@ -224,20 +284,20 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 
 @media(max-width:700px){
   .main-grid{grid-template-columns:1fr}
-  .chart-panel,.trade-panel,.limit-section{grid-column:1/2}
+  .chart-panel,.trade-panel,.limit-section,.history-section,.indicators-panel{grid-column:1/2}
   .top-bar{justify-content:center}
   .diff-cards{grid-template-columns:1fr}
+  .indicators-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ======== SETUP SCREEN ======== -->
+<!-- SETUP -->
 <div class="setup-screen" id="setup-screen">
   <div class="setup-card">
     <h1>VOID MARKET</h1>
     <div class="sub">Paper Trading Platform</div>
-
     <div class="setup-section">
       <label>Game Mode</label>
       <div class="setup-modes">
@@ -251,7 +311,6 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
         </div>
       </div>
     </div>
-
     <div class="setup-section">
       <label>Starting Cash</label>
       <input type="number" class="setup-input" id="setup-cash" value="10000" min="100" step="1000">
@@ -263,7 +322,6 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
         <div class="preset" onclick="setCash(1000000)">$1M</div>
       </div>
     </div>
-
     <div id="challenge-options" style="display:none">
       <div class="setup-section">
         <label>Difficulty</label>
@@ -275,16 +333,15 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
         </div>
       </div>
     </div>
-
     <button class="setup-start" onclick="startGame()">START TRADING</button>
-    <div style="margin-top:14px"><button class="btn train" onclick="openTraining()" style="padding:10px 24px">TRAINING MODE — Learn First</button></div>
+    <div style="margin-top:14px"><button class="btn train" onclick="openTraining()" style="padding:10px 24px">TRAINING MODE</button></div>
   </div>
 </div>
 
-<!-- ======== TRAINING OVERLAY ======== -->
+<!-- TRAINING -->
 <div class="training-overlay" id="training-overlay">
   <div class="training-card">
-    <h3 id="train-title">Training: Welcome</h3>
+    <h3 id="train-title">Training</h3>
     <div id="train-body"></div>
     <div class="training-nav">
       <button class="btn" id="train-prev" onclick="trainNav(-1)">← Back</button>
@@ -294,12 +351,15 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
   </div>
 </div>
 
-<!-- ======== MAIN APP ======== -->
+<!-- MAIN APP -->
 <div class="app" id="app">
   <div class="game-container">
     <div class="game-header">
       <div class="game-title">VOID MARKET</div>
       <div class="header-right">
+        <div class="market-status"><div class="market-dot" id="market-dot"></div><span id="market-text">OPEN</span></div>
+        <button class="btn bot" id="bot-toggle" onclick="toggleBot()">BOT</button>
+        <button class="btn" id="sound-toggle" onclick="toggleSound()">SOUND</button>
         <button class="btn train" onclick="openTraining()">Training</button>
         <button class="btn reset" onclick="backToSetup()">New Game</button>
       </div>
@@ -313,6 +373,7 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
       <div class="stat-box"><div class="stat-label">P&L</div><div class="stat-value total" id="pnl">$0 (0%)</div></div>
       <div class="stat-box"><div class="stat-label">Day</div><div class="stat-value day" id="day-num">1</div></div>
       <div class="stat-box"><div class="stat-label">Trades</div><div class="stat-value" id="trade-count" style="color:#4dd0e1">0</div></div>
+      <div class="stat-box"><div class="stat-label">Streak</div><div class="stat-value streak" id="streak-display">—</div></div>
     </div>
 
     <div class="controls">
@@ -324,6 +385,7 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 
     <div class="tabs">
       <div class="tab active" onclick="showTab('market',this)">Market</div>
+      <div class="tab" onclick="showTab('history',this)">History</div>
       <div class="tab" onclick="showTab('orders',this)">Orders <span id="order-count"></span></div>
       <div class="tab" onclick="showTab('achievements',this)">Badges <span id="ach-count"></span></div>
       <div class="tab" onclick="showTab('leaderboard',this)">Leaderboard</div>
@@ -331,10 +393,28 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
 
     <div id="tab-market" class="tab-content active">
       <div class="main-grid">
+        <div class="indicators-panel">
+          <div class="panel-title">Market Indicators</div>
+          <div class="indicators-grid">
+            <div class="indicator-box">
+              <div class="indicator-label">Sentiment</div>
+              <div class="indicator-value" id="sentiment-label">Neutral</div>
+              <div class="indicator-gauge" id="sentiment-gauge"><div class="indicator-fill"></div></div>
+            </div>
+            <div class="indicator-box">
+              <div class="indicator-label">Market Index</div>
+              <div class="indicator-value" id="market-index">1000.00</div>
+            </div>
+            <div class="indicator-box">
+              <div class="indicator-label">Volatility</div>
+              <div class="indicator-value" id="volatility-label">Normal</div>
+            </div>
+          </div>
+        </div>
         <div class="chart-panel">
           <div class="chart-header">
             <span class="chart-title" id="chart-label">MARKET INDEX</span>
-            <span style="font-size:0.6rem;color:#555" id="chart-hint">Click a stock to chart it</span>
+            <span style="font-size:0.6rem;color:#555" id="chart-hint">Click stock to detail</span>
           </div>
           <canvas id="chart" height="200"></canvas>
         </div>
@@ -345,7 +425,8 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
         </div>
         <div class="portfolio-panel">
           <div class="panel-title">Portfolio</div>
-          <div id="portfolio-list"><div class="empty-portfolio">No holdings yet</div></div>
+          <div class="heatmap-container" id="heatmap"></div>
+          <div class="portfolio-list-view" id="portfolio-list"><div class="empty-portfolio">No holdings yet</div></div>
         </div>
         <div class="trade-panel">
           <div class="panel-title">Trade</div>
@@ -359,6 +440,13 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
             <button class="btn btn-cover" onclick="executeTrade('cover')">Cover</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="tab-history" class="tab-content">
+      <div class="history-section">
+        <div class="panel-title">Trade History</div>
+        <div id="history-list"><div class="empty-portfolio">No trades yet</div></div>
       </div>
     </div>
 
@@ -400,15 +488,63 @@ canvas{width:100%;border-radius:6px;background:#0a0e17}
   </div>
 </div>
 
-<!-- Overlays -->
+<!-- OVERLAYS -->
 <div class="event-overlay" id="event-overlay">
   <div class="event-card"><h3 id="event-title">EVENT</h3><p id="event-text"></p><button class="btn advance" onclick="dismissEvent()">Continue</button></div>
+</div>
+
+<div class="earnings-popup" id="earnings-popup">
+  <div class="earnings-card">
+    <h3 id="earnings-ticker">STOCK</h3>
+    <div id="earnings-result" class="earnings-beat">BEAT</div>
+    <div class="earnings-detail" id="earnings-detail">Earnings exceeded expectations.</div>
+    <button class="btn advance" onclick="dismissEarnings()" style="margin-top:12px">Continue</button>
+  </div>
 </div>
 
 <div class="achievement-popup" id="ach-popup">
   <div class="ach-title">Achievement Unlocked!</div>
   <div class="ach-name" id="ach-popup-name"></div>
   <div class="ach-desc" id="ach-popup-desc"></div>
+</div>
+
+<div class="stock-detail-popup" id="stock-detail-popup">
+  <div class="stock-detail-card">
+    <div class="stock-detail-header">
+      <h3 id="detail-ticker"></h3>
+      <div style="color:#888;font-size:0.75rem" id="detail-company"></div>
+    </div>
+    <canvas id="detail-chart" height="150" style="width:100%;margin-bottom:12px;border-radius:6px;background:#0a0e17;border:1px solid #1f2937"></canvas>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Current Price</span>
+      <span class="stock-detail-value" id="detail-price">$0.00</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Lifetime High</span>
+      <span class="stock-detail-value" id="detail-high">$0.00</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Lifetime Low</span>
+      <span class="stock-detail-value" id="detail-low">$0.00</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Volatility</span>
+      <span class="stock-detail-value" id="detail-vol">0.00%</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Avg Volume</span>
+      <span class="stock-detail-value" id="detail-vol-amt">N/A</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">P/E Ratio</span>
+      <span class="stock-detail-value" id="detail-pe">—</span>
+    </div>
+    <div class="stock-detail-row">
+      <span class="stock-detail-label">Analyst Rating</span><br>
+      <span class="rating-badge" id="detail-rating">—</span>
+    </div>
+    <button class="btn" onclick="closeStockDetail()" style="margin-top:12px;width:100%">Close</button>
+  </div>
 </div>
 
 <div class="endgame" id="endgame">
@@ -443,6 +579,12 @@ const STOCK_TEMPLATES=[
   {ticker:'DEFI',name:'DeFi Protocol Labs',basePrice:33.33,vol:0.08,drift:0.0005,sector:'crypto'},
   {ticker:'GOLD',name:'Gold Reserve ETF',basePrice:185.00,vol:0.012,drift:0.0003,sector:'commodity'},
   {ticker:'OILX',name:'Crude Oil Futures ETF',basePrice:72.50,vol:0.04,drift:0.0002,sector:'commodity'},
+  {ticker:'MEDX',name:'MedTech Solutions',basePrice:156.20,vol:0.038,drift:0.0011,sector:'biotech'},
+  {ticker:'CHIP',name:'ChipForge Semiconductors',basePrice:287.50,vol:0.06,drift:0.0015,sector:'tech'},
+  {ticker:'REIT',name:'Real Estate Trust ETF',basePrice:92.30,vol:0.015,drift:0.0006,sector:'finance'},
+  {ticker:'LITH',name:'Lithium Battery Corp',basePrice:178.90,vol:0.065,drift:0.002,sector:'energy'},
+  {ticker:'GAME',name:'GameVerse Studios',basePrice:55.40,vol:0.095,drift:0.0025,sector:'tech'},
+  {ticker:'SAFE',name:'Treasury Bond ETF',basePrice:101.50,vol:0.005,drift:0.0001,sector:'commodity'},
 ];
 
 const SECTOR_COLORS={tech:'#4fc3f7',energy:'#ffab00',biotech:'#ce93d8',finance:'#66bb6a',space:'#7c4dff',crypto:'#ff4081',commodity:'#8d6e63'};
@@ -478,16 +620,15 @@ const ACHIEVEMENTS=[
   {id:'millionaire',icon:'🤑',name:'Millionaire',desc:'Reach $1,000,000 net worth'},
 ];
 
-// ============ TRAINING LESSONS ============
 const LESSONS=[
-  {title:'Welcome to Trading',body:`<p>VOID MARKET is a <strong>paper trading platform</strong> — you trade simulated stocks with fake money to learn how the market works without risking anything real.</p><p>This training will teach you everything you need to know in 8 quick lessons.</p><div class="tip">Paper trading is how real traders practice. Even pros at Goldman Sachs start this way.</div>`},
-  {title:'Buying & Selling',body:`<p><strong>Buying</strong> means you purchase shares of a stock. You make money when the price goes UP after you buy.</p><p><strong>Selling</strong> means you sell shares you own. You want to sell at a higher price than you bought.</p><p>Example: Buy 10 shares of QNTM at $142.50 = costs $1,425. If price rises to $160, sell for $1,600. Profit: $175!</p><div class="tip">The basic rule: <strong>Buy low, sell high.</strong> Simple to say, hard to do.</div>`},
-  {title:'Short Selling',body:`<p><strong>Shorting</strong> is betting a stock will go DOWN. You borrow shares and sell them, then buy them back cheaper later.</p><p>Example: Short BIOT at $234. If it drops to $200, you cover (buy back) and pocket $34/share profit.</p><p>⚠️ <strong>Warning:</strong> If the stock goes UP, you lose money. Losses on shorts are theoretically unlimited!</p><div class="tip">Shorting requires 50% margin (collateral). If you short $1,000 worth, $500 cash is locked up.</div>`},
-  {title:'Limit Orders',body:`<p>A <strong>limit order</strong> triggers automatically when a stock hits your target price.</p><p><strong>Buy limit:</strong> "Buy AURA if it drops to $290" — catches dips automatically.</p><p><strong>Sell limit:</strong> "Sell VOID if it hits $100" — locks in profits while you're away.</p><div class="tip">Set limit orders before fast-forwarding days. They'll fill automatically while time passes!</div>`},
-  {title:'Reading the Chart',body:`<p>The chart shows price history over time. Green = stock is up from start, red = down.</p><p>When no stock is selected, it shows <strong>your net worth vs the market index</strong> (purple = you, gray dashed = market).</p><div class="tip">If your purple line is ABOVE the gray line, you're beating the market. That's the goal.</div>`},
-  {title:'Sectors & Risk',body:`<p>Stocks are grouped by sector. Each sector has different risk levels:</p><p>🏦 <strong>Commodity/Finance</strong> — Low volatility, stable but slow gains.<br>⚡ <strong>Tech/Energy</strong> — Medium volatility, balanced.<br>🧬 <strong>Biotech/Space</strong> — High volatility, big swings both ways.<br>🪙 <strong>Crypto</strong> — Extreme volatility. Can make or lose fortunes fast.</p><div class="tip">A diversified portfolio (stocks from different sectors) reduces risk. This is Day 5 stuff!</div>`},
-  {title:'The Sharpe Ratio Mindset',body:`<p>From your bootcamp: <strong>Sharpe Ratio = Return ÷ Risk</strong></p><p>Don't just chase the highest return — think about how much risk you're taking to get it.</p><p>A 20% return with wild swings = bad Sharpe. A 15% return with smooth growth = good Sharpe.</p><div class="tip">The best quants don't maximize return — they maximize <strong>return per unit of risk</strong>.</div>`},
-  {title:'You\'re Ready!',body:`<p>That's everything! Here's a quick cheat sheet:</p><p>• <strong>Buy/Sell</strong> — Basic trading, profit when price rises<br>• <strong>Short/Cover</strong> — Profit when price drops<br>• <strong>Limit Orders</strong> — Auto-trade at target prices<br>• <strong>Sectors</strong> — Diversify across different types<br>• <strong>Chart</strong> — Track your performance vs market</p><div class="tip">In Challenge mode, you're ranked against the market. In Free Trade, there's no time limit — trade as long as you want!</div>`}
+  {title:'Welcome to Trading',body:`<p>VOID MARKET is a <strong>paper trading platform</strong> — you trade simulated stocks with fake money to learn the market.</p><p>This training covers everything in 8 lessons.</p><div class="tip">Paper trading is how real traders practice. Even Goldman Sachs pros start this way.</div>`},
+  {title:'Buying & Selling',body:`<p><strong>Buying</strong> = purchase shares. Make money when price goes UP after you buy.</p><p><strong>Selling</strong> = sell shares you own. Want to sell at higher price than you bought.</p><p>Example: Buy 10 QNTM @ $142.50 = $1,425. If price rises to $160, sell for $1,600. Profit: $175!</p><div class="tip">The basic rule: <strong>Buy low, sell high.</strong> Easy to say, hard to do.</div>`},
+  {title:'Short Selling',body:`<p><strong>Shorting</strong> = bet stock goes DOWN. Borrow shares, sell them, buy them back cheaper.</p><p>Example: Short BIOT @ $234. If it drops to $200, cover and profit $34/share.</p><p>⚠️ <strong>Warning:</strong> If stock goes UP, you lose money. Losses on shorts are unlimited!</p><div class="tip">Shorting requires 50% margin. Short $1,000 worth? $500 cash locked up.</div>`},
+  {title:'Limit Orders',body:`<p>A <strong>limit order</strong> triggers automatically at your target price.</p><p><strong>Buy limit:</strong> "Buy AURA if it drops to $290" — catches dips automatically.</p><p><strong>Sell limit:</strong> "Sell VOID if it hits $100" — locks in profits while away.</p><div class="tip">Set limits before fast-forwarding days. They'll fill automatically!</div>`},
+  {title:'Reading the Chart',body:`<p>Chart shows price history. Green = stock up from start, red = down.</p><p>When no stock selected, shows <strong>your net worth vs market index</strong> (purple = you, gray = market).</p><div class="tip">If your purple line is ABOVE gray, you're beating the market. That's the goal.</div>`},
+  {title:'Sectors & Risk',body:`<p>Stocks grouped by sector. Each has different risk:</p><p>🏦 <strong>Commodity/Finance</strong> — Low vol, stable.<br>⚡ <strong>Tech/Energy</strong> — Medium vol, balanced.<br>🧬 <strong>Biotech/Space</strong> — High vol, big swings.<br>🪙 <strong>Crypto</strong> — Extreme vol. Wild!</p><div class="tip">Diversified portfolio reduces risk. Mix sectors!</div>`},
+  {title:'Market Indicators',body:`<p><strong>Sentiment</strong> = bullish/neutral/bearish based on how many stocks are up vs down.</p><p><strong>Market Index</strong> = weighted average of all stock prices, starting at 1000.</p><p><strong>Volatility</strong> = average vol across all stocks. Low/Normal/High/Extreme.</p><div class="tip">High volatility = big opportunities AND big risks!</div>`},
+  {title:'You\'re Ready!',body:`<p>Core concepts: Buy/Sell, Short/Cover, Limit Orders, Sectors, Charts, Indicators.</p><p><strong>Earnings:</strong> Every 20 days, 2-3 stocks report earnings — big moves!</p><p><strong>Trade History:</strong> Review all trades in History tab.</p><div class="tip">In Challenge mode, you're ranked. In Free Trade, trade forever. Good luck!</div>`}
 ];
 
 // ============ STATE ============
@@ -498,6 +639,9 @@ let unlockedAchievements=JSON.parse(localStorage.getItem('vm2_ach')||'[]');
 let leaderboard=JSON.parse(localStorage.getItem('vm2_lb')||'[]');
 let gamesPlayed=parseInt(localStorage.getItem('vm2_games')||'0');
 let pendingAchievements=[],trainStep=0;
+let soundEnabled=false,botEnabled=false;
+let tradeHistory=[],marketIndexValues=[],winStreak=0,lossStreak=0;
+let nextEarningsDay=20;
 
 const NEWS=["Analysts upgrade TECH sector outlook...","Fed signals rate changes...","Major biotech merger announced...","Oil surges on supply concerns...","AI breakthrough — tech soars...","Volatility index spikes...","Retail investors pile into space...","Quantum milestone — QNTM volatile...","Bond yields rise...","Crypto regulation talks...","FDA approves new drug...","Bitcoin whales accumulate...","Gold hits new high...","Oil supply disruption...","Space tourism bookings surge...","DeFi hack reported...","Solar subsidies expanded...","Genomic medicine breakthrough...","Digital payments volume record...","Satellite launch failure..."];
 
@@ -532,43 +676,93 @@ function getNetWorth(){
   return{holdVal,shortVal,marginUsed,nw:cash+holdVal+shortVal};
 }
 
+// ============ SOUND ============
+function playSound(type){
+  if(!soundEnabled)return;
+  let ctx=new(window.AudioContext||window.webkitAudioContext)();
+  let now=ctx.currentTime;
+  if(type==='profit'){
+    let o=ctx.createOscillator(),g=ctx.createGain();
+    o.frequency.setValueAtTime(800,now);o.frequency.setValueAtTime(1200,now+0.1);
+    o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.3,now);g.gain.setValueAtTime(0,now+0.2);
+    o.start(now);o.stop(now+0.2);
+  }else if(type==='loss'){
+    let o=ctx.createOscillator(),g=ctx.createGain();
+    o.frequency.setValueAtTime(400,now);o.frequency.setValueAtTime(200,now+0.15);
+    o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.3,now);g.gain.setValueAtTime(0,now+0.25);
+    o.start(now);o.stop(now+0.25);
+  }else if(type==='alert'){
+    let o=ctx.createOscillator(),g=ctx.createGain();
+    o.frequency.value=600;
+    o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.2,now);g.gain.setValueAtTime(0,now+0.3);
+    o.start(now);o.stop(now+0.3);
+  }
+}
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  document.getElementById('sound-toggle').textContent=soundEnabled?'SOUND':'MUTE';
+}
+
+// ============ BOT ============
+function toggleBot(){
+  botEnabled=!botEnabled;
+  document.getElementById('bot-toggle').classList.toggle('active',botEnabled);
+}
+function runBot(){
+  if(!botEnabled)return;
+  let drops=STOCKS.filter(s=>{let y=s.history[s.history.length-2]||s.price;return(s.price-y)/y<=-0.03});
+  if(drops.length>0){
+    let b=drops[0];
+    selectedStock=b.ticker;
+    document.getElementById('trade-shares').value='5';
+    executeTrade('buy');
+    tradeHistory.push({day,type:'BUY',ticker:b.ticker,shares:5,price:b.price,pnl:0,bot:true});
+    renderHistory();
+  }
+}
+
+// ============ TRADE HISTORY ============
+function renderHistory(){
+  let hl=document.getElementById('history-list');
+  if(!tradeHistory.length){hl.innerHTML='<div class="empty-portfolio">No trades yet</div>';return}
+  hl.innerHTML='';
+  tradeHistory.slice().reverse().forEach(t=>{
+    let div=document.createElement('div');div.className='history-item';
+    let bot=t.bot?' (BOT)':'';
+    let pnl=t.pnl?fmt(t.pnl):'—';
+    let pnlClass=t.pnl>0?'gain':t.pnl<0?'loss':'';
+    div.innerHTML=`<span class="history-label">Day ${t.day}: <strong>${t.ticker}</strong> ${t.type} ${t.shares}sh @ ${fmt(t.price)}${bot}</span><span class="history-pnl ${pnlClass}">${pnl}</span>`;
+    hl.appendChild(div);
+  });
+}
+
 // ============ SETUP ============
-function setMode(m){
-  gameMode=m;
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('mode-'+m).classList.add('active');
-  document.getElementById('challenge-options').style.display=m==='challenge'?'block':'none';
-}
-function setDiff(d){
-  difficulty=d;
-  document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('active'));
-  document.querySelector('.diff-card.'+d).classList.add('active');
-}
-function setCash(v){
-  document.getElementById('setup-cash').value=v;
-  document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));
-  event.target.classList.add('active');
-}
+function setMode(m){gameMode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));document.getElementById('mode-'+m).classList.add('active');document.getElementById('challenge-options').style.display=m==='challenge'?'block':'none'}
+function setDiff(d){difficulty=d;document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('active'));document.querySelector('.diff-card.'+d).classList.add('active')}
+function setCash(v){document.getElementById('setup-cash').value=v;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));event.target.classList.add('active')}
 function startGame(){
   startCash=parseInt(document.getElementById('setup-cash').value)||10000;
   if(startCash<100)startCash=100;
   cash=startCash;day=1;tradeCount=0;pendingAchievements=[];
   portfolio={};shorts={};selectedStock=null;limitOrders=[];
+  tradeHistory=[];marketIndexValues=[];winStreak=0;lossStreak=0;nextEarningsDay=20;
 
-  if(gameMode==='challenge'){
-    totalDays=DIFFICULTIES[difficulty].days;
-  } else {
-    totalDays=Infinity;
-    difficulty='normal';
-  }
+  if(gameMode==='challenge'){totalDays=DIFFICULTIES[difficulty].days}else{totalDays=Infinity;difficulty='normal'}
 
-  STOCKS=STOCK_TEMPLATES.map(t=>({ticker:t.ticker,name:t.name,price:t.basePrice,vol:t.vol,drift:t.drift,history:[t.basePrice],sector:t.sector}));
-  marketHistory=[startCash];netWorthHistory=[startCash];
+  STOCKS=STOCK_TEMPLATES.map(t=>({
+    ticker:t.ticker,name:t.name,price:t.basePrice,basePrice:t.basePrice,vol:t.vol,drift:t.drift,
+    history:[t.basePrice],sector:t.sector,high:t.basePrice,low:t.basePrice,
+    pe:parseFloat((Math.random()*20+10).toFixed(2)),rating:['Strong Buy','Buy','Hold','Sell','Strong Sell'][Math.floor(Math.random()*5)]
+  }));
+  marketHistory=[startCash];netWorthHistory=[startCash];marketIndexValues=[1000];
 
   document.getElementById('setup-screen').classList.add('hidden');
   document.getElementById('app').classList.add('show');
-  document.getElementById('mode-label').textContent=gameMode==='challenge'?DIFFICULTIES[difficulty].label+' • '+totalDays+' days • Beat the market':'Free Trade • No time limit • '+fmt(startCash);
-  document.getElementById('news-text').textContent='Welcome to VOID MARKET. '+fmt(startCash)+' starting cash. '+(gameMode==='challenge'?totalDays+' days to beat the market.':'Trade freely, no time limit.');
+  document.getElementById('mode-label').textContent=gameMode==='challenge'?DIFFICULTIES[difficulty].label+' • '+totalDays+' days':'Free Trade • No time limit';
+  document.getElementById('news-text').textContent='Welcome to VOID MARKET. '+fmt(startCash)+' starting cash.';
 
   sectorFilter='all';
   buildSectorBar();drawMarketChart();updateUI();renderAchievements();renderLeaderboard();
@@ -581,17 +775,9 @@ function backToSetup(){
 }
 
 // ============ TRAINING ============
-function openTraining(){
-  trainStep=0;renderTraining();
-  document.getElementById('training-overlay').classList.add('show');
-}
+function openTraining(){trainStep=0;renderTraining();document.getElementById('training-overlay').classList.add('show')}
 function closeTraining(){document.getElementById('training-overlay').classList.remove('show')}
-function trainNav(dir){
-  trainStep+=dir;
-  if(trainStep<0)trainStep=0;
-  if(trainStep>=LESSONS.length){closeTraining();return}
-  renderTraining();
-}
+function trainNav(dir){trainStep+=dir;if(trainStep<0)trainStep=0;if(trainStep>=LESSONS.length){closeTraining();return}renderTraining()}
 function renderTraining(){
   let l=LESSONS[trainStep];
   document.getElementById('train-title').textContent=l.title;
@@ -624,6 +810,27 @@ function buildSectorBar(){
   });
 }
 
+// ============ INDICATORS ============
+function updateIndicators(){
+  let up=STOCKS.filter(s=>s.history.length>1&&s.price>s.history[s.history.length-2]).length;
+  let sentiment=up/STOCKS.length;
+  let sentimentLabel=sentiment>0.6?'Bullish':sentiment<0.4?'Bearish':'Neutral';
+  document.getElementById('sentiment-label').textContent=sentimentLabel;
+  let gauge=document.getElementById('sentiment-gauge');
+  gauge.className='indicator-gauge';
+  if(sentiment>0.6)gauge.classList.add('gauge-bullish');
+  if(sentiment<0.4)gauge.classList.add('gauge-bearish');
+  gauge.querySelector('.indicator-fill').style.width=(sentiment*100)+'%';
+
+  let indexValue=STOCKS.reduce((sum,s)=>sum+s.price/s.basePrice,0)/STOCKS.length*1000;
+  marketIndexValues.push(indexValue);
+  document.getElementById('market-index').textContent=indexValue.toFixed(2);
+
+  let avgVol=STOCKS.reduce((sum,s)=>sum+s.vol,0)/STOCKS.length;
+  let volLabel=avgVol<0.025?'Low':avgVol<0.05?'Normal':avgVol<0.08?'High':'Extreme';
+  document.getElementById('volatility-label').textContent=volLabel;
+}
+
 // ============ UI ============
 function updateUI(){
   let{holdVal,shortVal,marginUsed,nw}=getNetWorth();
@@ -638,7 +845,10 @@ function updateUI(){
   document.getElementById('day-num').textContent=totalDays===Infinity?day:day+' / '+totalDays;
   document.getElementById('trade-count').textContent=tradeCount;
 
-  // Stocks
+  let streakText='—';
+  if(winStreak>=5)streakText='+'+winStreak+' FIRE';else if(lossStreak>=5)streakText='-'+lossStreak+' SKULL';else if(winStreak>0)streakText='+'+winStreak;else if(lossStreak>0)streakText='-'+lossStreak;
+  document.getElementById('streak-display').textContent=streakText;
+
   let sl=document.getElementById('stocks-list');sl.innerHTML='';
   let filtered=STOCKS.filter(s=>sectorFilter==='all'||s.sector===sectorFilter);
   filtered.forEach(s=>{
@@ -646,16 +856,52 @@ function updateUI(){
     let cls=chg>0.01?'up':chg<-0.01?'down':'flat';let sign=chg>0?'+':'';
     let card=document.createElement('div');
     card.className='stock-card'+(selectedStock===s.ticker?' selected':'')+(shorts[s.ticker]?' short-held':'');
-    card.onclick=()=>selectStock(s.ticker);
+    card.onclick=()=>{selectStock(s.ticker);showStockDetail(s.ticker)};
     card.innerHTML=`<div class="stock-row"><div><span class="stock-name">${s.ticker}</span> <span class="stock-ticker">${s.name}</span></div><div class="stock-price">${fmt(s.price)}</div></div><div class="stock-row"><div><span class="stock-sector" style="background:${SECTOR_COLORS[s.sector]}22;color:${SECTOR_COLORS[s.sector]}">${SECTOR_NAMES[s.sector]}</span> <span class="stock-vol">Vol ${(s.vol*100).toFixed(1)}%</span></div><div class="stock-change ${cls}">${sign}${chg.toFixed(2)}%</div></div>`;
     sl.appendChild(card);
   });
 
-  // Portfolio
-  let pl=document.getElementById('portfolio-list');
+  renderHeatmap();
+  updateCost();
+  updateIndicators();
+}
+
+function renderHeatmap(){
+  let hm=document.getElementById('heatmap');
   let lk=Object.keys(portfolio),sk=Object.keys(shorts);
-  if(!lk.length&&!sk.length){pl.innerHTML='<div class="empty-portfolio">No holdings yet</div>';updateCost();return}
-  pl.innerHTML='';
+  let holdings=[];
+  lk.forEach(t=>{
+    let h=portfolio[t];let stk=STOCKS.find(s=>s.ticker===t);
+    let val=h.shares*stk.price,cost=h.shares*h.avgCost,p=val-cost,pp=((p/cost)*100);
+    holdings.push({ticker:t,val,p,pp,type:'long'});
+  });
+  sk.forEach(t=>{
+    let h=shorts[t];let stk=STOCKS.find(s=>s.ticker===t);
+    let p=(h.entryPrice-stk.price)*h.shares,pp=(p/(h.entryPrice*h.shares)*100);
+    holdings.push({ticker:t,val:Math.abs(p),p,pp,type:'short'});
+  });
+
+  hm.innerHTML='';
+  if(!holdings.length){
+    let div=document.createElement('div');div.style.width='100%';div.innerHTML='<div class="empty-portfolio">No holdings yet</div>';hm.appendChild(div);
+    document.getElementById('portfolio-list').innerHTML='<div class="empty-portfolio">No holdings yet</div>';
+    return;
+  }
+
+  let totalVal=holdings.reduce((sum,h)=>sum+h.val,0);
+  holdings.sort((a,b)=>b.val-a.val);
+  holdings.forEach(h=>{
+    let block=document.createElement('div');block.className='heatmap-block';
+    let intensity=Math.abs(h.pp)/100;
+    let color=h.p>0?`rgba(0,230,118,${0.2+intensity*0.6})`:h.p<0?`rgba(255,23,68,${0.2+intensity*0.6})`:`rgba(79,195,247,0.3)`;
+    block.style.background=color;
+    block.style.border='1px solid '+(h.p>0?'#00e676':h.p<0?'#ff1744':'#4fc3f7');
+    block.innerHTML=`<div class="heatmap-label">${h.ticker}</div><div class="heatmap-value">${fmt(h.val)}</div><div style="font-size:0.48rem;color:#999">${h.pp>0?'+':''}${h.pp.toFixed(1)}%</div>`;
+    block.style.flex=''+Math.max(0.15,(h.val/totalVal));
+    hm.appendChild(block);
+  });
+
+  let pl=document.getElementById('portfolio-list');pl.innerHTML='';
   lk.forEach(t=>{
     let h=portfolio[t];let stk=STOCKS.find(s=>s.ticker===t);
     let val=h.shares*stk.price,cost=h.shares*h.avgCost,p=val-cost,pp=(p/cost*100).toFixed(2);
@@ -670,7 +916,6 @@ function updateUI(){
     div.innerHTML=`<div class="holding-info"><div class="h-name">${t} <span class="h-type short-type">SHORT</span></div><div class="h-detail">${h.shares} @ ${fmt(h.entryPrice)}</div></div><div class="holding-value"><div class="h-val">${fmt(Math.abs(p))}</div><div class="h-pnl ${p>=0?'up':'down'}">${p>=0?'+':''}${fmt(p)} (${pp}%)</div></div>`;
     pl.appendChild(div);
   });
-  updateCost();
 }
 
 function selectStock(ticker){
@@ -681,6 +926,26 @@ function selectStock(ticker){
   document.getElementById('limit-price').value=stk.price.toFixed(2);
   drawChart(ticker);updateUI();
 }
+
+function showStockDetail(ticker){
+  let stk=STOCKS.find(s=>s.ticker===ticker);
+  document.getElementById('detail-ticker').textContent=stk.ticker;
+  document.getElementById('detail-company').textContent=stk.name;
+  document.getElementById('detail-price').textContent=fmt(stk.price);
+  document.getElementById('detail-high').textContent=fmt(Math.max(...stk.history));
+  document.getElementById('detail-low').textContent=fmt(Math.min(...stk.history));
+  document.getElementById('detail-vol').textContent=(stk.vol*100).toFixed(2)+'%';
+  document.getElementById('detail-vol-amt').textContent=Math.floor(Math.random()*5000000+1000000).toLocaleString();
+  document.getElementById('detail-pe').textContent=stk.pe.toFixed(1)+'x';
+  let ratingClass='rating-'+stk.rating.toLowerCase().replace(' ','-');
+  document.getElementById('detail-rating').innerHTML=`<span class="${ratingClass}">${stk.rating}</span>`;
+  let c=document.getElementById('detail-chart');let ctx=c.getContext('2d');
+  renderChartDirect(stk.history,'#4fc3f7',ctx);
+  document.getElementById('stock-detail-popup').classList.add('show');
+}
+
+function closeStockDetail(){document.getElementById('stock-detail-popup').classList.remove('show')}
+
 function updateCost(){
   if(!selectedStock)return;
   let sh=parseInt(document.getElementById('trade-shares').value)||0;
@@ -703,9 +968,13 @@ function executeTrade(type){
     if(!portfolio[selectedStock])portfolio[selectedStock]={shares:0,avgCost:0};
     let h=portfolio[selectedStock],tc=h.shares*h.avgCost+cost;
     h.shares+=shares;h.avgCost=tc/h.shares;
+    tradeHistory.push({day,type:'BUY',ticker:selectedStock,shares,price:stk.price,pnl:0,bot:false});
   }else if(type==='sell'){
     if(!portfolio[selectedStock]||portfolio[selectedStock].shares<shares){alert("Not enough shares!");return}
+    let pnl=shares*(stk.price-portfolio[selectedStock].avgCost);
     cash+=shares*stk.price;
+    tradeHistory.push({day,type:'SELL',ticker:selectedStock,shares,price:stk.price,pnl,bot:false});
+    if(pnl>0){playSound('profit');winStreak++;lossStreak=0}else{playSound('loss');lossStreak++;winStreak=0}
     portfolio[selectedStock].shares-=shares;
     if(portfolio[selectedStock].shares===0)delete portfolio[selectedStock];
   }else if(type==='short'){
@@ -715,10 +984,13 @@ function executeTrade(type){
     if(!shorts[selectedStock])shorts[selectedStock]={shares:0,entryPrice:0};
     let h=shorts[selectedStock],te=h.shares*h.entryPrice+shares*stk.price;
     h.shares+=shares;h.entryPrice=te/h.shares;
+    tradeHistory.push({day,type:'SHORT',ticker:selectedStock,shares,price:stk.price,pnl:0,bot:false});
   }else if(type==='cover'){
     if(!shorts[selectedStock]||shorts[selectedStock].shares<shares){alert("No short to cover!");return}
     let h=shorts[selectedStock],profit=(h.entryPrice-stk.price)*shares;
     cash+=shares*h.entryPrice*0.5+profit;
+    tradeHistory.push({day,type:'COVER',ticker:selectedStock,shares,price:stk.price,pnl:profit,bot:false});
+    if(profit>0){playSound('profit');winStreak++;lossStreak=0}else{playSound('loss');lossStreak++;winStreak=0}
     if(profit>0)checkAchievement('short_profit');
     h.shares-=shares;if(h.shares===0)delete shorts[selectedStock];
   }
@@ -728,6 +1000,7 @@ function executeTrade(type){
   if(tradeCount>=50)checkAchievement('fifty_trades');
   if(Object.keys(portfolio).length>=5)checkAchievement('own_5');
   if(Object.keys(portfolio).length>=STOCKS.length)checkAchievement('own_all');
+  renderHistory();
   updateUI();
 }
 
@@ -748,9 +1021,9 @@ function processLimits(){
     let stk=STOCKS.find(s=>s.ticker===o.ticker);
     if(o.type==='buy'&&stk.price<=o.price){
       let cost=o.shares*stk.price;
-      if(cost<=cash){cash-=cost;if(!portfolio[o.ticker])portfolio[o.ticker]={shares:0,avgCost:0};let h=portfolio[o.ticker],tc=h.shares*h.avgCost+cost;h.shares+=o.shares;h.avgCost=tc/h.shares;tradeCount++;checkAchievement('limit_fill');return false}
+      if(cost<=cash){cash-=cost;if(!portfolio[o.ticker])portfolio[o.ticker]={shares:0,avgCost:0};let h=portfolio[o.ticker],tc=h.shares*h.avgCost+cost;h.shares+=o.shares;h.avgCost=tc/h.shares;tradeCount++;checkAchievement('limit_fill');tradeHistory.push({day,type:'BUY',ticker:o.ticker,shares:o.shares,price:stk.price,pnl:0,bot:false});renderHistory();return false}
     }else if(o.type==='sell'&&stk.price>=o.price){
-      if(portfolio[o.ticker]&&portfolio[o.ticker].shares>=o.shares){cash+=o.shares*stk.price;portfolio[o.ticker].shares-=o.shares;if(portfolio[o.ticker].shares===0)delete portfolio[o.ticker];tradeCount++;checkAchievement('limit_fill');return false}
+      if(portfolio[o.ticker]&&portfolio[o.ticker].shares>=o.shares){let pnl=o.shares*(stk.price-portfolio[o.ticker].avgCost);cash+=o.shares*stk.price;portfolio[o.ticker].shares-=o.shares;if(portfolio[o.ticker].shares===0)delete portfolio[o.ticker];tradeCount++;checkAchievement('limit_fill');tradeHistory.push({day,type:'SELL',ticker:o.ticker,shares:o.shares,price:stk.price,pnl,bot:false});renderHistory();return false}
     }
     return true;
   });
@@ -763,7 +1036,7 @@ function updateLimitUI(){
   limitOrders.forEach((o,i)=>{
     let stk=STOCKS.find(s=>s.ticker===o.ticker);
     let div=document.createElement('div');div.className='limit-order';
-    div.innerHTML=`<div class="lo-info"><span class="lo-type ${o.type}-limit">${o.type.toUpperCase()}</span> <strong>${o.ticker}</strong> ${o.shares}sh @ ${fmt(o.price)} (now ${fmt(stk.price)})</div><button class="btn btn-sm reset" onclick="cancelLimit(${i})">✕</button>`;
+    div.innerHTML=`<div class="lo-info"><span class="lo-type ${o.type}-limit">${o.type.toUpperCase()}</span> <strong>${o.ticker}</strong> ${o.shares}sh @ ${fmt(o.price)} (now ${fmt(stk.price)})</div><button class="btn btn-sm reset" onclick="cancelLimit(${i})">X</button>`;
     el.appendChild(div);
   });
 }
@@ -815,19 +1088,42 @@ function renderLeaderboard(){
 function simulateDay(){
   let diff=DIFFICULTIES[difficulty]||DIFFICULTIES.normal;
   let evt=null,wasCrash=false;
-  if(Math.random()<diff.eventRate&&day>1){evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];if(evt.effect.mult<0.9)wasCrash=true}
+
+  // Earnings
+  if(day===nextEarningsDay||day%20===0){
+    for(let i=0;i<3;i++){
+      let s=STOCKS[Math.floor(Math.random()*STOCKS.length)];
+      let beat=Math.random()>0.4;
+      let mult=beat?1+Math.random()*0.15:1-Math.random()*0.15;
+      s.price=Math.max(0.01,s.price*mult);
+      s.history.push(s.price);
+      showEarnings(s.ticker,beat);
+    }
+    nextEarningsDay+=20;
+  }
+
+  if(Math.random()<diff.eventRate&&day>1){
+    evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+    if(evt.effect.mult<0.9)wasCrash=true;
+    playSound('alert');
+  }
+
   STOCKS.forEach(s=>{
     let shock=0;
     if(evt&&(evt.effect.ticker==='ALL'||evt.effect.ticker===s.ticker))shock=evt.effect.mult-1;
     let v=s.vol*diff.volMult,r=s.drift+v*(Math.random()*2-1)+shock;
     s.price=Math.max(0.01,s.price*(1+r));s.price=Math.round(s.price*100)/100;s.history.push(s.price);
+    s.high=Math.max(s.high,s.price);
+    s.low=Math.min(s.low,s.price);
   });
-  let mkt=STOCKS.reduce((sum,s)=>sum+s.price/s.history[0],0)/STOCKS.length*startCash;
+
+  let mkt=STOCKS.reduce((sum,s)=>sum+s.price/s.basePrice,0)/STOCKS.length*startCash;
   marketHistory.push(mkt);
   processLimits();
+  runBot();
   let prevNW=netWorthHistory[netWorthHistory.length-1];
   let{nw}=getNetWorth();netWorthHistory.push(nw);
-  // Achievements
+
   let pnl=nw-startCash;
   if(pnl>=1000)checkAchievement('profit_1k');
   if(pnl>=5000)checkAchievement('profit_5k');
@@ -842,23 +1138,45 @@ function simulateDay(){
   return evt;
 }
 
+function showEarnings(ticker,beat){
+  document.getElementById('earnings-ticker').textContent=ticker;
+  document.getElementById('earnings-result').textContent=beat?'BEAT':'MISS';
+  document.getElementById('earnings-result').className='earnings-'+(beat?'beat':'miss');
+  document.getElementById('earnings-detail').textContent=beat?'Earnings exceeded expectations!':'Earnings missed estimates.';
+  document.getElementById('earnings-popup').classList.add('show');
+  setTimeout(()=>document.getElementById('earnings-popup').classList.remove('show'),2000);
+}
+
+function dismissEarnings(){document.getElementById('earnings-popup').classList.remove('show')}
+
+function flashMarketStatus(){
+  let dot=document.getElementById('market-dot');
+  let text=document.getElementById('market-text');
+  dot.classList.add('closed');text.textContent='CLOSED';
+  setTimeout(()=>{dot.classList.remove('closed');text.textContent='OPEN'},800);
+}
+
 function advanceDay(){
   if(gameMode==='challenge'&&day>=totalDays){endGame();return}
   day++;let evt=simulateDay();
+  flashMarketStatus();
   if(selectedStock)drawChart(selectedStock);else drawMarketChart();
   updateUI();if(evt)showEvent(evt);
   if(gameMode==='challenge'&&day>=totalDays)setTimeout(endGame,500);
 }
+
 function advanceDays(n){
   for(let i=0;i<n;i++){
     if(gameMode==='challenge'&&day>=totalDays)break;
     day++;simulateDay();
   }
+  flashMarketStatus();
   if(selectedStock)drawChart(selectedStock);else drawMarketChart();
   updateUI();
   if(gameMode==='challenge'&&day>=totalDays)setTimeout(endGame,500);
 }
-function showEvent(evt){document.getElementById('event-title').textContent=evt.title;document.getElementById('event-text').textContent=evt.text;document.getElementById('event-overlay').classList.add('show')}
+
+function showEvent(evt){playSound('alert');document.getElementById('event-title').textContent=evt.title;document.getElementById('event-text').textContent=evt.text;document.getElementById('event-overlay').classList.add('show')}
 function dismissEvent(){document.getElementById('event-overlay').classList.remove('show')}
 
 // ============ END GAME ============
@@ -908,6 +1226,19 @@ function renderChart(data,color){
   ctx.stroke();ctx.lineTo(p+(data.length-1)/(data.length-1)*(w-p*2),h-p);ctx.lineTo(p,h-p);ctx.closePath();
   let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,color+'40');g.addColorStop(1,color+'05');ctx.fillStyle=g;ctx.fill();
 }
+
+function renderChartDirect(data,color,ctx){
+  let c=ctx.canvas;c.width=c.offsetWidth*2;c.height=150;ctx.clearRect(0,0,c.width,c.height);
+  if(data.length<2)return;
+  let min=Math.min(...data)*0.98,max=Math.max(...data)*1.02,w=c.width,h=c.height,p=20;
+  ctx.strokeStyle='#1a1f2e';ctx.lineWidth=1;
+  for(let i=0;i<3;i++){let y=p+(h-p*2)/2*i;ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke()}
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;
+  data.forEach((v,i)=>{let x=p+i/(data.length-1)*(w-p*2);let y=p+(1-(v-min)/(max-min))*(h-p*2);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+  ctx.stroke();ctx.lineTo(p+(data.length-1)/(data.length-1)*(w-p*2),h-p);ctx.lineTo(p,h-p);ctx.closePath();
+  let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,color+'40');g.addColorStop(1,color+'05');ctx.fillStyle=g;ctx.fill();
+}
+
 function renderDualChart(d1,d2){
   let c=document.getElementById('chart'),ctx=c.getContext('2d');c.width=c.offsetWidth*2;c.height=400;ctx.clearRect(0,0,c.width,c.height);
   let all=d1.concat(d2),min=Math.min(...all)*0.98,max=Math.max(...all)*1.02,w=c.width,h=c.height,p=40,len=Math.max(d1.length,d2.length);
@@ -923,7 +1254,6 @@ function renderDualChart(d1,d2){
   ctx.fillStyle='#666';ctx.fillText('--- Market',w-200,55);
 }
 
-// Init
 renderLeaderboard();renderAchievements();
 document.getElementById('ach-count').textContent='('+unlockedAchievements.length+'/'+ACHIEVEMENTS.length+')';
 </script>
