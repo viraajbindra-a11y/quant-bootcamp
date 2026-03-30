@@ -73,7 +73,7 @@ print(f"\n{'Day':<6} {'Price':<10} {'5-Day MA':<12} {'Signal':<10}")
 print("-" * 38)
 
 for i in range(len(moving_averages)):
-    day = i + window  # moving averages start at day 5
+    day = i + window - 1  # moving averages start at day 5 (index 4)
     price = prices[day]
     ma = moving_averages[i]
 

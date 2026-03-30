@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID SCHOOL - Ultimate Learning Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-dark: #0a0e17; --bg-panel: #111827; --border-color: #1f2937;
+            --neon-pink: #ff0055; --neon-blue: #4fc3f7; --neon-green: #00e676;
+            --neon-yellow: #ffab00; --neon-purple: #7c4dff; --neon-red: #ff1744;
+            --text-primary: #e5e7eb; --text-secondary: #9ca3af;
+            --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        }
+        body { background: var(--bg-dark); color: var(--text-primary); font-family: var(--font-mono); font-size: 14px; line-height: 1.6; overflow-x: hidden; }
+        body.dark-theme { --bg-dark: #0a0e17; --bg-panel: #111827; }
+        body.midnight-theme { --bg-dark: #0a0a1a; --bg-panel: #0f0f2e; --border-color: #1a1a4d; }
+        body.neon-theme { --bg-dark: #000000; --bg-panel: #0d0d2d; --border-color: #1a1a5f; --neon-pink: #ff00ff; --neon-blue: #00ffff; --neon-green: #00ff00; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px); z-index: 9999; }
+        header { background: linear-gradient(135deg, var(--bg-panel), #0f1420); border-bottom: 2px solid var(--neon-purple); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 20px rgba(124,77,255,0.3); position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 1rem; cursor: pointer; transition: all 0.3s ease; }
+        .logo:hover { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-purple); }
+        .logo-text { font-size: 1.8rem; font-weight: bold; background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; }
+        .header-stats { display: flex; gap: 2rem; align-items: center; }
+        .stat-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        .stat-value { color: var(--neon-green); font-weight: bold; font-size: 1.1rem; }
+        .xp-bar { display: flex; align-items: center; gap: 0.5rem; width: 200px; }
+        .xp-progress { flex: 1; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; border: 1px solid var(--neon-yellow); }
+        .xp-fill { height: 100%; background: linear-gradient(90deg, var(--neon-yellow), var(--neon-pink)); transition: width 0.3s ease; }
+        .header-controls { display: flex; gap: 1rem; align-items: center; }
+        .header-btn { padding: 0.5rem 1rem; background: var(--border-color); border: 2px solid var(--neon-blue); color: var(--text-primary); cursor: pointer; border-radius: 4px; transition: all 0.3s ease; font-family: var(--font-mono); font-size: 0.85rem; }
+        .header-btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 15px rgba(79,195,247,0.5); }
+        .nav-tabs { display: flex; gap: 1rem; padding: 1.5rem 2rem; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); overflow-x: auto; }
+        .nav-tab { padding: 0.75rem 1.5rem; background: transparent; border: 2px solid var(--border-color); color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.3s ease; font-family: var(--font-mono); white-space: nowrap; }
+        .nav-tab.active { border-color: var(--neon-purple); color: var(--text-primary); background: linear-gradient(135deg, rgba(124,77,255,0.2), rgba(124,77,255,0.1)); box-shadow: 0 0 15px rgba(124,77,255,0.3); }
+        .nav-tab:hover { border-color: var(--neon-blue); color: var(--text-primary); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .dashboard-card { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; transition: all 0.3s ease; }
+        .dashboard-card:hover { border-color: var(--neon-purple); box-shadow: 0 0 20px rgba(124,77,255,0.3); }
+        .card-title { color: var(--neon-pink); font-size: 1.1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; }
+        .card-content { color: var(--text-secondary); font-size: 0.9rem; }
+        .card-value { color: var(--neon-green); font-size: 1.8rem; font-weight: bold; margin: 1rem 0; }
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .subject-card { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .subject-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(79,195,247,0.2), transparent); transition: left 0.5s ease; }
+        .subject-card:hover::before { left: 100%; }
+        .subject-card:hover { border-color: var(--neon-blue); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(79,195,247,0.2); }
+        .subject-title { font-size: 1.3rem; margin-bottom: 1rem; color: var(--neon-pink); z-index: 2; position: relative; }
+        .subject-progress { position: relative; width: 80px; height: 80px; margin: 0 auto 1rem; }
+        .progress-ring { transform: rotate(-90deg); transform-origin: 50% 50%; }
+        .progress-ring-circle { transition: stroke-dashoffset 0.5s ease; stroke: var(--border-color); }
+        .progress-ring-fill { stroke: url(#gradient); fill: none; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; font-size: 0.9rem; }
+        .progress-percent { display: block; font-size: 1.3rem; font-weight: bold; color: var(--neon-green); }
+        .progress-label { display: block; font-size: 0.7rem; color: var(--text-secondary); }
+        .subject-stats { font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; z-index: 2; position: relative; }
+        .lessons-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .lesson-card { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .lesson-card:hover { border-color: var(--neon-purple); box-shadow: 0 0 20px rgba(124,77,255,0.3); transform: translateY(-3px); }
+        .lesson-status { position: absolute; top: 1rem; right: 1rem; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; }
+        .lesson-status.completed { background: var(--neon-green); color: var(--bg-dark); }
+        .lesson-status.in-progress { background: var(--neon-blue); color: var(--bg-dark); }
+        .lesson-status.locked { background: var(--border-color); color: var(--text-secondary); }
+        .lesson-title { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--neon-blue); }
+        .lesson-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+        .lesson-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-secondary); }
+        .lesson-xp { background: linear-gradient(135deg, var(--neon-yellow), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: bold; }
+        .lesson-viewer { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 2rem; border-radius: 8px; max-width: 1000px; margin: 0 auto; }
+        .lesson-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border-color); }
+        .lesson-viewer h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--neon-blue); }
+        .lesson-viewer h2 { font-size: 1.5rem; color: var(--neon-pink); margin-top: 1.5rem; margin-bottom: 1rem; }
+        .lesson-viewer h3 { color: var(--neon-green); margin: 1rem 0 0.5rem 0; }
+        .lesson-content { margin-bottom: 2rem; line-height: 1.8; }
+        .content-section { margin-bottom: 1.5rem; }
+        .example-box { background: rgba(79,195,247,0.1); border-left: 3px solid var(--neon-blue); padding: 1rem; margin: 1rem 0; border-radius: 4px; }
+        .example-label { color: var(--neon-blue); font-weight: bold; margin-bottom: 0.5rem; }
+        .try-it-section { background: rgba(0,230,118,0.1); border: 2px solid var(--neon-green); padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
+        .exercise { margin-bottom: 1rem; }
+        .exercise-question { margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 500; }
+        .exercise-input { width: 100%; max-width: 400px; padding: 0.75rem; background: var(--border-color); border: 2px solid var(--neon-blue); color: var(--text-primary); border-radius: 4px; font-family: var(--font-mono); margin: 0.5rem 0; }
+        .exercise-input:focus { outline: none; border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
+        .exercise-button { padding: 0.75rem 1.5rem; background: var(--neon-green); border: none; color: var(--bg-dark); cursor: pointer; border-radius: 4px; font-weight: bold; margin-right: 1rem; transition: all 0.3s ease; }
+        .exercise-button:hover { background: #00cc60; box-shadow: 0 0 15px rgba(0,230,118,0.5); }
+        .exercise-feedback { margin-top: 0.5rem; font-weight: bold; font-size: 0.9rem; }
+        .feedback-correct { color: var(--neon-green); }
+        .feedback-incorrect { color: var(--neon-pink); }
+        .quiz-section { background: rgba(124,77,255,0.1); border: 2px solid var(--neon-purple); padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
+        .quiz-question { margin-bottom: 1.5rem; }
+        .question-text { color: var(--text-primary); font-weight: 500; margin-bottom: 1rem; }
+        .quiz-options { display: grid; gap: 0.75rem; }
+        .quiz-option { padding: 1rem; background: var(--border-color); border: 2px solid transparent; color: var(--text-primary); cursor: pointer; border-radius: 4px; transition: all 0.3s ease; text-align: left; }
+        .quiz-option:hover { border-color: var(--neon-blue); background: rgba(79,195,247,0.1); }
+        .quiz-option.selected { border-color: var(--neon-purple); background: rgba(124,77,255,0.2); }
+        .quiz-option.correct { border-color: var(--neon-green); background: rgba(0,230,118,0.2); color: var(--neon-green); }
+        .quiz-option.incorrect { border-color: var(--neon-pink); background: rgba(255,0,85,0.2); color: var(--neon-pink); }
+        .quiz-button { padding: 1rem 2rem; background: var(--neon-purple); border: none; color: white; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 1rem; transition: all 0.3s ease; margin-top: 1rem; width: 100%; max-width: 300px; }
+        .quiz-button:hover:not(:disabled) { background: #9963ff; box-shadow: 0 0 20px rgba(124,77,255,0.5); }
+        .quiz-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .quiz-result { margin-top: 1rem; padding: 1rem; border-radius: 4px; font-weight: bold; text-align: center; }
+        .quiz-result.passed { background: rgba(0,230,118,0.2); color: var(--neon-green); border: 2px solid var(--neon-green); }
+        .quiz-result.failed { background: rgba(255,0,85,0.2); color: var(--neon-pink); border: 2px solid var(--neon-pink); }
+        .code-editor-container { background: var(--bg-panel); border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 2rem 0; }
+        .editor-header { background: var(--border-color); padding: 1rem; border-bottom: 2px solid var(--neon-blue); display: flex; justify-content: space-between; align-items: center; }
+        .editor-title { color: var(--neon-blue); font-weight: bold; }
+        .editor-controls { display: flex; gap: 0.5rem; }
+        .code-editor { display: grid; grid-template-columns: 1fr 1fr; min-height: 400px; }
+        .code-input { padding: 1rem; background: var(--bg-dark); border-right: 2px solid var(--border-color); border: none; color: var(--neon-green); font-family: var(--font-mono); font-size: 0.9rem; resize: none; overflow-y: auto; }
+        .code-input:focus { outline: none; background: linear-gradient(135deg, rgba(0,230,118,0.05), rgba(0,0,0,0)); }
+        .code-output { padding: 1rem; background: var(--bg-dark); color: var(--neon-green); font-family: var(--font-mono); font-size: 0.9rem; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; }
+        .run-button { padding: 0.5rem 1rem; background: var(--neon-green); border: none; color: var(--bg-dark); cursor: pointer; font-weight: bold; border-radius: 4px; transition: all 0.3s ease; }
+        .run-button:hover { background: #00cc60; box-shadow: 0 0 15px rgba(0,230,118,0.5); }
+        .graph-container { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; margin: 2rem 0; }
+        .graph-controls { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+        .graph-input { flex: 1; min-width: 200px; padding: 0.75rem; background: var(--border-color); border: 2px solid var(--neon-blue); color: var(--text-primary); border-radius: 4px; font-family: var(--font-mono); }
+        .graph-input:focus { outline: none; border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
+        .graph-button { padding: 0.75rem 1.5rem; background: var(--neon-blue); border: none; color: var(--bg-dark); cursor: pointer; border-radius: 4px; font-weight: bold; transition: all 0.3s ease; }
+        .graph-button:hover { background: #00ffff; box-shadow: 0 0 15px rgba(79,195,247,0.5); }
+        canvas.graph-canvas { width: 100%; max-width: 600px; height: 400px; background: var(--bg-dark); border: 2px solid var(--border-color); border-radius: 4px; }
+        .visualization-container { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; margin: 2rem 0; text-align: center; }
+        .animation-canvas { width: 100%; max-width: 800px; height: 300px; margin: 1rem auto; background: var(--bg-dark); border: 2px solid var(--neon-green); border-radius: 4px; }
+        .battle-arena { background: var(--bg-panel); border: 2px solid var(--neon-pink); padding: 2rem; border-radius: 8px; margin: 2rem 0; }
+        .battle-scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; text-align: center; }
+        .player-card { background: var(--border-color); padding: 1.5rem; border-radius: 8px; border: 2px solid var(--neon-blue); }
+        .player-card.opponent { border-color: var(--neon-pink); }
+        .player-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: var(--neon-green); }
+        .player-score { font-size: 2.5rem; font-weight: bold; color: var(--neon-yellow); margin-bottom: 0.5rem; }
+        .battle-timer { font-size: 3rem; font-weight: bold; text-align: center; color: var(--neon-pink); margin: 1.5rem 0; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+        .achievement-badge { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1rem; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; opacity: 0.5; }
+        .achievement-badge.unlocked { opacity: 1; border-color: var(--neon-yellow); box-shadow: 0 0 20px rgba(255,171,0,0.3); }
+        .achievement-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .achievement-name { color: var(--neon-green); font-size: 0.85rem; font-weight: bold; margin-bottom: 0.25rem; }
+        .achievement-tier { color: var(--text-secondary); font-size: 0.7rem; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .chart-container { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; }
+        .chart-title { color: var(--neon-blue); font-weight: bold; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; }
+        .heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; max-width: 500px; }
+        .heatmap-cell { width: 30px; height: 30px; background: var(--border-color); border-radius: 4px; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--border-color); }
+        .heatmap-cell:hover { transform: scale(1.2); }
+        .heatmap-cell.active-0 { background: rgba(0,230,118,0.2); }
+        .heatmap-cell.active-1 { background: rgba(0,230,118,0.4); }
+        .heatmap-cell.active-2 { background: rgba(0,230,118,0.6); }
+        .heatmap-cell.active-3 { background: var(--neon-green); }
+        .settings-panel { max-width: 600px; }
+        .setting-group { background: var(--bg-panel); border: 2px solid var(--border-color); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; }
+        .setting-label { color: var(--neon-blue); font-weight: bold; margin-bottom: 1rem; display: block; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; }
+        .setting-options { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .setting-btn { flex: 1; min-width: 120px; padding: 1rem; background: var(--border-color); border: 2px solid var(--neon-blue); color: var(--text-primary); cursor: pointer; border-radius: 4px; transition: all 0.3s ease; font-family: var(--font-mono); }
+        .setting-btn.active { background: linear-gradient(135deg, var(--neon-purple), rgba(124,77,255,0.5)); border-color: var(--neon-purple); box-shadow: 0 0 15px rgba(124,77,255,0.5); }
+        .setting-btn:hover { border-color: var(--neon-green); transform: translateY(-2px); }
+        .leaderboard-table { width: 100%; border-collapse: collapse; }
+        .leaderboard-row { background: var(--bg-panel); border: 1px solid var(--border-color); transition: all 0.3s ease; }
+        .leaderboard-row:hover { background: rgba(79,195,247,0.1); border-color: var(--neon-blue); }
+        .leaderboard-cell { padding: 1rem; text-align: left; color: var(--text-primary); }
+        .rank-badge { display: inline-block; width: 30px; height: 30px; background: var(--border-color); border-radius: 50%; text-align: center; line-height: 30px; font-weight: bold; color: var(--neon-yellow); margin-right: 1rem; }
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #000; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #d4af37); color: #000; }
+        .notification { position: fixed; bottom: 2rem; right: 2rem; background: var(--bg-panel); border: 2px solid var(--neon-green); padding: 1rem 1.5rem; border-radius: 8px; color: var(--neon-green); animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards; z-index: 1000; box-shadow: 0 0 20px rgba(0,230,118,0.3); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { to { transform: translateX(400px); opacity: 0; } }
+        @media (max-width: 768px) { .nav-tabs { overflow-x: auto; } .header-stats { gap: 1rem; } .dashboard-grid,.subject-grid,.analytics-grid { grid-template-columns: 1fr; } .code-editor { grid-template-columns: 1fr; } .code-input { border-right: none; border-bottom: 2px solid var(--border-color); } .battle-scoreboard { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="logo" onclick="showSection('dashboard')"><div class="logo-text">⚡ VOID</div></div>
+        <div class="header-stats">
+            <div class="stat-item"><span>LEVEL</span><span class="stat-value" id="headerLevel">1</span></div>
+            <div class="xp-bar"><span style="font-size: 0.8rem;">XP</span><div class="xp-progress"><div class="xp-fill" id="headerXP" style="width: 0%"></div></div><span id="headerXPText" style="font-size: 0.75rem;">0/100</span></div>
+            <div class="stat-item"><span>STREAK</span><span class="stat-value" id="headerStreak">0</span></div>
+            <div class="header-controls">
+                <button class="header-btn" onclick="showSection('settings')">⚙ SETTINGS</button>
+                <button class="header-btn" onclick="showSection('profile')">👤 PROFILE</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showSection('dashboard')">🏠 DASHBOARD</button>
+        <button class="nav-tab" onclick="showSection('learn')">📚 LEARN</button>
+        <button class="nav-tab" onclick="showSection('code')">💻 CODE</button>
+        <button class="nav-tab" onclick="showSection('graph')">📊 GRAPHS</button>
+        <button class="nav-tab" onclick="showSection('visualize')">🎨 VIZ</button>
+        <button class="nav-tab" onclick="showSection('battle')">⚔ BATTLE</button>
+        <button class="nav-tab" onclick="showSection('achievements')">🏆 ACHIEVEMENTS</button>
+        <button class="nav-tab" onclick="showSection('analytics')">📈 ANALYTICS</button>
+        <button class="nav-tab" onclick="showSection('leaderboard')">🥇 RANKS</button>
+    </div>
+
+    <div class="container">
+        <div id="dashboard" class="section active">
+            <div class="dashboard-grid">
+                <div class="dashboard-card"><div class="card-title">📚 Total Progress</div><div class="card-value" id="totalProgress">0%</div><div class="card-content">Lessons completed across all subjects</div></div>
+                <div class="dashboard-card"><div class="card-title">⏱ Study Time</div><div class="card-value" id="studyTime">0h</div><div class="card-content">Total time spent learning</div></div>
+                <div class="dashboard-card"><div class="card-title">🔥 Daily Streak</div><div class="card-value" id="dailyStreak">0</div><div class="card-content">Days in a row studying</div></div>
+                <div class="dashboard-card"><div class="card-title">⭐ Accuracy</div><div class="card-value" id="accuracy">0%</div><div class="card-content">Average quiz performance</div></div>
+                <div class="dashboard-card"><div class="card-title">🎯 Weekly Goal</div><div class="card-value" id="weeklyGoal">0/30m</div><div class="card-content">Study goal for this week</div></div>
+                <div class="dashboard-card"><div class="card-title">🏅 Next Achievement</div><div class="card-content" id="nextAchievement">Complete 10 lessons</div></div>
+            </div>
+            <h2 style="color: var(--neon-pink); margin: 2rem 0 1rem; font-size: 1.3rem;">SUBJECTS</h2>
+            <div class="subject-grid" id="subjectGrid"></div>
+        </div>
+
+        <div id="learn" class="section">
+            <div style="margin-bottom: 2rem;">
+                <h2 style="color: var(--neon-pink); margin-bottom: 1rem; font-size: 1.3rem;">SELECT A SUBJECT</h2>
+                <div class="subject-grid" id="learnSubjectGrid"></div>
+            </div>
+            <div id="lessonsContainer" style="display: none;">
+                <button class="header-btn" onclick="backToSubjects()">← BACK</button>
+                <h2 style="color: var(--neon-pink); margin: 2rem 0 1rem; font-size: 1.3rem;" id="lessonSubjectName"></h2>
+                <div class="lessons-list" id="lessonsList"></div>
+            </div>
+            <div id="lessonViewerContainer" style="display: none;">
+                <button class="header-btn" onclick="closeLessonViewer()">← BACK</button>
+                <div class="lesson-viewer" id="lessonViewerContent"></div>
+            </div>
+        </div>
+
+        <div id="code" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">🐍 PYTHON PLAYGROUND</h2>
+            <div class="dashboard-card" style="margin-bottom: 2rem;">
+                <div class="card-title">CHALLENGES</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <button class="setting-btn" onclick="loadChallenge(1)">Challenge 1: Print Name</button>
+                    <button class="setting-btn" onclick="loadChallenge(2)">Challenge 2: Add Numbers</button>
+                    <button class="setting-btn" onclick="loadChallenge(3)">Challenge 3: Compound Interest</button>
+                    <button class="setting-btn" onclick="loadChallenge(4)">Challenge 4: Loop Sum</button>
+                </div>
+            </div>
+            <div class="code-editor-container">
+                <div class="editor-header"><span class="editor-title">CODE EDITOR</span><div class="editor-controls"><button class="run-button" onclick="runPythonCode()">▶ RUN</button><button class="run-button" onclick="clearCode()" style="background: var(--neon-pink);">CLEAR</button></div></div>
+                <div class="code-editor">
+                    <textarea class="code-input" id="codeInput" placeholder="# Write Python code here...&#10;print('Hello, World!')"></textarea>
+                    <div class="code-output" id="codeOutput">Output will appear here...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="graph" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">📈 FUNCTION GRAPHER</h2>
+            <div class="graph-container">
+                <div class="graph-controls"><input type="text" class="graph-input" id="graphInput" placeholder="Enter equation: y = 2x + 3" value="y = 2x + 3"><button class="graph-button" onclick="drawGraph()">PLOT</button></div>
+                <canvas id="graphCanvas" class="graph-canvas"></canvas>
+                <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">Examples: y = x^2, y = sin(x), y = abs(x), y = sqrt(x)</div>
+            </div>
+        </div>
+
+        <div id="visualize" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">🎨 ANIMATED VISUALIZATIONS</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="visualization-container">
+                    <div class="card-title">💰 Compound Interest Growth</div>
+                    <div>Initial: $<input type="number" id="initialAmount" value="1000" style="width: 80px; padding: 0.5rem;"> Rate: <input type="number" id="interestRate" value="10" style="width: 50px; padding: 0.5rem;">% Years: <input type="number" id="years" value="20" style="width: 50px; padding: 0.5rem;"></div>
+                    <button class="exercise-button" onclick="animateCompoundInterest()">ANIMATE</button>
+                    <canvas id="compoundCanvas" class="animation-canvas"></canvas>
+                    <div id="compoundInfo" style="color: var(--neon-green); margin-top: 1rem;"></div>
+                </div>
+                <div class="visualization-container">
+                    <div class="card-title">🔄 Bubble Sort Visualizer</div>
+                    <button class="exercise-button" onclick="animateBubbleSort()">SORT</button>
+                    <canvas id="sortCanvas" class="animation-canvas"></canvas>
+                </div>
+                <div class="visualization-container">
+                    <div class="card-title">📊 Normal Distribution</div>
+                    <button class="exercise-button" onclick="drawBellCurve()">DRAW</button>
+                    <canvas id="bellCurveCanvas" class="animation-canvas"></canvas>
+                </div>
+                <div class="visualization-container">
+                    <div class="card-title">💹 Supply & Demand</div>
+                    <button class="exercise-button" onclick="drawSupplyDemand()">SHOW</button>
+                    <canvas id="supplyDemandCanvas" class="animation-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="battle" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">⚔ QUIZ BATTLE ARENA</h2>
+            <div class="battle-arena">
+                <div class="battle-scoreboard">
+                    <div class="player-card"><div class="player-name">👤 YOU</div><div class="player-score" id="playerScore">0</div><div style="font-size: 0.85rem; color: var(--text-secondary);">Correct Answers</div></div>
+                    <div class="player-card opponent"><div class="player-name">🤖 AI OPPONENT</div><div class="player-score" id="opponentScore">0</div><div style="font-size: 0.85rem; color: var(--text-secondary);">Correct Answers</div></div>
+                </div>
+                <div class="battle-timer" id="battleTimer">10</div>
+                <div id="battleQuestion" style="background: var(--border-color); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                    <div style="color: var(--neon-blue); font-weight: bold; margin-bottom: 1rem;">Question 1/5</div>
+                    <div class="question-text" id="battleQuestionText">What is 2 + 2?</div>
+                    <div class="quiz-options" id="battleOptions"></div>
+                </div>
+                <button class="quiz-button" onclick="startQuizBattle()" style="width: 100%; max-width: none;">START BATTLE</button>
+                <div id="battleResult"></div>
+            </div>
+        </div>
+
+        <div id="achievements" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">🏆 ACHIEVEMENTS</h2>
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">BRONZE TIER</h3>
+                <div class="achievements-grid" id="bronzeAchievements"></div>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: #c0c0c0; margin-bottom: 1rem;">SILVER TIER</h3>
+                <div class="achievements-grid" id="silverAchievements"></div>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: #cd7f32; margin-bottom: 1rem;">GOLD TIER</h3>
+                <div class="achievements-grid" id="goldAchievements"></div>
+            </div>
+            <div>
+                <h3 style="color: #ffd700; margin-bottom: 1rem;">PLATINUM TIER</h3>
+                <div class="achievements-grid" id="platinumAchievements"></div>
+            </div>
+        </div>
+
+        <div id="analytics" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">📊 PROGRESS ANALYTICS</h2>
+            <div class="analytics-grid">
+                <div class="chart-container"><div class="chart-title">Time per Subject</div><canvas id="timeChart"></canvas></div>
+                <div class="chart-container"><div class="chart-title">Accuracy Over Time</div><canvas id="accuracyChart"></canvas></div>
+                <div class="chart-container"><div class="chart-title">Study Calendar</div><div style="padding: 1rem;"><div class="heatmap-grid" id="studyHeatmap"></div></div></div>
+                <div class="chart-container"><div class="chart-title">Strength/Weakness</div><canvas id="radarChart"></canvas></div>
+            </div>
+        </div>
+
+        <div id="leaderboard" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">🥇 CLASS RANKINGS</h2>
+            <table class="leaderboard-table" id="leaderboardTable">
+                <tr style="background: var(--border-color);"><td class="leaderboard-cell" style="font-weight: bold;">RANK</td><td class="leaderboard-cell" style="font-weight: bold;">STUDENT</td><td class="leaderboard-cell" style="font-weight: bold;">LEVEL</td><td class="leaderboard-cell" style="font-weight: bold;">XP</td><td class="leaderboard-cell" style="font-weight: bold;">STREAK</td></tr>
+            </table>
+        </div>
+
+        <div id="profile" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">👤 YOUR PROFILE</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-title">AVATAR</div>
+                    <div style="font-size: 3rem; text-align: center; margin: 1rem 0;" id="profileAvatar">🧠</div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 1rem;">
+                        <button class="setting-btn" onclick="setAvatar('🧠')">🧠</button>
+                        <button class="setting-btn" onclick="setAvatar('🚀')">🚀</button>
+                        <button class="setting-btn" onclick="setAvatar('⚡')">⚡</button>
+                        <button class="setting-btn" onclick="setAvatar('🎯')">🎯</button>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-title">STATISTICS</div>
+                    <div style="margin-top: 1rem;">
+                        <div style="margin-bottom: 0.5rem;">Lessons Completed: <span style="color: var(--neon-green);" id="statsLessons">0</span></div>
+                        <div style="margin-bottom: 0.5rem;">Total XP: <span style="color: var(--neon-green);" id="statsXP">0</span></div>
+                        <div style="margin-bottom: 0.5rem;">Current Level: <span style="color: var(--neon-green);" id="statsLevel">1</span></div>
+                        <div style="margin-bottom: 0.5rem;">Achievements: <span style="color: var(--neon-green);" id="statsAchievements">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="section">
+            <h2 style="color: var(--neon-pink); margin-bottom: 1.5rem; font-size: 1.3rem;">⚙ SETTINGS</h2>
+            <div class="settings-panel">
+                <div class="setting-group"><label class="setting-label">THEME</label><div class="setting-options"><button class="setting-btn active" onclick="setTheme('dark-theme')">Dark</button><button class="setting-btn" onclick="setTheme('midnight-theme')">Midnight</button><button class="setting-btn" onclick="setTheme('neon-theme')">Neon</button></div></div>
+                <div class="setting-group"><label class="setting-label">DAILY STUDY GOAL</label><div class="setting-options"><button class="setting-btn" onclick="setGoal(15)">15 min</button><button class="setting-btn active" onclick="setGoal(30)">30 min</button><button class="setting-btn" onclick="setGoal(60)">1 hour</button><button class="setting-btn" onclick="setGoal(120)">2 hours</button></div></div>
+                <div class="setting-group"><label class="setting-label">NOTIFICATIONS</label><div class="setting-options"><button class="setting-btn active" onclick="toggleNotifications()">ENABLED</button><button class="setting-btn" onclick="toggleNotifications()">DISABLED</button></div></div>
+                <div class="setting-group"><label class="setting-label">GAME DATA</label><div class="setting-options"><button class="setting-btn" onclick="exportData()">EXPORT</button><button class="setting-btn" onclick="resetData()">RESET</button></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const gameState = {level: 1, xp: 0, xpNeeded: 100, streak: 0, totalStudyTime: 0, completedLessons: [], unlockedAchievements: [], accuracy: 0, avatar: '🧠', theme: 'dark-theme', dailyGoal: 30, notificationsEnabled: true, quizScores: [], subjectProgress: {}};
+
+const subjects = {
+    math: {name: '📐 Mathematics', color: 'var(--neon-blue)', lessons: [
+        {id: 'algebra-basics', title: 'Algebra: Linear Equations', desc: 'Solve equations step by step', xp: 100},
+        {id: 'geometry-triangles', title: 'Geometry: Triangles & Angles', desc: 'Properties and classifications', xp: 120},
+        {id: 'statistics-data', title: 'Statistics: Data Analysis', desc: 'Mean, median, mode fundamentals', xp: 110},
+        {id: 'probability-basics', title: 'Probability 101', desc: 'Likelihood & independent events', xp: 110},
+        {id: 'pre-calc-functions', title: 'Pre-Calc: Functions', desc: 'Domain, range, transformations', xp: 130},
+        {id: 'number-theory', title: 'Number Theory', desc: 'Primes, divisors, GCD & LCM', xp: 120}
+    ]},
+    finance: {name: '💰 Finance', color: 'var(--neon-green)', lessons: [
+        {id: 'compound-interest', title: 'Compound Interest', desc: 'Money growing exponentially', xp: 150},
+        {id: 'stock-market-101', title: 'Stock Market Basics', desc: 'How stocks and exchanges work', xp: 150},
+        {id: 'risk-return', title: 'Risk & Return', desc: 'Understanding investment risk', xp: 140},
+        {id: 'portfolio-theory', title: 'Portfolio Theory', desc: 'Diversification strategies', xp: 150},
+        {id: 'options-basics', title: 'Options Basics', desc: 'Calls, puts & derivatives', xp: 160},
+        {id: 'crypto-101', title: 'Crypto 101', desc: 'Blockchain & Bitcoin fundamentals', xp: 150}
+    ]},
+    cs: {name: '💻 Computer Science', color: 'var(--neon-pink)', lessons: [
+        {id: 'python-basics', title: 'Python Basics', desc: 'Syntax, print statements & setup', xp: 120},
+        {id: 'variables-types', title: 'Variables & Types', desc: 'Strings, ints, floats, booleans', xp: 120},
+        {id: 'loops-control', title: 'Loops & Control Flow', desc: 'If/else, for loops, while loops', xp: 130},
+        {id: 'functions-scope', title: 'Functions & Scope', desc: 'Creating reusable code blocks', xp: 130},
+        {id: 'lists-arrays', title: 'Lists & Arrays', desc: 'Storing and accessing data collections', xp: 130},
+        {id: 'algorithms-sorting', title: 'Algorithms & Sorting', desc: 'Big O notation & efficiency', xp: 140}
+    ]},
+    science: {name: '🔬 Science', color: 'var(--neon-yellow)', lessons: [
+        {id: 'physics-motion', title: 'Physics: Motion', desc: 'Speed, velocity, acceleration concepts', xp: 140},
+        {id: 'physics-forces', title: 'Physics: Forces', desc: 'Newton three laws of motion', xp: 140},
+        {id: 'chemistry-atoms', title: 'Chemistry: Atoms', desc: 'Atomic structure and electrons', xp: 130},
+        {id: 'chemistry-reactions', title: 'Chemistry: Reactions', desc: 'Chemical bonds and reactions', xp: 140},
+        {id: 'biology-cells', title: 'Biology: Cells', desc: 'Cell structure and functions', xp: 130},
+        {id: 'biology-dna', title: 'Biology: DNA', desc: 'Genetics and heredity basics', xp: 140}
+    ]}
+};
+
+const achievements = {
+    bronze: [
+        {id: 'first-lesson', icon: '📖', name: 'First Steps', desc: 'Complete 1 lesson'},
+        {id: 'five-lessons', icon: '📚', name: 'Bookworm', desc: 'Complete 5 lessons'},
+        {id: 'streak-3', icon: '🔥', name: 'On Fire', desc: '3 day streak'},
+        {id: 'perfect-quiz', icon: '💯', name: 'Perfect Score', desc: '100% on a quiz'},
+        {id: 'level-2', icon: '⬆️', name: 'Leveling Up', desc: 'Reach level 2'},
+        {id: 'code-first', icon: '🐍', name: 'Code Warrior', desc: 'Run first program'}
+    ],
+    silver: [
+        {id: 'ten-lessons', icon: '📖', name: 'Scholar', desc: 'Complete 10 lessons'},
+        {id: 'level-5', icon: '⭐', name: 'Rising Star', desc: 'Reach level 5'},
+        {id: 'streak-7', icon: '🔥', name: 'Week Warrior', desc: '7 day streak'},
+        {id: 'subject-master', icon: '🎯', name: 'Subject Expert', desc: 'Master one subject'},
+        {id: 'quiz-100', icon: '💯', name: 'Quiz Master', desc: '100% avg on 5 quizzes'},
+        {id: 'graph-pro', icon: '📈', name: 'Graph Master', desc: 'Plot 10 functions'}
+    ],
+    gold: [
+        {id: 'twenty-lessons', icon: '📖', name: 'Polymath', desc: 'Complete 20 lessons'},
+        {id: 'level-10', icon: '👑', name: 'Legendary', desc: 'Reach level 10'},
+        {id: 'streaky', icon: '🔥', name: 'Unstoppable', desc: '30 day streak'},
+        {id: 'all-subjects', icon: '🌟', name: 'Renaissance', desc: 'Study all subjects'},
+        {id: 'battle-champion', icon: '⚔️', name: 'Battle Champ', desc: 'Win 10 battles'},
+        {id: 'analytics-pro', icon: '📊', name: 'Data Scientist', desc: 'View analytics 20x'}
+    ],
+    platinum: [
+        {id: 'thirty-lessons', icon: '📚', name: 'Learning Machine', desc: 'Complete 30 lessons'},
+        {id: 'level-15', icon: '💎', name: 'Diamond Hand', desc: 'Reach level 15'},
+        {id: 'perfect-accuracy', icon: '🎯', name: 'Perfectionist', desc: '95%+ accuracy'},
+        {id: 'marathon', icon: '🏃', name: 'Marathon Runner', desc: 'Study 100 hours'},
+        {id: 'ultimate-learner', icon: '🏆', name: 'Ultimate Learner', desc: 'All achievements'},
+        {id: 'guardian', icon: '⚡', name: 'VOID Guardian', desc: 'Elite rank achieved'}
+    ]
+};
+
+const leaderboard = [
+    {rank: 1, name: 'You', level: 1, xp: 0, streak: 0},
+    {rank: 2, name: 'Alex Nova', level: 12, xp: 5200, streak: 25},
+    {rank: 3, name: 'Jordan Sky', level: 11, xp: 4800, streak: 21},
+    {rank: 4, name: 'Casey Moon', level: 9, xp: 3600, streak: 18},
+    {rank: 5, name: 'River Zero', level: 8, xp: 3100, streak: 15}
+];
+
+let charts = {};
+
+function init() { loadGameState(); renderSubjectProgress(); renderLearnSubjects(); initCharts(); renderAchievements(); renderLeaderboard(); updateHeader(); updateDashboard(); }
+function saveGameState() { localStorage.setItem('voidSchoolState', JSON.stringify(gameState)); }
+function loadGameState() { const saved = localStorage.getItem('voidSchoolState'); if (saved) Object.assign(gameState, JSON.parse(saved)); }
+function addXP(amount) { gameState.xp += amount; while (gameState.xp >= gameState.xpNeeded) { gameState.xp -= gameState.xpNeeded; gameState.level++; gameState.xpNeeded = Math.floor(gameState.xpNeeded * 1.2); showNotification(`LEVEL UP! Level ${gameState.level}!`); } saveGameState(); updateHeader(); }
+function showSection(sectionId) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active')); document.getElementById(sectionId).classList.add('active'); const tabs = document.querySelectorAll('.nav-tab'); const sectionMap = {'dashboard': 0, 'learn': 1, 'code': 2, 'graph': 3, 'visualize': 4, 'battle': 5, 'achievements': 6, 'analytics': 7, 'leaderboard': 8}; if (sectionMap[sectionId] !== undefined) tabs[sectionMap[sectionId]].classList.add('active'); }
+function renderSubjectProgress() { const grids = [document.getElementById('subjectGrid'), document.getElementById('learnSubjectGrid')]; grids.forEach(grid => { if (!grid) return; grid.innerHTML = Object.entries(subjects).map(([key, subject]) => { const lessons = subject.lessons; const completed = lessons.filter(l => gameState.completedLessons.includes(l.id)).length; const progress = Math.round((completed / lessons.length) * 100); return `<div class="subject-card" onclick="selectSubject('${key}')"><div class="subject-title">${subject.name}</div><svg class="subject-progress" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" class="progress-ring-circle"></circle><circle cx="60" cy="60" r="50" class="progress-ring-fill" stroke-dasharray="${314 * progress / 100} 314"></circle></svg><div class="progress-text"><span class="progress-percent">${progress}%</span><span class="progress-label">${completed}/${lessons.length}</span></div><div class="subject-stats"><div>✓ ${completed} lessons</div><div>📈 ${lessons.length} total</div></div></div>`; }).join(''); }); }
+function renderLearnSubjects() { renderSubjectProgress(); }
+function selectSubject(key) { const subject = subjects[key]; document.getElementById('learnSubjectGrid').style.display = 'none'; document.getElementById('lessonsContainer').style.display = 'block'; document.getElementById('lessonSubjectName').textContent = subject.name; const lessonsList = document.getElementById('lessonsList'); lessonsList.innerHTML = subject.lessons.map(lesson => { const completed = gameState.completedLessons.includes(lesson.id); const status = completed ? 'completed' : 'in-progress'; return `<div class="lesson-card" onclick="openLesson('${lesson.id}')"><div class="lesson-status ${status}">${completed ? '✓' : '►'}</div><div class="lesson-title">${lesson.title}</div><div class="lesson-desc">${lesson.desc}</div><div class="lesson-meta"><span>${lesson.xp} XP</span><span>${completed ? 'COMPLETED' : 'LEARN'}</span></div></div>`; }).join(''); }
+function backToSubjects() { document.getElementById('lessonsContainer').style.display = 'none'; document.getElementById('learnSubjectGrid').style.display = 'grid'; }
+function openLesson(lessonId) { const lesson = Object.values(subjects).flatMap(s => s.lessons).find(l => l.id === lessonId); if (!lesson) return; document.getElementById('lessonsContainer').style.display = 'none'; document.getElementById('lessonViewerContainer').style.display = 'block'; const completed = gameState.completedLessons.includes(lessonId); document.getElementById('lessonViewerContent').innerHTML = `<div class="lesson-header"><h1>${lesson.title}</h1><div style="color: var(--text-secondary);">${lesson.desc} • ${lesson.xp} XP${completed ? ' • ✓ COMPLETED' : ''}</div></div><div class="lesson-content"><div class="content-section"><p>${lesson.desc}</p></div></div>`; }
+function closeLessonViewer() { document.getElementById('lessonViewerContainer').style.display = 'none'; document.getElementById('lessonsContainer').style.display = 'block'; }
+function checkAnswer(inputId, correctAnswer) { const input = document.getElementById(inputId); const feedback = document.getElementById(inputId + '-feedback'); const userAnswer = parseFloat(input.value); const tolerance = 0.5; const isCorrect = Math.abs(userAnswer - correctAnswer) < tolerance; if (isCorrect) { feedback.className = 'exercise-feedback feedback-correct'; feedback.textContent = '✓ Correct!'; input.style.borderColor = 'var(--neon-green)'; } else { feedback.className = 'exercise-feedback feedback-incorrect'; feedback.textContent = `✗ Incorrect. Answer: ${correctAnswer.toFixed(2)}`; input.style.borderColor = 'var(--neon-pink)'; } }
+function selectQuizOption(element, questionId, value) { const container = element.parentElement; container.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected')); element.classList.add('selected'); document.getElementById(questionId).value = value; }
+function submitQuiz(questionIds, correctAnswers, lessonId) { let correct = 0; questionIds.forEach((id, index) => { const value = parseInt(document.getElementById(id).value); if (value === correctAnswers[index]) correct++; }); const percentage = Math.round((correct / questionIds.length) * 100); const passed = percentage >= 70; const resultDiv = document.getElementById('quizResult'); resultDiv.className = `quiz-result ${passed ? 'passed' : 'failed'}`; resultDiv.innerHTML = `Score: ${correct}/${questionIds.length} (${percentage}%) ${passed ? '<br>Great job! 🎉' : '<br>Try again!'}`; if (passed) completeLesson(lessonId); }
+function completeLesson(lessonId) { if (!gameState.completedLessons.includes(lessonId)) { gameState.completedLessons.push(lessonId); const lesson = Object.values(subjects).flatMap(s => s.lessons).find(l => l.id === lessonId); if (lesson) addXP(lesson.xp); saveGameState(); unlockAchievement('first-lesson'); if (gameState.completedLessons.length >= 5) unlockAchievement('five-lessons'); if (gameState.completedLessons.length >= 10) unlockAchievement('ten-lessons'); if (gameState.completedLessons.length >= 20) unlockAchievement('twenty-lessons'); if (gameState.completedLessons.length >= 30) unlockAchievement('thirty-lessons'); showNotification(`Lesson completed! +${lesson.xp} XP`); renderSubjectProgress(); updateDashboard(); } }
+function unlockAchievement(id) { if (!gameState.unlockedAchievements.includes(id)) { gameState.unlockedAchievements.push(id); const allAchievements = Object.values(achievements).flatMap(tier => tier); const ach = allAchievements.find(a => a.id === id); if (ach) showNotification(`Achievement Unlocked: ${ach.icon} ${ach.name}`); saveGameState(); renderAchievements(); } }
+function renderAchievements() { Object.entries(achievements).forEach(([tier, achs]) => { const container = document.getElementById(`${tier}Achievements`); if (!container) return; container.innerHTML = achs.map(ach => `<div class="achievement-badge ${gameState.unlockedAchievements.includes(ach.id) ? 'unlocked' : ''}"><div class="achievement-icon">${ach.icon}</div><div class="achievement-name">${ach.name}</div><div class="achievement-tier">${ach.desc}</div></div>`).join(''); }); }
+function loadChallenge(num) { const challenges = {1: "# Print your name\nprint('Your Name')", 2: "# Add two numbers\na = 10\nb = 20\nprint(a + b)", 3: "# Compound interest\np = 1000\nr = 0.1\nt = 5\nprint(p * (1 + r) ** t)", 4: "# Sum 1 to 10\ntotal = 0\nfor i in range(1, 11):\n    total += i\nprint(total)"}; document.getElementById('codeInput').value = challenges[num]; }
+function runPythonCode() { const code = document.getElementById('codeInput').value; const output = document.getElementById('codeOutput'); try { let result = ''; const originalLog = console.log; console.log = function(...args) { result += args.join(' ') + '\n'; }; eval(code.replace(/print\(/g, 'console.log(')); console.log = originalLog; output.textContent = result || 'Program executed.'; addXP(25); showNotification('Code executed! +25 XP'); unlockAchievement('code-first'); } catch (e) { output.textContent = `Error: ${e.message}`; } }
+function clearCode() { document.getElementById('codeInput').value = ''; document.getElementById('codeOutput').textContent = 'Output will appear here...'; }
+function drawGraph() { const input = document.getElementById('graphInput').value; const canvas = document.getElementById('graphCanvas'); const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.fillStyle = '#0a0e17'; ctx.fillRect(0, 0, canvas.width, canvas.height); const centerX = canvas.width / 2; const centerY = canvas.height / 2; const scale = 40; ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 1; for (let i = -10; i <= 10; i++) { ctx.beginPath(); ctx.moveTo(centerX + i * scale, 0); ctx.lineTo(centerX + i * scale, canvas.height); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, centerY + i * scale); ctx.lineTo(canvas.width, centerY + i * scale); ctx.stroke(); } ctx.strokeStyle = '#4fc3f7'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY); ctx.stroke(); try { ctx.strokeStyle = '#ff0055'; ctx.lineWidth = 2; ctx.beginPath(); let firstPoint = true; for (let px = -canvas.width / 2; px < canvas.width / 2; px += 2) { const x = px / scale; const expr = input.replace(/y\s*=\s*/, '').replace(/x/g, `(${x})`).replace(/\^/g, '**').replace(/sqrt/g, 'Math.sqrt').replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos').replace(/tan/g, 'Math.tan').replace(/abs/g, 'Math.abs'); const y = parseFloat(eval(expr)); if (!isNaN(y) && isFinite(y)) { const canvasX = centerX + x * scale; const canvasY = centerY - y * scale; if (firstPoint) { ctx.moveTo(canvasX, canvasY); firstPoint = false; } else { ctx.lineTo(canvasX, canvasY); } } } ctx.stroke(); showNotification('Graph plotted!'); unlockAchievement('graph-pro'); } catch (e) { document.getElementById('codeOutput').textContent = 'Invalid equation'; } }
+function animateCompoundInterest() { const principal = parseFloat(document.getElementById('initialAmount').value); const rate = parseFloat(document.getElementById('interestRate').value) / 100; const years = parseInt(document.getElementById('years').value); const canvas = document.getElementById('compoundCanvas'); const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const maxAmount = principal * Math.pow(1 + rate, years); const scale = (canvas.height - 40) / maxAmount; let currentYear = 0; const animate = () => { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#0a0e17'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#00e676'; for (let year = 0; year <= currentYear; year++) { const amount = principal * Math.pow(1 + rate, year); const height = amount * scale; const x = 50 + (year * (canvas.width - 100) / years); ctx.fillRect(x, canvas.height - 20 - height, 30, height); } if (currentYear <= years) { const amount = principal * Math.pow(1 + rate, currentYear); document.getElementById('compoundInfo').textContent = `Year ${Math.floor(currentYear)}: $${amount.toFixed(2)}`; currentYear += 0.1; setTimeout(animate, 100); } }; animate(); }
+function animateBubbleSort() { const canvas = document.getElementById('sortCanvas'); const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const arr = Array.from({length: 10}, () => Math.random() * 100); const draw = () => { ctx.fillStyle = '#0a0e17'; ctx.fillRect(0, 0, canvas.width, canvas.height); const barWidth = canvas.width / arr.length; arr.forEach((val, i) => { ctx.fillStyle = '#4fc3f7'; ctx.fillRect(i * barWidth, canvas.height - val * 2, barWidth - 2, val * 2); }); }; let swaps = 0; for (let i = 0; i < arr.length; i++) { for (let j = 0; j < arr.length - i - 1; j++) { if (arr[j] > arr[j + 1]) { [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; swaps++; } } } draw(); showNotification(`Bubble Sort: ${swaps} swaps!`); }
+function drawBellCurve() { const canvas = document.getElementById('bellCurveCanvas'); const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.fillStyle = '#0a0e17'; ctx.fillRect(0, 0, canvas.width, canvas.height); const mean = canvas.width / 2; const std = canvas.width / 6; ctx.fillStyle = 'rgba(0, 230, 118, 0.3)'; ctx.strokeStyle = '#00e676'; ctx.lineWidth = 2; ctx.beginPath(); for (let x = 0; x < canvas.width; x++) { const z = (x - mean) / std; const y = (100 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-z * z / 2); if (x === 0) ctx.moveTo(x, canvas.height - y * 100); else ctx.lineTo(x, canvas.height - y * 100); } ctx.stroke(); ctx.fill(); showNotification('Bell curve drawn!'); }
+function drawSupplyDemand() { const canvas = document.getElementById('supplyDemandCanvas'); const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.fillStyle = '#0a0e17'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#4fc3f7'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(50, canvas.height - 50); ctx.lineTo(canvas.width - 20, canvas.height - 50); ctx.stroke(); ctx.beginPath(); ctx.moveTo(50, canvas.height - 50); ctx.lineTo(50, 20); ctx.stroke(); ctx.strokeStyle = '#ff0055'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(60, canvas.height - 60); ctx.lineTo(canvas.width - 30, 40); ctx.stroke(); ctx.strokeStyle = '#00e676'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(60, 40); ctx.lineTo(canvas.width - 30, canvas.height - 60); ctx.stroke(); showNotification('Supply & demand curve displayed!'); }
+function startQuizBattle() { gameState.playerScore = 0; gameState.opponentScore = 0; const questions = [{q: 'What is 5 + 3?', a: 1, opts: ['8', '7', '9', '6']}, {q: 'What is 12 - 4?', a: 0, opts: ['8', '6', '10', '5']}, {q: 'What is 6 × 7?', a: 2, opts: ['40', '41', '42', '43']}, {q: 'What is 100 ÷ 4?', a: 0, opts: ['25', '20', '30', '15']}, {q: 'What is 2^3?', a: 1, opts: ['6', '8', '4', '16']}]; let currentQ = 0; const playRound = () => { if (currentQ >= questions.length) { endBattle(); return; } const q = questions[currentQ]; document.getElementById('battleQuestionText').textContent = q.q; document.getElementById('battleOptions').innerHTML = q.opts.map((opt, i) => `<div class="quiz-option" onclick="answerBattleQuestion(${i}, ${q.a}, ${currentQ}, () => playRound())">${opt}</div>`).join(''); currentQ++; }; playRound(); }
+function answerBattleQuestion(chosen, correct, qIndex, next) { if (chosen === correct) { gameState.playerScore = (gameState.playerScore || 0) + 1; } gameState.opponentScore = (gameState.opponentScore || 0) + (Math.random() > 0.4 ? 1 : 0); document.getElementById('playerScore').textContent = gameState.playerScore; document.getElementById('opponentScore').textContent = gameState.opponentScore; next(); }
+function endBattle() { const result = document.getElementById('battleResult'); const playerWins = gameState.playerScore > gameState.opponentScore; result.className = `quiz-result ${playerWins ? 'passed' : 'failed'}`; result.innerHTML = playerWins ? `<div>YOU WIN! 🎉</div><div style="margin-top: 0.5rem;">+100 XP</div>` : `<div>Opponent Wins!</div>`; if (playerWins) { addXP(100); unlockAchievement('battle-champion'); } }
+function initCharts() { const timeCtx = document.getElementById('timeChart'); if (timeCtx && typeof Chart !== 'undefined') { charts.time = new Chart(timeCtx, {type: 'bar', data: {labels: ['Math', 'Finance', 'CS', 'Science'], datasets: [{label: 'Minutes', data: [120, 95, 150, 80], backgroundColor: ['#4fc3f7', '#00e676', '#ff0055', '#ffab00']}]}, options: {responsive: true, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}}); } const accCtx = document.getElementById('accuracyChart'); if (accCtx && typeof Chart !== 'undefined') { charts.accuracy = new Chart(accCtx, {type: 'line', data: {labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'], datasets: [{label: 'Accuracy %', data: [60, 70, 75, 85, 90], borderColor: '#00e676', fill: false}]}, options: {responsive: true, plugins: {legend: {display: false}}}}); } const radarCtx = document.getElementById('radarChart'); if (radarCtx && typeof Chart !== 'undefined') { charts.radar = new Chart(radarCtx, {type: 'radar', data: {labels: ['Algebra', 'Geometry', 'Finance', 'CS', 'Science'], datasets: [{label: 'Proficiency', data: [85, 72, 90, 88, 78], borderColor: '#7c4dff'}]}, options: {responsive: true, plugins: {legend: {display: false}}}}); } renderHeatmap(); }
+function renderHeatmap() { const heatmap = document.getElementById('studyHeatmap'); if (!heatmap) return; heatmap.innerHTML = Array(28).fill(0).map((_, i) => { const intensity = Math.floor(Math.random() * 4); return `<div class="heatmap-cell active-${intensity}"></div>`; }).join(''); }
+function renderLeaderboard() { const table = document.getElementById('leaderboardTable'); if (!table) return; const rows = leaderboard.map((entry, i) => `<tr class="leaderboard-row"><td class="leaderboard-cell"><span class="rank-badge rank-${Math.min(i + 1, 3)}">${i + 1}</span></td><td class="leaderboard-cell">${entry.name}</td><td class="leaderboard-cell">Lv${entry.level}</td><td class="leaderboard-cell">${entry.xp}</td><td class="leaderboard-cell">${entry.streak} days</td></tr>`).join(''); const firstRow = table.innerHTML.split('\n')[0]; table.innerHTML = firstRow + '\n' + rows; }
+function setTheme(theme) { document.body.className = theme; gameState.theme = theme; document.querySelectorAll('.setting-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); saveGameState(); }
+function setGoal(minutes) { gameState.dailyGoal = minutes; document.querySelectorAll('.setting-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); saveGameState(); }
+function toggleNotifications() { gameState.notificationsEnabled = !gameState.notificationsEnabled; document.querySelectorAll('.setting-btn').forEach(b => b.classList.remove('active')); if (gameState.notificationsEnabled) { document.querySelectorAll('.setting-btn')[0].classList.add('active'); } else { document.querySelectorAll('.setting-btn')[1].classList.add('active'); } saveGameState(); }
+function setAvatar(emoji) { gameState.avatar = emoji; document.getElementById('profileAvatar').textContent = emoji; saveGameState(); }
+function exportData() { const json = JSON.stringify(gameState, null, 2); const blob = new Blob([json], {type: 'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'void-school-data.json'; a.click(); showNotification('Data exported!'); }
+function resetData() { if (confirm('Are you sure? This cannot be undone!')) { localStorage.removeItem('voidSchoolState'); location.reload(); } }
+function showNotification(message) { if (!gameState.notificationsEnabled) return; const notif = document.createElement('div'); notif.className = 'notification'; notif.textContent = message; document.body.appendChild(notif); setTimeout(() => notif.remove(), 3000); }
+function updateHeader() { document.getElementById('headerLevel').textContent = gameState.level; document.getElementById('headerXP').style.width = (gameState.xp / gameState.xpNeeded * 100) + '%'; document.getElementById('headerXPText').textContent = gameState.xp + '/' + gameState.xpNeeded; document.getElementById('headerStreak').textContent = gameState.streak; }
+function updateDashboard() { const totalLessons = Object.values(subjects).flatMap(s => s.lessons).length; const progress = Math.round(gameState.completedLessons.length / totalLessons * 100); document.getElementById('totalProgress').textContent = progress + '%'; document.getElementById('dailyStreak').textContent = gameState.streak; document.getElementById('studyTime').textContent = Math.floor(gameState.totalStudyTime / 60) + 'h'; document.getElementById('accuracy').textContent = '92%'; document.getElementById('weeklyGoal').textContent = '15/30m'; document.getElementById('statsLessons').textContent = gameState.completedLessons.length; document.getElementById('statsXP').textContent = gameState.xp; document.getElementById('statsLevel').textContent = gameState.level; document.getElementById('statsAchievements').textContent = gameState.unlockedAchievements.length; }
+window.addEventListener('load', init);
+    </script>
+</body>
+</html>

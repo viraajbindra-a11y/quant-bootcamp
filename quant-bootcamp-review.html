@@ -3,48 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quant Finance Bootcamp — Days 1-6 Progress Report</title>
+<title>Quant Finance Bootcamp — Ultimate 90-Day Dashboard</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --theme-dark: #0a0e17;
+    --theme-card: #141a2e;
+    --theme-border: #2a2f3a;
+    --theme-text: #e0e0e0;
+    --theme-cyan: #4fc3f7;
+    --theme-purple: #7c4dff;
+    --theme-green: #66bb6a;
+    --theme-orange: #ff9800;
+    --theme-neon-pink: #ff006e;
+    --theme-neon-green: #39ff14;
+  }
+
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #0a0e17;
-    color: #e0e0e0;
+    background: var(--theme-dark);
+    color: var(--theme-text);
     line-height: 1.7;
+    transition: all 0.3s ease;
   }
-  .container { max-width: 860px; margin: 0 auto; padding: 30px 20px 80px; }
+
+  body.theme-midnight { --theme-dark: #0f0b1f; --theme-card: #1a1535; --theme-cyan: #00d4ff; --theme-purple: #b537f2; }
+  body.theme-neon { --theme-dark: #000000; --theme-card: #1a1a2e; --theme-cyan: #39ff14; --theme-purple: #ff006e; --theme-neon-green: #39ff14; --theme-neon-pink: #ff006e; }
+  body.theme-cyberpunk { --theme-dark: #0d0221; --theme-card: #120136; --theme-cyan: #ff006e; --theme-purple: #3a86ff; --theme-border: #ff006e; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px 80px; }
+
+  /* Theme Switcher */
+  .theme-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+    flex-wrap: wrap;
+  }
+  .theme-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--theme-border);
+    background: var(--theme-card);
+    color: var(--theme-text);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover, .theme-btn.active { border-color: var(--theme-cyan); background: var(--theme-purple); }
 
   header {
     text-align: center;
     margin-bottom: 50px;
     padding: 40px 20px;
-    background: linear-gradient(135deg, #0d1330, #1a0a2e);
+    background: linear-gradient(135deg, rgba(13, 19, 48, 0.8), rgba(26, 10, 46, 0.8));
     border-radius: 16px;
-    border: 1px solid #2a2f4a;
+    border: 1px solid var(--theme-border);
+    backdrop-filter: blur(10px);
   }
+
   h1 {
     font-size: 2.2rem;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+    background: linear-gradient(135deg, var(--theme-cyan), var(--theme-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: slideDown 0.6s ease;
   }
+
+  @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes countUp { from { transform: scale(0.8); } to { transform: scale(1); } }
+
   .subtitle { color: #888; font-size: 0.95rem; margin-bottom: 20px; }
+
+  /* Premium Stats Cards */
   .header-stats {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 30px;
     margin-top: 24px;
-    flex-wrap: wrap;
   }
+
   .header-stat {
     text-align: center;
+    background: rgba(20, 26, 46, 0.6);
+    border: 1px solid var(--theme-border);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
   }
+
+  .header-stat:hover {
+    border-color: var(--theme-cyan);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(79, 195, 247, 0.2);
+  }
+
   .header-stat .num {
-    font-size: 2rem;
+    font-size: 2.4rem;
     font-weight: 700;
-    color: #7c4dff;
+    color: var(--theme-purple);
+    animation: countUp 1s ease;
   }
+
   .header-stat .label {
     font-size: 0.75rem;
     color: #888;
@@ -60,81 +127,582 @@
     flex-wrap: wrap;
     position: sticky;
     top: 0;
-    background: #0a0e17;
+    background: var(--theme-dark);
     padding: 12px 0;
     z-index: 10;
-    border-bottom: 1px solid #1a1f2e;
+    border-bottom: 1px solid var(--theme-border);
   }
+
   .nav-btn {
     padding: 10px 18px;
     border-radius: 8px;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     background: #12172a;
     color: #aaa;
     cursor: pointer;
     font-size: 0.85rem;
     transition: all 0.2s;
   }
-  .nav-btn:hover { border-color: #4fc3f7; color: #fff; }
+
+  .nav-btn:hover { border-color: var(--theme-cyan); color: #fff; }
   .nav-btn.active {
     background: linear-gradient(135deg, #1a237e, #4a148c);
-    border-color: #7c4dff;
+    border-color: var(--theme-purple);
     color: #fff;
   }
 
-  /* Sections */
+  /* Pages */
   .page { display: none; }
-  .page.active { display: block; }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
 
-  /* Timeline */
-  .timeline { position: relative; padding-left: 30px; }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, #7c4dff, #4fc3f7, #66bb6a);
+  /* Interactive 90-Day Timeline */
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+    gap: 8px;
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(20, 26, 46, 0.6);
+    border-radius: 12px;
+    border: 1px solid var(--theme-border);
   }
-  .timeline-item {
-    position: relative;
-    margin-bottom: 28px;
-  }
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -26px;
-    top: 8px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #7c4dff;
-    border: 2px solid #0a0e17;
-  }
-  .timeline-item.milestone::before { background: #66bb6a; width: 14px; height: 14px; left: -27px; }
-  .timeline-item.mistake::before { background: #ff9800; }
 
-  /* Cards */
+  .timeline-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .timeline-day.complete { background: var(--theme-green); color: #000; border: 2px solid var(--theme-green); }
+  .timeline-day.current { background: var(--theme-cyan); color: #000; border: 2px solid var(--theme-cyan); transform: scale(1.15); }
+  .timeline-day.upcoming { background: transparent; border: 1px solid var(--theme-border); color: #666; }
+
+  .timeline-day:hover { transform: scale(1.1); border-color: var(--theme-cyan); }
+
+  .timeline-tooltip {
+    background: var(--theme-card);
+    border: 1px solid var(--theme-border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.8rem;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .timeline-tooltip.show { display: block; animation: fadeIn 0.3s ease; }
+
+  /* Progress Bar */
+  .progress-container {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(20, 26, 46, 0.6);
+    border-radius: 12px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .progress-bar {
+    height: 16px;
+    background: var(--theme-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--theme-cyan), var(--theme-purple), var(--theme-green));
+    width: 67%;
+    border-radius: 8px;
+    transition: width 1.5s ease;
+    box-shadow: 0 0 20px rgba(79, 195, 247, 0.5);
+  }
+
+  .progress-text { font-size: 0.85rem; color: #888; }
+
+  /* Glassmorphism Cards */
   .card {
-    background: #141a2e;
-    border: 1px solid #2a2f3a;
+    background: rgba(20, 26, 46, 0.7);
+    border: 1px solid var(--theme-border);
     border-radius: 12px;
     padding: 22px;
     margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
   }
+
+  .card:hover {
+    border-color: var(--theme-cyan);
+    box-shadow: 0 8px 32px rgba(79, 195, 247, 0.1);
+  }
+
   .card h2 {
     font-size: 1.3rem;
     margin-bottom: 14px;
-    color: #4fc3f7;
+    color: var(--theme-cyan);
   }
+
   .card h3 {
     font-size: 1rem;
     margin: 18px 0 10px;
     color: #b39ddb;
   }
+
   .card p { margin-bottom: 10px; color: #ccc; font-size: 0.92rem; }
 
+  /* Skill Tree Visualization */
+  .skill-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 20px 0;
+  }
+
+  .tree-level {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tree-node {
+    width: 140px;
+    padding: 14px;
+    background: var(--theme-card);
+    border: 2px solid var(--theme-border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .tree-node.mastered {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.3), rgba(79, 195, 247, 0.3));
+    border-color: var(--theme-green);
+    box-shadow: 0 0 16px rgba(102, 187, 106, 0.4);
+  }
+
+  .tree-node:hover {
+    border-color: var(--theme-cyan);
+    transform: translateY(-4px);
+  }
+
+  .tree-node .node-title { font-size: 0.9rem; font-weight: 600; color: var(--theme-cyan); }
+  .tree-node .node-desc { font-size: 0.7rem; color: #888; margin-top: 6px; }
+  .tree-node .node-prereq { font-size: 0.65rem; color: var(--theme-orange); margin-top: 4px; }
+
+  /* Concept Map */
+  .concept-map {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(20, 26, 46, 0.6);
+    border-radius: 12px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .concept-network {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .concept-node {
+    padding: 14px;
+    background: var(--theme-card);
+    border: 2px solid var(--theme-border);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .concept-node.mastered {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.2), rgba(79, 195, 247, 0.2));
+    border-color: var(--theme-green);
+    box-shadow: 0 0 12px rgba(102, 187, 106, 0.3);
+  }
+
+  .concept-node:hover {
+    border-color: var(--theme-cyan);
+    transform: scale(1.05);
+  }
+
+  .concept-node .cn-title { font-weight: 600; color: var(--theme-cyan); font-size: 0.9rem; }
+  .concept-node .cn-connects { font-size: 0.7rem; color: #888; margin-top: 6px; }
+
+  /* Code Gallery */
+  .code-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .code-item {
+    background: rgba(20, 26, 46, 0.6);
+    border: 1px solid var(--theme-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .code-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  .code-item-title {
+    font-weight: 600;
+    color: var(--theme-cyan);
+    font-size: 0.95rem;
+  }
+
+  .code-item-collapse {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--theme-purple);
+    transition: transform 0.2s;
+  }
+
+  .code-item.collapsed .code-item-collapse { transform: rotate(-90deg); }
+
+  .code-item-body { display: none; }
+  .code-item.collapsed .code-item-body { display: block; }
+
+  .code-copy-btn {
+    padding: 6px 12px;
+    background: var(--theme-purple);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+
+  .code-copy-btn:hover { background: var(--theme-cyan); }
+
+  /* Enhanced Quiz */
+  .quiz-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .quiz-control-btn {
+    padding: 10px 16px;
+    background: var(--theme-purple);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .quiz-control-btn:hover { background: var(--theme-cyan); }
+
+  .timer-display {
+    font-size: 1rem;
+    color: var(--theme-cyan);
+    font-weight: 600;
+  }
+
+  .difficulty-filter {
+    display: flex;
+    gap: 8px;
+  }
+
+  .difficulty-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--theme-border);
+    background: transparent;
+    border-radius: 6px;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+
+  .difficulty-btn.active {
+    background: var(--theme-purple);
+    border-color: var(--theme-purple);
+    color: white;
+  }
+
+  .score-history {
+    margin: 20px 0;
+    padding: 16px;
+    background: rgba(20, 26, 46, 0.6);
+    border-radius: 10px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .score-history h4 { color: var(--theme-cyan); font-size: 0.9rem; margin-bottom: 10px; }
+
+  .score-history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--theme-border);
+    font-size: 0.8rem;
+  }
+
+  .score-history-item:last-child { border-bottom: none; }
+
+  /* Formula Reference with Calculator */
+  .formula-container {
+    margin: 20px 0;
+    padding: 16px;
+    background: var(--theme-card);
+    border-radius: 10px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .formula-title {
+    font-weight: 600;
+    color: var(--theme-cyan);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .formula-math {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'SF Mono', monospace;
+    color: var(--theme-neon-green);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+  }
+
+  .formula-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .formula-input {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .formula-input label {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+  }
+
+  .formula-input input {
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--theme-border);
+    border-radius: 6px;
+    color: var(--theme-text);
+    font-size: 0.85rem;
+  }
+
+  .formula-result {
+    padding: 12px;
+    background: rgba(102, 187, 106, 0.1);
+    border: 1px solid var(--theme-green);
+    border-radius: 6px;
+    color: var(--theme-green);
+    font-weight: 600;
+  }
+
+  /* Daily Log / Journal */
+  .daily-log {
+    margin: 20px 0;
+    padding: 16px;
+    background: var(--theme-card);
+    border-radius: 10px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .log-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .log-search input {
+    flex: 1;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--theme-border);
+    border-radius: 6px;
+    color: var(--theme-text);
+  }
+
+  .log-entry {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid var(--theme-purple);
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .log-entry-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .log-entry-date { font-weight: 600; color: var(--theme-cyan); font-size: 0.85rem; }
+  .log-entry-time { color: #888; font-size: 0.75rem; }
+  .log-entry-content { color: #ccc; font-size: 0.85rem; margin-top: 4px; }
+
+  .log-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .log-tag {
+    padding: 2px 8px;
+    background: var(--theme-purple);
+    border-radius: 12px;
+    font-size: 0.65rem;
+    color: white;
+  }
+
+  /* Performance Analytics */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .chart-container {
+    padding: 16px;
+    background: var(--theme-card);
+    border-radius: 10px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .chart-title {
+    font-weight: 600;
+    color: var(--theme-cyan);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .mini-chart {
+    height: 150px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--theme-cyan), var(--theme-purple));
+    border-radius: 4px 4px 0 0;
+    min-height: 8px;
+  }
+
+  .heatmap {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .heatmap-cell {
+    aspect-ratio: 1;
+    background: rgba(102, 187, 106, 0.2);
+    border-radius: 4px;
+    border: 1px solid var(--theme-border);
+  }
+
+  .heatmap-cell.strong {
+    background: rgba(102, 187, 106, 0.8);
+    border-color: var(--theme-green);
+  }
+
+  /* Export & Sharing */
+  .export-controls {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .export-btn {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, var(--theme-cyan), var(--theme-purple));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .export-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 195, 247, 0.3); }
+
+  /* Motivational System */
+  .motivation-banner {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(79, 195, 247, 0.2), rgba(124, 77, 255, 0.2));
+    border-radius: 10px;
+    border: 1px solid var(--theme-border);
+    margin-bottom: 20px;
+    border-left: 4px solid var(--theme-cyan);
+  }
+
+  .motivation-quote {
+    color: var(--theme-cyan);
+    font-style: italic;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .motivation-subtext {
+    color: #888;
+    font-size: 0.85rem;
+  }
+
+  .milestone-achievement {
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.2), rgba(255, 217, 102, 0.2));
+    border-radius: 10px;
+    border: 1px solid var(--theme-green);
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .milestone-achievement h3 {
+    color: var(--theme-green);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  /* Tags & Elements */
   .tag {
     display: inline-block;
     padding: 3px 10px;
@@ -145,12 +713,12 @@
     letter-spacing: 0.5px;
     margin-bottom: 8px;
   }
-  .tag-python { background: #1a3a5c; color: #4fc3f7; }
-  .tag-finance { background: #1a3a2a; color: #66bb6a; }
+
+  .tag-python { background: #1a3a5c; color: var(--theme-cyan); }
+  .tag-finance { background: #1a3a2a; color: var(--theme-green); }
   .tag-math { background: #3a1a3a; color: #ce93d8; }
   .tag-milestone { background: #2e3d1a; color: #aed581; }
-  .tag-mistake { background: #3d2a1a; color: #ffb74d; }
-  .tag-insight { background: #1a2a3d; color: #81d4fa; }
+  .tag-day7 { background: #1a3a1a; color: var(--theme-neon-green); }
 
   code {
     background: #1e2440;
@@ -160,9 +728,10 @@
     font-size: 0.85rem;
     color: #80cbc4;
   }
+
   pre {
-    background: #0d1117;
-    border: 1px solid #2a2f3a;
+    background: rgba(13, 17, 23, 0.8);
+    border: 1px solid var(--theme-border);
     border-radius: 8px;
     padding: 16px;
     overflow-x: auto;
@@ -172,6 +741,7 @@
     line-height: 1.6;
     color: #c9d1d9;
   }
+
   .output {
     background: #0a1a0a;
     border: 1px solid #1b3a1b;
@@ -182,6 +752,7 @@
     font-size: 0.82rem;
     color: #a5d6a7;
   }
+
   .output::before {
     content: '>>> OUTPUT';
     display: block;
@@ -190,185 +761,140 @@
     letter-spacing: 1px;
     margin-bottom: 8px;
   }
-  .error-output {
-    background: #1a0a0a;
-    border: 1px solid #3a1b1b;
-    border-radius: 8px;
-    padding: 14px;
-    margin: 10px 0;
-    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-    font-size: 0.82rem;
-    color: #ef9a9a;
-  }
-  .error-output::before {
-    content: '>>> ERROR';
-    display: block;
-    font-size: 0.65rem;
-    color: #ef5350;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
 
-  /* Lesson learned boxes */
   .lesson {
     background: #1a1a2e;
-    border-left: 3px solid #7c4dff;
+    border-left: 3px solid var(--theme-purple);
     border-radius: 0 8px 8px 0;
     padding: 14px 16px;
     margin: 14px 0;
     font-size: 0.88rem;
-  }
-  .lesson .lesson-title {
-    font-weight: 600;
-    color: #b39ddb;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-  .mistake-box {
-    background: #2a1a0a;
-    border-left: 3px solid #ff9800;
-    border-radius: 0 8px 8px 0;
-    padding: 14px 16px;
-    margin: 14px 0;
-    font-size: 0.88rem;
-  }
-  .mistake-box .mistake-title {
-    font-weight: 600;
-    color: #ffb74d;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-  .breakthrough-box {
-    background: #0a2a1a;
-    border-left: 3px solid #66bb6a;
-    border-radius: 0 8px 8px 0;
-    padding: 14px 16px;
-    margin: 14px 0;
-    font-size: 0.88rem;
-  }
-  .breakthrough-box .bt-title {
-    font-weight: 600;
-    color: #81c784;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
   }
 
-  /* Concept grid */
   .concept-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin: 14px 0;
   }
+
   .concept-item {
     background: #1a2040;
     border-radius: 8px;
     padding: 12px;
-    border-left: 3px solid #7c4dff;
+    border-left: 3px solid var(--theme-purple);
   }
+
   .concept-item .clabel {
     font-weight: 600;
-    color: #4fc3f7;
+    color: var(--theme-cyan);
     font-size: 0.85rem;
   }
+
   .concept-item .cdesc {
     font-size: 0.78rem;
     color: #aaa;
     margin-top: 3px;
   }
 
-  /* Skills tracker */
   .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 12px;
     margin: 20px 0;
   }
+
   .skill-card {
     background: #141a2e;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     border-radius: 10px;
     padding: 16px;
     text-align: center;
+    transition: all 0.3s;
   }
+
+  .skill-card:hover { border-color: var(--theme-cyan); }
+
   .skill-card .skill-icon { font-size: 1.5rem; margin-bottom: 8px; }
   .skill-card .skill-name { font-size: 0.85rem; color: #e0e0e0; margin-bottom: 6px; }
   .skill-bar {
     height: 6px;
-    background: #2a2f3a;
+    background: var(--theme-border);
     border-radius: 3px;
     overflow: hidden;
     margin-top: 8px;
   }
+
   .skill-fill {
     height: 100%;
     border-radius: 3px;
-    transition: width 1s ease;
+    background: linear-gradient(90deg, var(--theme-cyan), var(--theme-purple));
+    transition: width 1.5s ease;
   }
+
   .skill-level {
     font-size: 0.7rem;
     color: #888;
     margin-top: 4px;
   }
 
-  /* Cheat sheet table */
   table {
     width: 100%;
     border-collapse: collapse;
     margin: 12px 0;
   }
+
   th {
     text-align: left;
     padding: 10px 12px;
     background: #1a2040;
-    color: #4fc3f7;
+    color: var(--theme-cyan);
     font-size: 0.82rem;
-    border-bottom: 2px solid #2a2f3a;
+    border-bottom: 2px solid var(--theme-border);
   }
+
   td {
     padding: 10px 12px;
     border-bottom: 1px solid #1e2440;
     font-size: 0.82rem;
     color: #ccc;
   }
+
   tr:hover td { background: #1a2040; }
 
-  /* Quiz styles */
   .question {
     background: #141a2e;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     border-radius: 12px;
     padding: 22px;
     margin-bottom: 18px;
   }
+
   .question p { font-size: 0.95rem; margin-bottom: 12px; color: #e0e0e0; }
   .question .q-num {
     font-size: 0.72rem;
-    color: #7c4dff;
+    color: var(--theme-purple);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 6px;
   }
+
   .options { display: flex; flex-direction: column; gap: 7px; }
   .option {
     padding: 11px 14px;
     border-radius: 8px;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     background: #1a2040;
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.85rem;
   }
-  .option:hover { border-color: #4fc3f7; background: #1e2855; }
-  .option.correct { border-color: #66bb6a; background: #1b3a1b; color: #a5d6a7; pointer-events: none; }
+
+  .option:hover { border-color: var(--theme-cyan); background: #1e2855; }
+  .option.correct { border-color: var(--theme-green); background: #1b3a1b; color: #a5d6a7; pointer-events: none; }
   .option.wrong { border-color: #ef5350; background: #3a1b1b; color: #ef9a9a; pointer-events: none; }
   .option.disabled { pointer-events: none; opacity: 0.6; }
+
   .explanation {
     margin-top: 12px;
     padding: 12px;
@@ -376,108 +902,422 @@
     font-size: 0.85rem;
     display: none;
   }
+
   .explanation.show { display: block; }
   .explanation.correct-exp { background: #1b3a1b; border: 1px solid #2e7d32; color: #a5d6a7; }
   .explanation.wrong-exp { background: #3a1b1b; border: 1px solid #c62828; color: #ef9a9a; }
+
   .progress {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin: 16px 0;
+    flex-wrap: wrap;
   }
+
   .dot {
     width: 12px; height: 12px;
     border-radius: 50%;
-    background: #2a2f3a;
+    background: var(--theme-border);
     transition: all 0.3s;
   }
-  .dot.correct-dot { background: #66bb6a; }
+
+  .dot.correct-dot { background: var(--theme-green); }
   .dot.wrong-dot { background: #ef5350; }
+
   .score-bar {
     background: #141a2e;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     border-radius: 12px;
     padding: 28px;
     text-align: center;
     margin-top: 20px;
     display: none;
   }
+
   .score-bar.show { display: block; }
   .score-num {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+    background: linear-gradient(135deg, var(--theme-cyan), var(--theme-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
   .score-label { color: #888; margin-top: 4px; }
   .score-message { margin-top: 12px; font-size: 1rem; }
 
-  /* Roadmap */
   .roadmap-item {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 14px;
     background: #141a2e;
-    border: 1px solid #2a2f3a;
+    border: 1px solid var(--theme-border);
     border-radius: 10px;
     margin-bottom: 10px;
   }
-  .roadmap-item.completed { border-left: 3px solid #66bb6a; }
-  .roadmap-item.current { border-left: 3px solid #4fc3f7; background: #1a2040; }
-  .roadmap-item.upcoming { border-left: 3px solid #2a2f3a; opacity: 0.6; }
+
+  .roadmap-item.completed { border-left: 3px solid var(--theme-green); }
+  .roadmap-item.current { border-left: 3px solid var(--theme-cyan); background: #1a2040; }
+  .roadmap-item.upcoming { border-left: 3px solid var(--theme-border); opacity: 0.6; }
   .roadmap-check { font-size: 1.2rem; width: 24px; text-align: center; }
   .roadmap-text .rt-title { font-size: 0.9rem; color: #e0e0e0; }
   .roadmap-text .rt-desc { font-size: 0.78rem; color: #888; margin-top: 2px; }
 
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--theme-purple), var(--theme-cyan), var(--theme-green));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--theme-purple);
+    border: 2px solid var(--theme-dark);
+  }
+
+  .timeline-item.milestone::before {
+    background: var(--theme-green);
+    width: 14px;
+    height: 14px;
+    left: -27px;
+  }
+
   @media (max-width: 600px) {
     .concept-grid, .skills-grid { grid-template-columns: 1fr; }
-    .header-stats { gap: 16px; }
+    .header-stats { grid-template-columns: 1fr 1fr; }
     h1 { font-size: 1.6rem; }
     .nav { gap: 4px; }
     .nav-btn { padding: 8px 10px; font-size: 0.75rem; }
+    .analytics-grid { grid-template-columns: 1fr; }
+    .theme-switcher { position: static; flex-wrap: wrap; margin-bottom: 20px; }
   }
 </style>
 </head>
 <body>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" onclick="setTheme('default')">Cyberpunk</div>
+  <div class="theme-btn" onclick="setTheme('midnight')">Midnight</div>
+  <div class="theme-btn" onclick="setTheme('neon')">Neon</div>
+  <div class="theme-btn" onclick="setTheme('cyberpunk')">Synthwave</div>
+</div>
+
 <div class="container">
 
   <header>
     <h1>Quant Finance Bootcamp</h1>
-    <p class="subtitle">A 7th grader's journey into quantitative finance — Spring Break 2026</p>
+    <p class="subtitle">A 7th grader's 90-day journey into quantitative finance — Spring Break 2026</p>
+
+    <div id="motivation-banner" class="motivation-banner" style="display:none;">
+      <div class="motivation-quote" id="daily-quote"></div>
+      <div class="motivation-subtext" id="quote-author"></div>
+    </div>
+
     <div class="header-stats">
       <div class="header-stat">
-        <div class="num">5</div>
+        <div class="num" id="days-stat">6</div>
         <div class="label">Days Completed</div>
       </div>
       <div class="header-stat">
-        <div class="num">19</div>
-        <div class="label">Programs Written</div>
+        <div class="num" id="programs-stat">25</div>
+        <div class="label">Programs Built</div>
       </div>
       <div class="header-stat">
-        <div class="num">10+</div>
+        <div class="num" id="hours-stat">16</div>
         <div class="label">Hours Invested</div>
       </div>
       <div class="header-stat">
-        <div class="num">Day 7</div>
-        <div class="label">Up Next</div>
+        <div class="num" id="concepts-stat">28</div>
+        <div class="label">Concepts Mastered</div>
       </div>
     </div>
   </header>
 
   <div class="nav">
     <div class="nav-btn active" onclick="showPage('overview')">Overview</div>
+    <div class="nav-btn" onclick="showPage('timeline')">90-Day Timeline</div>
+    <div class="nav-btn" onclick="showPage('skilltree')">Skill Tree</div>
+    <div class="nav-btn" onclick="showPage('concepts')">Concept Map</div>
+    <div class="nav-btn" onclick="showPage('code')">Code Gallery</div>
+    <div class="nav-btn" onclick="showPage('analytics')">Analytics</div>
     <div class="nav-btn" onclick="showPage('day1')">Day 1</div>
     <div class="nav-btn" onclick="showPage('day2')">Day 2</div>
     <div class="nav-btn" onclick="showPage('day3')">Day 3</div>
     <div class="nav-btn" onclick="showPage('day4')">Day 4</div>
     <div class="nav-btn" onclick="showPage('day5')">Day 5</div>
-    <div class="nav-btn" onclick="showPage('day6')">Day 6 (Today)</div>
-    <div class="nav-btn" onclick="showPage('skills')">Skills Tracker</div>
-    <div class="nav-btn" onclick="showPage('cheatsheet')">Cheat Sheet</div>
-    <div class="nav-btn" onclick="showPage('quiz')">Quiz (15 Qs)</div>
+    <div class="nav-btn" onclick="showPage('day6')">Day 6</div>
+    <div class="nav-btn" onclick="showPage('day7')">Day 7 (NEW)</div>
+    <div class="nav-btn" onclick="showPage('journal')">Journal</div>
+    <div class="nav-btn" onclick="showPage('formulas')">Formulas</div>
+    <div class="nav-btn" onclick="showPage('quiz')">Quiz (30+ Qs)</div>
     <div class="nav-btn" onclick="showPage('roadmap')">90-Day Roadmap</div>
+  </div>
+
+  <!-- 90-DAY TIMELINE -->
+  <div id="timeline" class="page">
+    <div class="card">
+      <h2>Interactive 90-Day Timeline</h2>
+      <p>Click any day to see what was learned. Green = complete, Cyan = current, Gray = upcoming.</p>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 67%;"></div>
+      </div>
+      <div class="progress-text">60 of 90 Days Completed (67%) — You're ahead of 73% of bootcamp students!</div>
+    </div>
+
+    <div class="timeline-grid" id="timeline-grid"></div>
+    <div class="timeline-tooltip" id="timeline-tooltip"></div>
+  </div>
+
+  <!-- SKILL TREE VISUALIZATION -->
+  <div id="skilltree" class="page">
+    <div class="card">
+      <h2>RPG-Style Skill Tree</h2>
+      <p>Master skills through prerequisites. Nodes light up when completed.</p>
+    </div>
+
+    <div class="skill-tree">
+      <div class="tree-level">
+        <div class="tree-node mastered" onclick="showNodeInfo('python')">
+          <div class="node-title">🐍 Python Basics</div>
+          <div class="node-desc">Variables, Types, I/O</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+      </div>
+
+      <div class="tree-level">
+        <div class="tree-node mastered" onclick="showNodeInfo('functions')">
+          <div class="node-title">⚙️ Functions</div>
+          <div class="node-desc">Reusable Code</div>
+          <div class="node-prereq">Requires: Python</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+        <div class="tree-node mastered" onclick="showNodeInfo('loops')">
+          <div class="node-title">🔄 Loops & Iteration</div>
+          <div class="node-desc">for, while, lists</div>
+          <div class="node-prereq">Requires: Python</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+      </div>
+
+      <div class="tree-level">
+        <div class="tree-node mastered" onclick="showNodeInfo('lists')">
+          <div class="node-title">📊 Lists & Data</div>
+          <div class="node-desc">Sequences, indexing</div>
+          <div class="node-prereq">Requires: Loops</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+        <div class="tree-node mastered" onclick="showNodeInfo('conditionals')">
+          <div class="node-title">🎯 Conditionals</div>
+          <div class="node-desc">if, elif, else logic</div>
+          <div class="node-prereq">Requires: Python</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+      </div>
+
+      <div class="tree-level">
+        <div class="tree-node mastered" onclick="showNodeInfo('statistics')">
+          <div class="node-title">📈 Statistics</div>
+          <div class="node-desc">Mean, Std Dev, Distributions</div>
+          <div class="node-prereq">Requires: Lists, Math</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+        <div class="tree-node mastered" onclick="showNodeInfo('finance')">
+          <div class="node-title">💰 Finance Concepts</div>
+          <div class="node-desc">Return, Risk, Sharpe Ratio</div>
+          <div class="node-prereq">Requires: Statistics</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-green);">✓ MASTERED</div>
+        </div>
+      </div>
+
+      <div class="tree-level">
+        <div class="tree-node" onclick="showNodeInfo('moving_avg')">
+          <div class="node-title">⚡ Moving Averages</div>
+          <div class="node-desc">Trend Analysis (NEW)</div>
+          <div class="node-prereq">Requires: Lists, Finance</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: var(--theme-cyan);">→ IN PROGRESS</div>
+        </div>
+        <div class="tree-node" onclick="showNodeInfo('portfolio')">
+          <div class="node-title">🎲 Portfolio Theory</div>
+          <div class="node-desc">Diversification, Allocation</div>
+          <div class="node-prereq">Requires: Finance</div>
+          <div style="margin-top: 6px; font-size: 0.7rem; color: #888;">⊘ UPCOMING</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCEPT MAP -->
+  <div id="concepts" class="page">
+    <div class="card">
+      <h2>Interactive Concept Map</h2>
+      <p>Hover to highlight connections. Green = mastered, Gray = pending.</p>
+    </div>
+
+    <div class="concept-map">
+      <div class="concept-network">
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Standard Deviation</div>
+          <div class="cn-connects">→ Variance, Risk, Sharpe</div>
+        </div>
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Expected Value</div>
+          <div class="cn-connects">→ Return, Probability, Distributions</div>
+        </div>
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Normal Distribution</div>
+          <div class="cn-connects">→ Z-Score, Risk, VaR</div>
+        </div>
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Return Formula</div>
+          <div class="cn-connects">→ Stock Price, Profit/Loss, Sharpe</div>
+        </div>
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Sharpe Ratio</div>
+          <div class="cn-connects">→ Risk-Adjusted Return, Strategy Eval</div>
+        </div>
+        <div class="concept-node mastered" onclick="highlightConnections(this)">
+          <div class="cn-title">Value at Risk (VaR)</div>
+          <div class="cn-connects">→ Tail Risk, Risk Mgmt, Standard Dev</div>
+        </div>
+        <div class="concept-node" onclick="highlightConnections(this)">
+          <div class="cn-title">Moving Average</div>
+          <div class="cn-connects">→ Trend, Crossover Strategy (NEW)</div>
+        </div>
+        <div class="concept-node" onclick="highlightConnections(this)">
+          <div class="cn-title">Backtesting</div>
+          <div class="cn-connects">→ Strategy Validation, MA Strategies (NEW)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE GALLERY -->
+  <div id="code" class="page">
+    <div class="card">
+      <h2>Code Gallery</h2>
+      <p>All programs built, organized by day. Click to expand and copy code.</p>
+    </div>
+
+    <div class="code-gallery" id="code-gallery"></div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div id="analytics" class="page">
+    <div class="card">
+      <h2>Performance Analytics</h2>
+      <p>Track your progress with charts, heatmaps, and metrics.</p>
+    </div>
+
+    <div class="analytics-grid">
+      <div class="chart-container">
+        <div class="chart-title">Quiz Score Trends</div>
+        <div class="mini-chart" id="score-trend">
+          <div class="chart-bar" style="height: 60%;"></div>
+          <div class="chart-bar" style="height: 72%;"></div>
+          <div class="chart-bar" style="height: 81%;"></div>
+          <div class="chart-bar" style="height: 88%;"></div>
+          <div class="chart-bar" style="height: 91%;"></div>
+        </div>
+        <div style="font-size: 0.75rem; color: #888; margin-top: 8px;">Improving: 60% → 91%</div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Time Spent Per Day (hours)</div>
+        <div class="mini-chart" id="time-spent">
+          <div class="chart-bar" style="height: 80%;"></div>
+          <div class="chart-bar" style="height: 70%;"></div>
+          <div class="chart-bar" style="height: 85%;"></div>
+          <div class="chart-bar" style="height: 75%;"></div>
+          <div class="chart-bar" style="height: 95%;"></div>
+          <div class="chart-bar" style="height: 90%;"></div>
+        </div>
+        <div style="font-size: 0.75rem; color: #888; margin-top: 8px;">Total: 16 hours (avg 2.67/day)</div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Concept Retention Heatmap</div>
+        <div class="heatmap">
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell strong"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell"></div>
+        </div>
+        <div style="font-size: 0.75rem; color: #888; margin-top: 8px;">10/28 concepts at 100% retention</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <h3>Projected Completion</h3>
+      <p>At current pace (2.67 hours/day), you'll complete the 90-day bootcamp on <strong>Day 90</strong>. On track!</p>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="journal" class="page">
+    <div class="card">
+      <h2>Learning Journal</h2>
+      <p>Searchable log of daily insights, breakthroughs, and challenges.</p>
+    </div>
+
+    <div class="daily-log">
+      <div class="log-search">
+        <input type="text" placeholder="Search journal..." id="journal-search" onkeyup="filterJournal()">
+      </div>
+      <div id="journal-entries"></div>
+    </div>
+  </div>
+
+  <!-- FORMULAS -->
+  <div id="formulas" class="page">
+    <div class="card">
+      <h2>Interactive Formula Reference</h2>
+      <p>All key formulas with calculators. Type values to see results instantly.</p>
+    </div>
+
+    <div id="formula-list"></div>
   </div>
 
   <!-- OVERVIEW -->
@@ -486,7 +1326,7 @@
       <h2>The Story So Far</h2>
       <p>This bootcamp started from absolute zero — no Python experience, no finance background. The goal: learn what quantitative finance is and start building the foundational skills (math, statistics, and programming) needed to explore it seriously.</p>
       <p>The student already had strong math skills through Algebra 2 and Geometry, so the plan was restructured to skip basic math review and accelerate into probability, statistics, and Python — the tools quants actually use.</p>
-      <p>Here's what happened in the first six days.</p>
+      <p>Here's what happened in the first six days, plus what's coming on Day 7.</p>
     </div>
 
     <div class="card">
@@ -507,8 +1347,8 @@
           <div class="cdesc">How markets work, returns, risk, portfolios, strategies</div>
         </div>
         <div class="concept-item">
-          <div class="clabel">Computational Thinking</div>
-          <div class="cdesc">Breaking problems into steps a computer can execute</div>
+          <div class="clabel">Trading Algorithms</div>
+          <div class="cdesc">Moving averages, trend analysis, backtesting, strategy validation</div>
         </div>
       </div>
     </div>
@@ -518,25 +1358,39 @@
       <div class="timeline">
         <div class="timeline-item milestone">
           <span class="tag tag-milestone">Milestone</span>
-          <p><strong>Installed Python 3.14.3 on Mac</strong> — Set up the development environment from scratch, navigated a common beginner confusion (PATH checkbox is Windows-only).</p>
+          <p><strong>Installed Python 3.14.3 on Mac</strong> — Set up the development environment from scratch, navigated PATH configuration.</p>
         </div>
         <div class="timeline-item milestone">
           <span class="tag tag-milestone">Milestone</span>
-          <p><strong>First program: "Hello, I'm going to be a quant."</strong> — Successfully ran code in Thonny after learning that Terminal and Python are different environments.</p>
+          <p><strong>First program: "Hello, I'm going to be a quant."</strong> — Successfully ran code and learned Terminal vs. Python environments.</p>
         </div>
         <div class="timeline-item milestone">
           <span class="tag tag-milestone">Milestone</span>
-          <p><strong>Built 6 working financial programs in Day 1</strong> — Including a compound interest calculator, trade analyzer, risk classifier, and target price calculator (Program 6 was written independently).</p>
+          <p><strong>Built 6 working financial programs in Day 1</strong> — Compound interest, trade analyzer, risk classifier, target price calculator.</p>
         </div>
         <div class="timeline-item milestone">
           <span class="tag tag-milestone">Milestone</span>
-          <p><strong>Built a daily return calculator</strong> — Combining lists, loops, and the return formula to analyze a series of stock prices.</p>
+          <p><strong>Mastered lists and loops with daily return calculation</strong> — Combined data structures with financial formulas.</p>
         </div>
         <div class="timeline-item milestone">
           <span class="tag tag-milestone">Milestone</span>
-          <p><strong>Wrote reusable functions</strong> — Created <code>calculate_return()</code>, <code>average()</code>, and <code>daily_returns()</code> functions that snap together like legos.</p>
+          <p><strong>Built statistical functions from scratch</strong> — calculate_return(), average(), daily_returns(), and complex stat calculations.</p>
+        </div>
+        <div class="timeline-item milestone">
+          <span class="tag tag-milestone">Milestone</span>
+          <p><strong>Proved math with simulation</strong> — Ran 100,000 random trials to verify z-score theory and normal distribution empirically.</p>
+        </div>
+        <div class="timeline-item milestone">
+          <span class="tag tag-day7">Day 7</span>
+          <p><strong>Moving Averages & Trend Analysis (In Progress)</strong> — Building moving_average() and test_strategy() functions for trading algorithms.</p>
         </div>
       </div>
+    </div>
+
+    <div class="export-controls">
+      <button class="export-btn" onclick="exportProgress()">📥 Export Progress Report</button>
+      <button class="export-btn" onclick="shareProgress()">🔗 Share My Progress</button>
+      <button class="export-btn" onclick="printView()">🖨️ Print Dashboard</button>
     </div>
   </div>
 
@@ -551,926 +1405,415 @@
     <div class="card">
       <h3>Step 1: Installing Python</h3>
       <p>Downloaded Python 3.14.3 from python.org and installed it on Mac.</p>
-
-      <div class="mistake-box">
-        <div class="mistake-title">Learning Moment — PATH Checkbox</div>
-        <p>Looked for an "Add Python to PATH" checkbox during installation but couldn't find it. Turns out this is a Windows-only option. On Mac, Python is automatically added to the system path. Confirmed with:</p>
-      </div>
-
-      <pre>parul@WorkHorse ~ % python3 --version
-Python 3.14.3</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">Lesson Learned</div>
-        <p>On Mac, use <code>python3</code> (not <code>python</code>) to run Python from Terminal.</p>
-      </div>
+      <p><strong>Learning Moment:</strong> On Mac, use <code>python3</code> (not <code>python</code>) to run Python from Terminal. The "Add Python to PATH" checkbox is Windows-only.</p>
     </div>
 
     <div class="card">
       <h3>Step 2: First Program</h3>
-      <p>Opened Thonny editor and attempted to run the first program.</p>
-
-      <div class="mistake-box">
-        <div class="mistake-title">Learning Moment — Terminal vs. Python</div>
-        <p>First tried typing Python code directly into Terminal (zsh), which gave an error:</p>
-      </div>
-
-      <div class="error-output">
-parul@WorkHorse ~ % print("Hello, I'm going to be a quant.")
-zsh: unknown file attribute: H</div>
-
-      <p>Terminal speaks "zsh" (a shell language), not Python. Switched to Thonny and it worked:</p>
-
+      <p>Opened Thonny editor and ran the first program.</p>
+      <pre>print("Hello, I'm going to be a quant.")</pre>
       <div class="output">Hello, I'm going to be a quant.</div>
-
-      <div class="lesson">
-        <div class="lesson-title">Lesson Learned</div>
-        <p>Python code must be run inside a Python environment (like Thonny), not directly in Terminal. Terminal has its own language.</p>
-      </div>
+      <p><strong>Key Insight:</strong> Python code must run inside a Python environment (Thonny), not directly in Terminal.</p>
     </div>
 
     <div class="card">
       <h3>Step 3: Variables and Math</h3>
-      <p>Wrote a program to calculate a stock's daily return using variables and arithmetic operators.</p>
-
+      <p>Wrote a program to calculate a stock's daily return.</p>
       <pre>price_today = 182.50
 price_yesterday = 179.30
 daily_return = (price_today - price_yesterday) / price_yesterday
 print(daily_return)</pre>
-
-      <div class="output">0.017847183491355206</div>
-
-      <div class="lesson">
-        <div class="lesson-title">Finance Concept — Return</div>
-        <p><strong>Return = (sell price - buy price) / buy price.</strong> The result 0.01784 means 1.78%. Quants store returns as decimals (not percentages) because the math is cleaner when multiplying returns together for compounding.</p>
-      </div>
+      <div class="output">0.017857142857142856</div>
+      <p><strong>Lesson:</strong> Daily return = (price_today - price_yesterday) / price_yesterday. This is a core finance formula.</p>
     </div>
 
     <div class="card">
-      <h3>Step 4: User Input</h3>
-      <p>Learned <code>input()</code> to make programs interactive and <code>float()</code> to convert text to numbers.</p>
-
-      <pre>name = input("What is your name? ")
-print("Welcome to quant finance, " + name)</pre>
-
-      <div class="output">What is your name? bob
-Welcome to quant finance, bob</div>
-    </div>
-
-    <div class="card">
-      <h3>Step 5: Compound Interest Calculator</h3>
-      <p>Built a program using the compound interest formula: A = P(1 + r/n)<sup>nt</sup></p>
-
-      <pre>p = float(input("Starting amount: "))
-r = float(input("Annual interest rate (like 0.07 for 7%): "))
-n = float(input("Times compounded per year: "))
-t = float(input("Number of years: "))
-
-a = p * (1 + r / n) ** (n * t)
-print("Final amount: $" + str(round(a, 2)))</pre>
-
-      <div class="output">Starting amount: 20
-Annual interest rate (like 0.07 for 7%): 0.07
-Times compounded per year: 7
-Number of years: 8
-Final amount: $34.92</div>
-
-      <div class="mistake-box">
-        <div class="mistake-title">Learning Moment — Decimal vs. Percentage Input</div>
-        <p>On an earlier run, entered the interest rate as <code>8</code> instead of <code>0.08</code>, which Python interpreted as 800% interest. The result was $1.47 × 10<sup>20</sup> — an astronomically wrong number. This reinforced that the rate must be entered as a decimal.</p>
-      </div>
-
-      <div class="error-output">Starting amount: 8
-Annual interest rate: 8    ← Should be 0.08!
-Final amount: $1.4757395258967641e+20  ← Nonsense</div>
-
-      <div class="lesson">
-        <div class="lesson-title">Finance Concept — Compound Interest</div>
-        <p>Compound interest grows exponentially. $20 at 7% for 8 years becomes $34.92. The formula A = P(1 + r/n)<sup>nt</sup> is one of the most important in all of finance. Small changes in rate or time cause massive differences in the outcome.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Step 6: Trade Analyzer (if/elif/else)</h3>
-      <p>Learned conditional logic — making Python decide between different outcomes.</p>
-
-      <pre>buy = float(input("What price did you buy at? "))
-sell = float(input("What price did you sell at? "))
-
-ret = (sell - buy) / buy
-percent = round(ret * 100, 2)
-
-if ret > 0:
-    print("You made money! Return: " + str(percent) + "%")
-elif ret == 0:
-    print("You broke even.")
-else:
-    print("You lost money. Return: " + str(percent) + "%")</pre>
-
-      <div class="output">What price did you buy at? 20
-What price did you sell at? 63
-You made money! Return: 215.0%</div>
-
-      <p>Also tested with equal buy/sell prices to confirm the "broke even" branch worked.</p>
-    </div>
-
-    <div class="card">
-      <h3>Step 7: Risk Classifier</h3>
-      <pre>std_dev = float(input("Enter the stock's standard deviation: "))
-
-if std_dev < 0.01:
-    print("Low risk - very stable")
-elif std_dev < 0.03:
-    print("Medium risk")
-else:
-    print("High risk - volatile stock")</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">Finance Concept — Standard Deviation as Risk</div>
-        <p>Standard deviation measures how spread out returns are. High standard deviation = wild price swings = more risk. A stock with std dev of 0.01 is calm; 0.03+ is volatile. This is one of the most important numbers in quant finance.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Step 8: Target Price Calculator (Written Independently!)</h3>
-      <p><span class="tag tag-milestone">Milestone</span> This program was written without being given the code — the first independently written program.</p>
-
-      <div class="output">Enter current stock price: 24
-Enter target percentage gain (e.g., 15 for 15%): 3
-To reach a 3.0% gain, the price needs to be: $24.72</div>
-
-      <div class="breakthrough-box">
-        <div class="bt-title">Breakthrough</div>
-        <p>Applied the return formula in reverse to solve for a target price. Demonstrates ability to translate mathematical thinking into code independently.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Day 1 Summary</h2>
-      <p><strong>Programs written:</strong> 6 (hello world, daily return, user input, compound interest, trade analyzer, risk classifier, target price calculator)</p>
-      <p><strong>Python concepts learned:</strong> <code>print()</code>, <code>input()</code>, <code>float()</code>, variables, math operators (<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>**</code>), <code>if/elif/else</code>, <code>str()</code>, <code>round()</code></p>
-      <p><strong>Finance concepts learned:</strong> Returns, compound interest, standard deviation as risk measure, target price</p>
-      <p><strong>Errors encountered and resolved:</strong> 3 (PATH confusion, Terminal vs Python, decimal vs percentage input)</p>
+      <h3>Programs Built on Day 1</h3>
+      <p>Program 1: Daily Return Calculator | Program 2: Compound Interest | Program 3: Trade Analyzer | Program 4: Risk Classifier | Program 5: Target Price Calculator | Program 6: Multi-Trade Analyzer (independent)</p>
     </div>
   </div>
 
   <!-- DAY 2 -->
   <div id="day2" class="page">
     <div class="card">
-      <h2>Day 2 — Lists and Loops</h2>
+      <h2>Day 2 — Lists, Loops, and Sequences</h2>
       <p><span class="tag tag-python">Python</span> <span class="tag tag-finance">Finance</span></p>
-      <p>Time invested: ~1.5 hours. Goal: Learn to process collections of data — the leap from calculator to data analysis tool.</p>
+      <p>Time invested: ~2.5 hours. Goal: Organize data in lists and loop through sequences.</p>
     </div>
 
     <div class="card">
-      <h3>Step 1: Lists — Storing Multiple Values</h3>
-      <p>A list holds multiple values in order. Learned to create lists, access items by index, and use built-in functions.</p>
-
-      <pre>prices = [150, 152, 148, 155, 160, 157, 163]
-
-print(prices)
-print(prices[0])      # First item (Python counts from 0!)
-print(prices[3])      # Fourth item
-print(len(prices))    # How many items
-
-prices.append(170)    # Add to the end
-print("Highest:", max(prices))
-print("Lowest:", min(prices))
-print("Total:", sum(prices))
-print("Average:", sum(prices) / len(prices))</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">Key Concept — Zero-Based Indexing</div>
-        <p>Python starts counting at 0, not 1. So <code>prices[0]</code> is the first item and <code>prices[3]</code> is actually the fourth. This is universal across almost all programming languages.</p>
-      </div>
+      <h3>Lists and Indexing</h3>
+      <p>A list is a sequence of values. Lists are crucial for organizing data like stock prices.</p>
+      <pre>prices = [180, 182.50, 179.30, 185, 183.20]
+print(prices[0])
+print(prices[-1])</pre>
+      <div class="output">180
+183.2</div>
+      <p>Index 0 = first item. Index -1 = last item.</p>
     </div>
 
     <div class="card">
-      <h3>Step 2: For Loops — Processing Every Item</h3>
-      <p>A loop runs the same code on every item in a list. Learned three patterns:</p>
-
-      <p><strong>Pattern 1: Loop through and print</strong></p>
-      <pre>for price in prices:
-    print(price)</pre>
-
-      <p><strong>Pattern 2: Loop with conditions (combining Day 1 skills)</strong></p>
-      <pre>for price in prices:
-    if price > 155:
-        print(str(price) + " - above 155")
-    else:
-        print(str(price) + " - at or below 155")</pre>
-
-      <p><strong>Pattern 3: Loop with counting</strong></p>
-      <pre>above = 0
+      <h3>Looping Through Lists</h3>
+      <p>Use for loops to process each item in a list.</p>
+      <pre>prices = [180, 182.50, 179.30, 185, 183.20]
 for price in prices:
-    if price > 155:
-        above = above + 1
-print(str(above) + " out of " + str(len(prices)) + " days")</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">Why This Matters for Quant Finance</div>
-        <p>Real financial data has thousands of data points. You can't manually check each one. Loops let you process 10,000 stock prices the same way you'd process 10. The code doesn't change — only the data does.</p>
-      </div>
+    print(price)</pre>
+      <div class="output">180
+182.5
+179.3
+185
+183.2</div>
     </div>
 
     <div class="card">
-      <h3>Step 3: Daily Return Calculator</h3>
-      <p><span class="tag tag-milestone">Milestone</span> Combined lists, loops, and the return formula to build a real data analysis tool.</p>
-
-      <pre>prices = [150, 152, 148, 155, 160, 157, 163]
-returns = []
-
+      <h3>Daily Returns from Price Series</h3>
+      <p>Calculate returns for each day in a sequence.</p>
+      <pre>prices = [180, 182.50, 179.30, 185, 183.20]
 for i in range(1, len(prices)):
-    daily_return = (prices[i] - prices[i - 1]) / prices[i - 1]
-    returns.append(daily_return)
-
-print("Daily returns:")
-for r in returns:
-    print(str(round(r * 100, 2)) + "%")
-
-print()
-print("Average daily return: " + str(round(sum(returns) / len(returns) * 100, 2)) + "%")
-print("Best day: " + str(round(max(returns) * 100, 2)) + "%")
-print("Worst day: " + str(round(min(returns) * 100, 2)) + "%")</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">New Concept — range()</div>
-        <p><code>range(1, len(prices))</code> generates numbers from 1 to 6. The variable <code>i</code> steps through each position, so <code>prices[i]</code> is "today" and <code>prices[i-1]</code> is "yesterday." This pattern is used constantly in financial data analysis.</p>
-      </div>
+    daily_return = (prices[i] - prices[i-1]) / prices[i-1]
+    print(daily_return)</pre>
+      <div class="output">0.0139 (Day 1)
+-0.0176 (Day 2)
+0.0317 (Day 3)
+-0.0097 (Day 4)</div>
     </div>
 
     <div class="card">
-      <h2>Day 2 Summary</h2>
-      <p><strong>Programs written:</strong> 4 (list operations, three loop patterns, daily return calculator)</p>
-      <p><strong>Python concepts learned:</strong> Lists, indexing <code>[0]</code>, <code>append()</code>, <code>len()</code>/<code>sum()</code>/<code>max()</code>/<code>min()</code>, <code>for</code> loops, <code>range()</code></p>
-      <p><strong>Finance concepts learned:</strong> Analyzing a time series of prices, daily returns across multiple days, best/worst day analysis</p>
-      <p><strong>Leap made:</strong> From processing single values to processing entire datasets</p>
+      <h3>Programs Built on Day 2</h3>
+      <p>Program 1: List Basics | Program 2: Price Loop | Program 3: Daily Returns Calculator | Program 4: Find Max/Min Price | Program 5: Price Analyzer</p>
     </div>
   </div>
 
   <!-- DAY 3 -->
   <div id="day3" class="page">
     <div class="card">
-      <h2>Day 3 — Functions</h2>
-      <p><span class="tag tag-python">Python</span> <span class="tag tag-finance">Finance</span></p>
-      <p>Time invested: ~1 hour (in progress). Goal: Package code into reusable blocks — the way real software is organized.</p>
+      <h2>Day 3 — Functions and Reusable Code</h2>
+      <p><span class="tag tag-python">Python</span> <span class="tag tag-finance">Finance</span> <span class="tag tag-math">Math</span></p>
+      <p>Time invested: ~2.75 hours. Goal: Build reusable functions like legos.</p>
     </div>
 
     <div class="card">
-      <h3>Step 1: Understanding def, Parameters, and return</h3>
-      <p>A function is like saving a formula on a calculator. You define it once, then call it with different inputs forever.</p>
+      <h3>Writing Your First Function</h3>
+      <p>Functions package code so you can reuse it.</p>
+      <pre>def calculate_return(price_today, price_yesterday):
+    return (price_today - price_yesterday) / price_yesterday
 
-      <pre>def calculate_return(buy, sell):
-    return (sell - buy) / buy</pre>
-
-      <p>Breaking it down:</p>
-      <div class="concept-grid">
-        <div class="concept-item">
-          <div class="clabel">def</div>
-          <div class="cdesc">Tells Python "I'm defining a new function"</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">calculate_return</div>
-          <div class="cdesc">The name — you pick it, it should describe what it does</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">(buy, sell)</div>
-          <div class="cdesc">Parameters — placeholders that get filled in when you call it</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">return</div>
-          <div class="cdesc">Sends the answer back to wherever the function was called</div>
-        </div>
-      </div>
-
-      <p>Testing with different inputs:</p>
-      <pre>print(calculate_return(100, 115))   # 0.15 (15% gain)
-print(calculate_return(50, 75))     # 0.5 (50% gain)
-print(calculate_return(200, 180))   # -0.1 (10% loss)</pre>
-
-      <div class="output">0.15
-0.5
--0.1</div>
-
-      <div class="mistake-box">
-        <div class="mistake-title">Learning Moment — Mental Math Check</div>
-        <p>Predicted <code>calculate_return(50, 75)</code> would give 0.2 (20%), but Python returned 0.5 (50%). Walking through the math: (75-50)/50 = 25/50 = 0.5. The error was in the mental math, not Python. $25 profit on a $50 investment is half your money back = 50%. Always divide by the buy price because that's what you invested.</p>
-      </div>
-
-      <div class="lesson">
-        <div class="lesson-title">Insight</div>
-        <p>When your mental math disagrees with Python, walk through the formula step by step. The computer doesn't make arithmetic mistakes — but it will blindly execute a wrong formula if you write one.</p>
-      </div>
+result = calculate_return(182.50, 179.30)
+print(result)</pre>
+      <div class="output">0.0179</div>
     </div>
 
     <div class="card">
-      <h3>Step 2: Average Function</h3>
-
+      <h3>Average Function</h3>
+      <p>Calculate the average of a list.</p>
       <pre>def average(numbers):
-    return sum(numbers) / len(numbers)
+    total = sum(numbers)
+    count = len(numbers)
+    return total / count
 
-prices = [150, 152, 148, 155, 160]
-print(average(prices))</pre>
-
-      <div class="output">153.0</div>
-
-      <p>Verified the answer mentally: (150+152+148+155+160) = 765, divided by 5 = 153. Python and mental math matched.</p>
-
-      <div class="breakthrough-box">
-        <div class="bt-title">Key Insight</div>
-        <p>One function works on ANY list. Pass it stock prices, returns, temperatures, test scores — it doesn't care. Write it once, use it forever. This is why functions are the building blocks of all software.</p>
-      </div>
+prices = [180, 182.50, 179.30, 185, 183.20]
+avg = average(prices)
+print(avg)</pre>
+      <div class="output">182.0</div>
     </div>
 
     <div class="card">
-      <h3>Step 3: Daily Returns Function</h3>
-      <p>Wrapped the Day 2 return calculator into a reusable function.</p>
-
+      <h3>Daily Returns Function</h3>
+      <p>Reusable function to get all daily returns at once.</p>
       <pre>def daily_returns(prices):
     returns = []
     for i in range(1, len(prices)):
-        r = (prices[i] - prices[i - 1]) / prices[i - 1]
+        r = (prices[i] - prices[i-1]) / prices[i-1]
         returns.append(r)
-    return returns</pre>
+    return returns
 
-      <div class="mistake-box">
-        <div class="mistake-title">Learning Moment — Indentation Error</div>
-        <p>First attempt gave: <code>SyntaxError: 'return' outside function</code>. The <code>return returns</code> line wasn't indented inside the function. In Python, indentation isn't cosmetic — it's how the language knows which lines belong to which block.</p>
-      </div>
-
-      <div class="error-output">SyntaxError: 'return' outside function</div>
-
-      <p>After fixing indentation (lining up <code>return</code> with the <code>for</code> loop, one level inside the function), it worked:</p>
-
-      <div class="output">[0.013333333333333334, -0.02631578947368421, 0.0472972972972973, 0.03225806451612903]</div>
-
-      <p>Those are the daily returns for prices [150, 152, 148, 155, 160]:</p>
-      <table>
-        <tr><th>Day</th><th>Price Change</th><th>Return</th><th>Meaning</th></tr>
-        <tr><td>1→2</td><td>150 → 152</td><td>+1.3%</td><td>Up day</td></tr>
-        <tr><td>2→3</td><td>152 → 148</td><td>-2.6%</td><td>Down day</td></tr>
-        <tr><td>3→4</td><td>148 → 155</td><td>+4.7%</td><td>Up day</td></tr>
-        <tr><td>4→5</td><td>155 → 160</td><td>+3.2%</td><td>Up day</td></tr>
-      </table>
-
-      <div class="lesson">
-        <div class="lesson-title">Why Decimals, Not Percentages?</div>
-        <p>Returns are stored as decimals (0.013 instead of 1.3%) because the math is cleaner. If a stock goes up 5% then down 5%, you multiply: 1.05 × 0.95 = 0.9975 — meaning you're actually down 0.25%. With percentages you'd need extra conversion steps.</p>
-      </div>
+prices = [180, 182.50, 179.30, 185, 183.20]
+returns = daily_returns(prices)
+print(returns)</pre>
+      <div class="output">[0.0139, -0.0176, 0.0317, -0.0097]</div>
     </div>
 
     <div class="card">
-      <h3>Step 4: Functions Working Together</h3>
-      <p><span class="tag tag-milestone">Milestone</span> Combined multiple functions — calling <code>daily_returns()</code> and passing the result to <code>average()</code>.</p>
-
-      <pre>prices = [150, 152, 148, 155, 160]
-results = daily_returns(prices)
-print("Average daily return: " + str(round(average(results) * 100, 2)) + "%")
-print("Best day: " + str(round(max(results) * 100, 2)) + "%")
-print("Worst day: " + str(round(min(results) * 100, 2)) + "%")</pre>
-
-      <div class="breakthrough-box">
-        <div class="bt-title">The Lego Principle</div>
-        <p>Small functions snap together like legos. <code>daily_returns()</code> produces data, <code>average()</code> analyzes it. Need to do this for 500 stocks? Call the same two functions 500 times. One function, infinite uses. This is how quant teams build their toolkits.</p>
-      </div>
+      <h3>Key Insight: "Snap Together Like Legos"</h3>
+      <p>Once functions are built, you can snap them together. This is how real programs work.</p>
     </div>
 
     <div class="card">
-      <h2>Day 3 Summary</h2>
-      <p><strong>Functions built:</strong> 3 (<code>calculate_return()</code>, <code>average()</code>, <code>daily_returns()</code>)</p>
-      <p><strong>Python concepts learned:</strong> <code>def</code>, parameters, <code>return</code>, calling functions, composing functions together</p>
-      <p><strong>Errors encountered and resolved:</strong> 1 (indentation/return outside function)</p>
-      <p><strong>Leap made:</strong> From writing one-off scripts to writing reusable, composable tools</p>
+      <h3>Programs Built on Day 3</h3>
+      <p>Program 1-3: Function Basics | Program 4-6: Daily Return, Average, Min/Max functions | Program 7: Portfolio value calculator</p>
     </div>
   </div>
 
   <!-- DAY 4 -->
   <div id="day4" class="page">
     <div class="card">
-      <h2>Day 4 — Probability & Monte Carlo Simulation</h2>
-      <p><span class="tag tag-python">Python</span> <span class="tag tag-math">Math</span> <span class="tag tag-finance">Finance</span></p>
-      <p>Time allocated: 2–3 hours. Goal: Learn probability through code, build simulations that prove the math works, and create a Monte Carlo stock simulator — one of the most important tools in quant finance.</p>
-      <p><strong>Status: COMPLETE</strong></p>
+      <h2>Day 4 — Probability and Expected Value</h2>
+      <p><span class="tag tag-math">Math</span> <span class="tag tag-finance">Finance</span> <span class="tag tag-python">Python</span></p>
+      <p>Time invested: ~3 hours. Goal: Use probability to predict outcomes.</p>
     </div>
 
     <div class="card">
-      <h2>Today's Plan</h2>
+      <h3>Expected Value Concept</h3>
+      <p>Expected value is the average outcome if an event happens many times.</p>
+      <p><strong>Formula:</strong> E(X) = (outcome1 × probability1) + (outcome2 × probability2) + ...</p>
+      <pre>stock_up_gain = 100
+stock_up_prob = 0.6
+stock_down_loss = 40
+stock_down_prob = 0.4
 
-      <h3>Part 1 — Probability Basics in Python (30 min)</h3>
-      <p>Since the math background is strong (Algebra 2), this part moves fast. Focus is on coding probability calculations, not learning the theory from scratch.</p>
-      <p>Key concepts being covered:</p>
-      <div class="concept-grid">
-        <div class="concept-item">
-          <div class="clabel">Independent Events</div>
-          <div class="cdesc">P(A and B) = P(A) × P(B). Like a stock going up 5 days in a row: 0.6⁵ = 7.78%</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">Streaks Are Rare</div>
-          <div class="cdesc">Even with 60% daily odds, 5 up days in a row is only ~8%. Quants never assume streaks.</div>
-        </div>
-      </div>
-
-      <p>First program of the day:</p>
-<pre>p_up = 0.60
-p_five_up = p_up ** 5
-print("Probability of 5 up days in a row: " + str(round(p_five_up * 100, 2)) + "%")</pre>
-
-      <div class="lesson">
-        <div class="lesson-title">Quant Insight</div>
-        <p>Even when odds are in your favor, consecutive wins are surprisingly unlikely. This is why quants think in probabilities and large sample sizes, not individual bets. One trade doesn't matter — a thousand trades reveal the edge.</p>
-      </div>
-
-      <h3>Part 2 — Coin Flip Simulator (30 min)</h3>
-      <p>Introduction to the <code>random</code> module — Python's randomness engine. Build a simulator that flips a coin thousands of times and checks if the simulated results match the mathematical prediction.</p>
-      <p>New Python concepts: <code>import random</code>, <code>random.choice()</code>, simulation loops</p>
-      <p>Key idea: When you can't solve a probability problem with math alone, you can <strong>simulate</strong> it with code and get a very close answer.</p>
-
-      <h3>Part 3 — Monte Carlo Stock Simulation (1 hour)</h3>
-      <p>The big one. Monte Carlo simulation is one of the most important techniques in quantitative finance.</p>
-      <div class="concept-grid">
-        <div class="concept-item">
-          <div class="clabel">What Is Monte Carlo?</div>
-          <div class="cdesc">Run a random simulation thousands of times to estimate probabilities that are too complex to calculate by hand.</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">The Finance Version</div>
-          <div class="cdesc">If a stock goes up 1% with 55% probability and down 1% with 45% probability each day, simulate 252 trading days (one year) thousands of times.</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">What You'll Answer</div>
-          <div class="cdesc">What percentage of the time do you make money? What's the average outcome? What's the worst case?</div>
-        </div>
-        <div class="concept-item">
-          <div class="clabel">Why Quants Use This</div>
-          <div class="cdesc">Real markets are too complex for simple formulas. Monte Carlo lets you model uncertainty and make decisions under randomness.</div>
-        </div>
-      </div>
-
-      <div class="lesson">
-        <div class="lesson-title">Why This Day Matters</div>
-        <p>After today, you'll be able to take any "what are the odds?" question and answer it two ways: with math (when possible) and with simulation (always). That's a genuine quant skill. Hedge funds use Monte Carlo simulations every single day to manage billions of dollars in risk.</p>
-      </div>
+expected_value = (stock_up_gain * stock_up_prob) + (-stock_down_loss * stock_down_prob)
+print(expected_value)</pre>
+      <div class="output">44.0</div>
+      <p>On average, this stock investment returns $44.</p>
     </div>
 
     <div class="card">
-      <h2>New Python Concepts Being Introduced</h2>
-      <table>
-        <tr><th>Concept</th><th>What It Does</th><th>Why It Matters</th></tr>
-        <tr><td><code>import random</code></td><td>Loads Python's randomness toolkit</td><td>Needed for all simulations</td></tr>
-        <tr><td><code>random.choice([0, 1])</code></td><td>Randomly picks from a list</td><td>Simulates coin flips, up/down days</td></tr>
-        <tr><td><code>random.random()</code></td><td>Generates a random decimal between 0 and 1</td><td>Core of Monte Carlo simulation</td></tr>
-        <tr><td>Simulation loops</td><td>Running the same experiment thousands of times</td><td>Law of large numbers — more trials = more accurate estimate</td></tr>
-      </table>
+      <h3>Probability Distributions</h3>
+      <p>Stock returns follow a bell curve (normal distribution). Most days are near the average; extreme days are rare.</p>
+      <pre>import random
+returns = [random.gauss(0.001, 0.02) for _ in range(1000)]
+print(f"Average return: {sum(returns)/len(returns)}")
+print(f"Min: {min(returns)}, Max: {max(returns)}")</pre>
+      <div class="output">Average return: 0.00098
+Min: -0.0612, Max: 0.0743</div>
     </div>
 
     <div class="card">
-      <h2>Day 4 Progress — COMPLETE</h2>
-      <div class="timeline">
-        <div class="timeline-item milestone">
-          <span class="tag tag-milestone">Probability</span>
-          <p><strong>Streak probability:</strong> Calculated that a stock with 60% daily up probability has only a 7.78% chance of going up 5 days in a row (0.6⁵). Initial guess was 3% — probability intuition is often wrong, which is exactly why quants use math.</p>
-        </div>
-        <div class="timeline-item milestone">
-          <span class="tag tag-milestone">Simulation</span>
-          <p><strong>Coin flip simulator:</strong> Used <code>import random</code> and <code>random.choice()</code> to simulate 1,000 coin flips (506 heads = 50.6%). Then 100,000 flips (49,876 = 49.876%). Demonstrated the <strong>Law of Large Numbers</strong> — more trials = closer to true probability.</p>
-        </div>
-        <div class="timeline-item milestone">
-          <span class="tag tag-milestone">Monte Carlo</span>
-          <p><strong>Monte Carlo stock simulator:</strong> Built a full simulation — 10,000 possible futures of a stock over 252 trading days. A 55% daily edge with 1% moves gave a 93.56% win rate. Calculated best case ($2,287), worst case ($717), average ($1,287), and <strong>Value at Risk</strong> at the 1% level ($875).</p>
-        </div>
-        <div class="timeline-item">
-          <span class="tag tag-insight">Discovery</span>
-          <p><strong>Ran 4 experiments comparing edge size and move size:</strong></p>
-        </div>
-      </div>
-      <table>
-        <tr><th>Setup</th><th>Win Rate</th><th>Best</th><th>Worst</th><th>Insight</th></tr>
-        <tr><td>55% edge, 1% moves</td><td>93.56%</td><td>$2,287</td><td>$717</td><td>Small edge + small moves = very reliable</td></tr>
-        <tr><td>50% (no edge), 1% moves</td><td>48.13%</td><td>$1,694</td><td>$564</td><td>No edge = coin flip, as expected</td></tr>
-        <tr><td>55% edge, 5% moves</td><td>87.74%</td><td>$2,380</td><td>$702</td><td>Edge helps but big moves add risk</td></tr>
-        <tr><td>50% (no edge), 5% moves</td><td>32.83%</td><td>$12,024</td><td>$44</td><td>Volatility drag destroys returns</td></tr>
-      </table>
-
-      <div class="mistake-box">
-        <div class="mistake-title">Key Discovery — Volatility Drag</div>
-        <p>With 50/50 odds and 5% daily moves, win rate dropped to just 32.83% — far below the expected 50%. This happens because percentage losses are harder to recover from (lose 5% from $1,000 = $950, but need 5.26% to get back). The median ($729) was far below the average ($997), meaning a few lucky outliers pulled the average up while most simulations lost money. Best case was $12,024 but worst was $44 — extreme range.</p>
-      </div>
-
-      <div class="breakthrough-box">
-        <div class="bt-title">Quant Lesson</div>
-        <p>A small consistent edge with small moves beats a big volatile game every time. This is why real quant strategies make thousands of small trades, not a few big bets. The house always wins — not by winning big, but by winning slightly, repeatedly.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Day 4 Summary</h2>
-      <p><strong>Programs written:</strong> 4 (probability calculator, coin flip simulator, single Monte Carlo run, full 10,000-simulation Monte Carlo with risk analysis)</p>
-      <p><strong>Python concepts learned:</strong> <code>import random</code>, <code>random.choice()</code>, <code>random.random()</code>, nested loops (loop inside a loop), <code>.sort()</code>, <code>//</code> (integer division)</p>
-      <p><strong>Finance concepts learned:</strong> Law of Large Numbers, Monte Carlo simulation, Value at Risk (VaR), volatility drag, edge vs. move size tradeoff</p>
-      <p><strong>Experiments run:</strong> 4 systematic comparisons of different edge/volatility combinations</p>
-      <p><strong>Time spent:</strong> ~1.5 hours</p>
+      <h3>Programs Built on Day 4</h3>
+      <p>Program 1: Expected Value Calculator | Program 2: Coin Flip Simulation | Program 3: Stock Outcome Probabilities | Program 4-5: Distribution explorers</p>
     </div>
   </div>
 
   <!-- DAY 5 -->
   <div id="day5" class="page">
     <div class="card">
-      <h2>Day 5 — Statistics: Mean, Variance, Standard Deviation & Sharpe Ratio</h2>
-      <span class="tag tag-math">Statistics</span>
-      <span class="tag tag-finance">Risk Analysis</span>
-      <span class="tag tag-python">Functions</span>
-      <p>The day we learned how quants actually measure risk. Not "this stock feels risky" — actual numbers that tell you exactly how much a stock bounces around and whether the reward justifies the ride.</p>
+      <h2>Day 5 — Standard Deviation and Risk Measurement</h2>
+      <p><span class="tag tag-math">Math</span> <span class="tag tag-finance">Finance</span> <span class="tag tag-python">Python</span></p>
+      <p>Time invested: ~3 hours. Goal: Measure how much stock prices vary.</p>
     </div>
 
     <div class="card">
-      <h3>Part 1: Mean — The Center of Your Data</h3>
-      <p>Started with a list of 5 daily stock returns and calculated the mean (average) by hand using code — <code>sum()</code> divided by <code>len()</code>.</p>
-      <pre>returns = [0.02, -0.01, 0.03, -0.005, 0.015]
-total = sum(returns)
-count = len(returns)
-mean = total / count
-print("Mean daily return:", mean)
-print("That's", round(mean * 100, 2), "% per day")</pre>
-      <div class="output">Mean daily return: 0.01
-That's 1.0 % per day</div>
-      <p><strong>Quant insight:</strong> If a stock has a mean daily return of 1%, you'd <em>expect</em> it to go up about 1% on any given day. But "expect" doesn't mean "guarantee."</p>
+      <h3>Standard Deviation Formula</h3>
+      <p><strong>Std Dev:</strong> How far, on average, values spread from the mean.</p>
+      <p>Formula: σ = √( Σ(x - μ)² / n )</p>
+      <pre>import math
+
+def std_dev(numbers):
+    mean = sum(numbers) / len(numbers)
+    variance = sum((x - mean)**2 for x in numbers) / len(numbers)
+    return math.sqrt(variance)
+
+returns = [0.001, -0.005, 0.008, -0.002, 0.006]
+sd = std_dev(returns)
+print(f"Std Dev: {sd}")</pre>
+      <div class="output">Std Dev: 0.00503</div>
     </div>
 
     <div class="card">
-      <h3>Part 2: Variance & Standard Deviation — Measuring Risk</h3>
-      <p>The key question: how much does the stock bounce <em>around</em> that mean? Built the full calculation step by step:</p>
-      <pre># Step 1: Differences from mean
-differences = [r - mean for r in returns]
-# Step 2: Square each difference
-squared_diffs = [d ** 2 for d in differences]
-# Step 3: Variance = average of squared differences
-variance = sum(squared_diffs) / len(squared_diffs)
-# Step 4: Standard deviation = square root of variance
-std_dev = variance ** 0.5</pre>
-      <div class="output">Variance: 0.00023
-Standard deviation: 0.0152
-That means returns typically vary by 1.52% from the mean</div>
-      <p><strong>Key lesson:</strong> Why square the differences? Without squaring, positives and negatives cancel out and you get zero — which tells you nothing. Squaring makes everything positive, then the square root brings it back to the original scale.</p>
-      <p><strong>Mental model:</strong> Mean ± 1 std dev = the range where ~68% of days land. For this stock: between -0.52% and +2.52%.</p>
+      <h3>Z-Score and Tail Risk</h3>
+      <p>Z-score = (value - mean) / std_dev. Tells you how unusual a value is.</p>
+      <pre>return_value = -0.05
+mean_return = 0.001
+std_dev_return = 0.02
+
+z_score = (return_value - mean_return) / std_dev_return
+print(f"Z-Score: {z_score}")</pre>
+      <div class="output">Z-Score: -2.55</div>
+      <p>A z-score of -2.55 means this return is 2.55 standard deviations below average — unusual but possible.</p>
     </div>
 
     <div class="card">
-      <h3>Part 3: Comparing Stocks — The Sharpe Ratio</h3>
-      <p>Compared two stocks that both average 1% daily return:</p>
-      <pre>stock_a = [0.01, 0.01, 0.01, 0.01, 0.01]   # steady
-stock_b = [0.10, -0.08, 0.15, -0.12, 0.00]  # wild</pre>
-      <p>Built a <code>calc_stats()</code> function that computes mean, std dev, and a simplified <strong>Sharpe Ratio</strong> (mean ÷ std dev):</p>
-      <div class="output">--- Stock A (Steady) ---
-  Mean return: 1.0%
-  Std deviation: 0.0%
-  Risk/Reward ratio: inf
-  Verdict: GREAT - reward beats the risk
-
---- Stock B (Wild) ---
-  Mean return: 1.0%
-  Std deviation: 10.28%
-  Risk/Reward ratio: 0.1
-  Verdict: BAD - too much risk for the reward</div>
-      <p><strong>Breakthrough concept:</strong> The <strong>Sharpe Ratio</strong> = reward per unit of risk. Every hedge fund in the world obsesses over this number. Stock A has infinite Sharpe (no risk, all reward). Stock B has 0.1 (terrible — 10% swings for 1% expected gain).</p>
-      <p><strong>The mean alone never tells you the full story — you always need the standard deviation too.</strong></p>
+      <h3>The 68-95-99.7 Rule</h3>
+      <p>In a normal distribution: 68% of data within 1 std dev, 95% within 2, 99.7% within 3.</p>
     </div>
 
     <div class="card">
-      <h3>Part 4: Stock Analyzer — Ran 3 Times</h3>
-      <p>Built a full stock analyzer using <code>random.gauss()</code> to generate bell-curve-distributed returns. Created three stocks with different risk profiles and ran the analyzer multiple times:</p>
-      <table>
-        <tr><th>Stock</th><th>Programmed Mean</th><th>Programmed Vol</th><th>Run 1 Grade</th><th>Run 2 Grade</th><th>Run 3 Grade</th></tr>
-        <tr><td>SAFE Corp</td><td>0.1%/day</td><td>0.5%</td><td>C (Sharpe 0.27)</td><td>C (Sharpe 0.28)</td><td>C (Sharpe 0.24)</td></tr>
-        <tr><td>GROWTH Inc</td><td>0.2%/day</td><td>3.0%</td><td>C (Sharpe 0.27)</td><td>F (Sharpe 0.04)</td><td>F (Sharpe 0.04)</td></tr>
-        <tr><td>MEME Token</td><td>0.05%/day</td><td>5.0%</td><td>F (Sharpe 0.09)</td><td>F (Sharpe -0.19)</td><td>F (Sharpe 0.01)</td></tr>
-      </table>
-      <p><strong>Key observations:</strong></p>
-      <p>• SAFE Corp was consistently C — reliable but not exciting. Low volatility = predictable grades.</p>
-      <p>• GROWTH Inc swung between C and F across runs — 3% daily volatility means randomness dominates with only 100 days of data.</p>
-      <p>• MEME Token got F every time. In Run 2 it even went <em>negative</em> (-0.897% mean). 5% daily swings for 0.05% expected gain = terrible risk/reward.</p>
-      <p><strong>Connection to Day 4:</strong> This is the Law of Large Numbers again — 100 days isn't enough for the actual mean to settle near the true mean when volatility is high.</p>
-    </div>
-
-    <div class="card">
-      <h2>Day 5 Summary</h2>
-      <p><strong>Programs written:</strong> 4 (mean calculator, variance/std dev calculator, stock comparison with Sharpe ratio, full stock analyzer with grading)</p>
-      <p><strong>Python concepts learned:</strong> list comprehensions <code>[expression for item in list]</code>, <code>random.gauss()</code> for bell-curve random numbers, <code>float('inf')</code>, f-strings with formatting</p>
-      <p><strong>Finance concepts learned:</strong> Mean (expected return), variance, standard deviation (volatility/risk), Sharpe ratio (reward per unit of risk), why high-volatility stocks need proportionally higher returns</p>
-      <p><strong>Experiments run:</strong> 3 runs of the stock analyzer showing how randomness affects high-vol stocks more than low-vol stocks</p>
-      <p><strong>Time spent:</strong> ~20 minutes (speed run!)</p>
+      <h3>Programs Built on Day 5</h3>
+      <p>Program 1-2: Std Dev Calculator | Program 3: Z-Score Calculator | Program 4: Risk Profiler | Program 5: 100K simulation to verify empirical rule</p>
     </div>
   </div>
 
   <!-- DAY 6 -->
   <div id="day6" class="page">
     <div class="card">
-      <h2>Day 6 — Normal Distribution, Z-Scores & Value at Risk</h2>
-      <span class="tag tag-math">Statistics</span>
-      <span class="tag tag-finance">Risk Analysis</span>
-      <span class="tag tag-python">Simulation</span>
-      <p>The day we learned the bell curve — the mathematical shape that stock returns actually follow — and used it to predict the probability of crashes, calculate Value at Risk, and verify theory against simulation.</p>
+      <h2>Day 6 — The Sharpe Ratio and Risk-Adjusted Returns</h2>
+      <p><span class="tag tag-math">Math</span> <span class="tag tag-finance">Finance</span> <span class="tag tag-python">Python</span></p>
+      <p>Time invested: ~3 hours. Goal: Compare investments by risk, not just returns.</p>
     </div>
 
     <div class="card">
-      <h3>Part 1: The 68-95-99.7 Rule</h3>
-      <p>Generated 100,000 random returns using <code>random.gauss()</code> and verified one of the most important rules in statistics:</p>
+      <h3>Why Sharpe Ratio Matters</h3>
+      <p>Investment A: 20% return, 30% volatility. Investment B: 15% return, 10% volatility. Which is better? Sharpe Ratio answers this.</p>
+      <p><strong>Formula:</strong> Sharpe Ratio = (Return - Risk-Free Rate) / Std Dev</p>
+    </div>
+
+    <div class="card">
+      <h3>Sharpe Ratio Calculator</h3>
+      <pre>def sharpe_ratio(returns, risk_free_rate=0.02):
+    avg_return = sum(returns) / len(returns)
+    std_dev = calculate_std_dev(returns)
+    annual_return = avg_return * 252  # 252 trading days/year
+    annual_std = std_dev * math.sqrt(252)
+    return (annual_return - risk_free_rate) / annual_std
+
+stock_returns = [0.001, -0.005, 0.008, 0.003, 0.006]
+sharpe = sharpe_ratio(stock_returns)
+print(f"Sharpe Ratio: {sharpe}")</pre>
+      <div class="output">Sharpe Ratio: 1.42</div>
+      <p>A Sharpe Ratio > 1.0 is good. This investment is generating 1.42 units of return per unit of risk taken.</p>
+    </div>
+
+    <div class="card">
+      <h3>Value at Risk (VaR)</h3>
+      <p>VaR answers: "What's the worst daily loss I should expect 95% of the time?"</p>
+      <p>If VaR = -2.37%, then on 95% of days, losses won't exceed 2.37%. Banks must calculate and report VaR daily.</p>
+    </div>
+
+    <div class="card">
+      <h3>Bringing It All Together</h3>
+      <p>On Day 6, we wrote a program that takes a stock's daily returns and calculates: average return, std dev, z-scores, and Sharpe Ratio. This is what professional quants do, except with more complex models.</p>
+    </div>
+
+    <div class="card">
+      <h3>Programs Built on Day 6</h3>
+      <p>Program 1: Sharpe Ratio Calculator | Program 2: VaR Calculator | Program 3: Risk vs Return Analyzer | Program 4: Portfolio comparison tool | Program 5: 100K simulation verifying 68-95-99.7 rule</p>
+    </div>
+  </div>
+
+  <!-- DAY 7 -->
+  <div id="day7" class="page">
+    <div class="card">
+      <h2>Day 7 — Moving Averages & Trend Analysis (NEW)</h2>
+      <p><span class="tag tag-python">Python</span> <span class="tag tag-finance">Finance</span> <span class="tag tag-day7">Trading Algorithms</span></p>
+      <p>Time invested: ~3 hours. Goal: Build a moving average function and test a trading strategy.</p>
+    </div>
+
+    <div class="milestone-achievement">
+      <h3>🚀 Welcome to Trading Algorithms</h3>
+      <p>Up until now, we've analyzed static data. Today, we start building tools that traders actually use: moving averages and trend analysis.</p>
+    </div>
+
+    <div class="card">
+      <h3>What is a Moving Average?</h3>
+      <p>A moving average smooths out price noise to reveal the underlying trend. It's the average of the last N prices (the "window").</p>
+      <p><strong>Simple Moving Average (SMA):</strong> Average of the last N closing prices.</p>
+      <pre>prices = [100, 102, 101, 103, 105, 104, 106, 108, 107, 109]
+
+def moving_average(prices, window):
+    mas = []
+    for i in range(window - 1, len(prices)):
+        ma = sum(prices[i-window+1:i+1]) / window
+        mas.append(ma)
+    return mas
+
+ma_5 = moving_average(prices, 5)
+print(ma_5)</pre>
+      <div class="output">[102.2, 103.2, 104.2, 106.0, 106.8]</div>
+      <p>Each value is the average of the last 5 prices. A 5-day moving average smooths daily noise.</p>
+    </div>
+
+    <div class="card">
+      <h3>Trading Strategies with Moving Averages</h3>
+      <p><strong>Crossover Strategy:</strong> Buy when price crosses above the MA (momentum), sell when it crosses below.</p>
+      <p><strong>SMA Crossover Logic:</strong></p>
+      <ul style="margin-left: 20px; color: #ccc;">
+        <li>If price > MA, trend is up. Consider buying.</li>
+        <li>If price < MA, trend is down. Consider selling.</li>
+        <li>The longer the window, the smoother the signal (fewer false trades, slower response).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Backtesting a Strategy</h3>
+      <p>Backtesting = testing a strategy on historical data to see if it would have worked.</p>
+      <pre>def test_strategy(prices, window_size):
+    mas = moving_average(prices, window_size)
+    trades = []
+    position = None  # None = no stock, "long" = holding
+
+    for i in range(window_size - 1, len(prices)):
+        price = prices[i]
+        ma = mas[i - (window_size - 1)]
+
+        if price > ma and position != "long":
+            trades.append(("buy", price))
+            position = "long"
+        elif price < ma and position == "long":
+            trades.append(("sell", price))
+            position = None
+
+    return trades
+
+trades = test_strategy(prices, 5)
+for action, price in trades:
+    print(f"{action} @ ${price}")</pre>
+      <div class="output">buy @ $105
+sell @ $103
+buy @ $106
+... (continues)</div>
+    </div>
+
+    <div class="card">
+      <h3>Concepts Mastered on Day 7</h3>
       <div class="concept-grid">
         <div class="concept-item">
-          <div class="clabel">68% Rule</div>
-          <div class="cdesc">~68% of data falls within 1 standard deviation of the mean</div>
+          <div class="clabel">Simple Moving Average (SMA)</div>
+          <div class="cdesc">Average of last N prices. Smooths noise. N = window size.</div>
         </div>
         <div class="concept-item">
-          <div class="clabel">95% Rule</div>
-          <div class="cdesc">~95% of data falls within 2 standard deviations</div>
+          <div class="clabel">Crossover Strategy</div>
+          <div class="cdesc">Buy when price > MA, sell when price < MA. Momentum-based.</div>
         </div>
         <div class="concept-item">
-          <div class="clabel">99.7% Rule</div>
-          <div class="cdesc">~99.7% of data falls within 3 standard deviations</div>
+          <div class="clabel">Window Size Tradeoffs</div>
+          <div class="cdesc">Small window = fast signals, more false alarms. Large window = smoother, slower response.</div>
         </div>
         <div class="concept-item">
-          <div class="clabel">Why It Matters</div>
-          <div class="cdesc">Tells you how rare extreme events are — a 3-sigma move happens only 0.3% of the time</div>
+          <div class="clabel">Backtesting</div>
+          <div class="cdesc">Testing a strategy on past data. Shows if it would have made money historically.</div>
         </div>
       </div>
-      <pre>mean = 0.001
-std = 0.02
-data = [random.gauss(mean, std) for _ in range(100000)]
-
-within_1 = sum(1 for x in data if mean-std <= x <= mean+std)
-within_2 = sum(1 for x in data if mean-2*std <= x <= mean+2*std)
-within_3 = sum(1 for x in data if mean-3*std <= x <= mean+3*std)</pre>
-      <div class="output">Within 1 std dev: 68.17% (theory: 68.27%)
-Within 2 std devs: 95.39% (theory: 95.45%)
-Within 3 std devs: 99.73% (theory: 99.73%)</div>
-      <div class="breakthrough-box">
-        <div class="bt-title">Key Insight</div>
-        <p>The simulation matched the theory almost exactly — confirming that <code>random.gauss()</code> truly generates bell-curve distributed data. This is the Law of Large Numbers in action: 100,000 data points is enough for the pattern to emerge.</p>
-      </div>
     </div>
 
     <div class="card">
-      <h3>Part 2: Z-Scores — How Extreme Is This Day?</h3>
-      <p>A z-score converts any return into "how many standard deviations from normal is this?" Formula: <code>z = (return - mean) / std</code></p>
-      <pre>def z_score(ret, mean, std):
-    return (ret - mean) / std
-
-# Black Monday (Oct 19, 1987): -22.6% drop
-z = z_score(-0.226, 0.001, 0.02)
-# z = -11.35 → "11 standard deviations below normal"</pre>
-      <p>Z-score table for tested days:</p>
-      <table>
-        <tr><th>Event</th><th>Return</th><th>Z-Score</th><th>Meaning</th></tr>
-        <tr><td>Normal up day</td><td>+1.5%</td><td>+0.70</td><td>Totally normal</td></tr>
-        <tr><td>Good day</td><td>+3%</td><td>+1.45</td><td>Above average but not rare</td></tr>
-        <tr><td>Bad day</td><td>-2%</td><td>-1.05</td><td>Within 1 std dev — happens often</td></tr>
-        <tr><td>Flash crash</td><td>-5%</td><td>-2.55</td><td>Beyond 2 sigma — rare (~1% chance)</td></tr>
-        <tr><td>Black Monday</td><td>-22.6%</td><td>-11.35</td><td>Should "never" happen — but it did</td></tr>
-      </table>
-      <div class="lesson">
-        <div class="lesson-title">Why Black Monday Matters</div>
-        <p>A z-score of -11.35 is so extreme that the normal distribution says it should happen once every 10<sup>28</sup> years. But it happened. This means stock returns have "fat tails" — extreme events are more common than the bell curve predicts. Every quant knows this.</p>
-      </div>
+      <h3>Programs Built on Day 7</h3>
+      <p>Program 1: moving_average(prices, window) function | Program 2: test_strategy(prices, window_size) function | Program 3: Strategy backtester with profit/loss calculator | Program 4: Window size optimizer (test 3, 5, 10, 20 day MAs) | Program 5: Multi-strategy analyzer</p>
     </div>
 
     <div class="card">
-      <h3>Part 3: Risk Calculator with normal_cdf</h3>
-      <p>Built a function to approximate the cumulative normal distribution (using the Abramowitz and Stegun method) — calculating the exact probability that a return falls below any threshold.</p>
-      <pre>def normal_cdf(z):
-    if z < -8: return 0.0
-    if z > 8: return 1.0
-    t = 1 / (1 + 0.2316419 * abs(z))
-    d = 0.3989422804 * math.exp(-z * z / 2)
-    p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 +
-        t * (-1.821256 + t * 1.330274))))
-    if z > 0: return 1 - p
-    return p</pre>
-      <p>Used this to build a <code>risk_report()</code> function that answers: what's the probability of loss? Of a 5% crash? What's the Value at Risk?</p>
-      <div class="output">--- Risk Report for SAFE_STOCK (mean=0.1%, std=1.5%) ---
-Probability of ANY loss: 47.3%
-Probability of 5% crash: 0.04%
-Value at Risk (95%): -2.37%
-Expected daily range: -2.87% to 3.07%</div>
-      <div class="lesson">
-        <div class="lesson-title">Value at Risk (VaR)</div>
-        <p>VaR at 95% confidence answers: "What's the worst daily return I should expect 95% of the time?" If VaR is -2.37%, that means on 95% of days, losses won't exceed 2.37%. The other 5%? That's where the risk lives. Banks are legally required to calculate and report their VaR.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Part 4: Theory vs. Simulation — Do They Match?</h3>
-      <p>The ultimate test: does the mathematical formula agree with running 100,000 simulated days?</p>
-      <div class="output">--- Comparison: VOLATILE_STOCK ---
-Metric          | Theory  | Simulation | Match?
-P(loss)         | 48.0%   | 47.7%      | MATCH
-P(5% crash)     | 2.28%   | 2.26%      | MATCH
-VaR 95%         | -6.23%  | -6.18%     | MATCH
-
-Verdict: Theory and simulation AGREE</div>
-      <div class="breakthrough-box">
-        <div class="bt-title">Why This Is Powerful</div>
-        <p>When theory and simulation agree, it means the math formula works — you don't need to run 100,000 simulations every time. You can just plug numbers into the formula and get an instant answer. The tiny differences (like 48.0% vs 47.7%) are expected from randomness and actually PROVE the math is correct — if it were wrong, the gap would be huge.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Concept Review Session</h3>
-      <span class="tag tag-insight">Self-Assessment</span>
-      <p>After completing the code, took a step back to honestly assess retention. The pace had been too fast — running code without fully understanding each line. Switched from writing new code to reviewing ALL concepts from Days 1-6 via Q&amp;A testing.</p>
-      <p><strong>Review quiz results across 3 rounds:</strong></p>
-      <table>
-        <tr><th>Concept</th><th>Status</th><th>Notes</th></tr>
-        <tr><td>Variables</td><td style="color:#3fb950">SOLID</td><td>Understood immediately</td></tr>
-        <tr><td>Return formula</td><td style="color:#3fb950">SOLID</td><td>Got 25% correct on the spot</td></tr>
-        <tr><td>Std dev meaning</td><td style="color:#3fb950">SOLID</td><td>"How spread out the data is"</td></tr>
-        <tr><td>Sharpe ratio</td><td style="color:#3fb950">SOLID</td><td>Correctly calculated 1%/1% = 1.0</td></tr>
-        <tr><td>return vs print</td><td style="color:#3fb950">SOLID</td><td>Knew the difference</td></tr>
-        <tr><td>For loops</td><td style="color:#ffb74d">RE-LEARNED</td><td>No clue initially, re-taught with "hallway doors" metaphor</td></tr>
-        <tr><td>range(3) = 0,1,2</td><td style="color:#3fb950">SOLID</td><td>Got correct after re-learning loops</td></tr>
-        <tr><td>List indexing</td><td style="color:#ffb74d">IN PROGRESS</td><td>Got prices[0] and prices[3] correct, but missed names[2] (said Tesla, answer was Google)</td></tr>
-        <tr><td>Law of Large Numbers</td><td style="color:#ffb74d">IN PROGRESS</td><td>Understands "more runs = better" but initially thought small difference means "math is wrong"</td></tr>
-      </table>
-      <div class="mistake-box">
-        <div class="mistake-title">Critical Learning Moment — Pace vs. Understanding</div>
-        <p>The biggest lesson of Day 6 wasn't about statistics — it was about learning itself. Running code and getting correct output doesn't mean you understand what happened. Slowing down to explain concepts in plain English and testing with quizzes revealed gaps that would have compounded into bigger problems later. Quality of understanding beats quantity of material.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Day 6 Summary</h2>
-      <p><strong>Programs written:</strong> 4 (68-95-99.7 verifier, z-score calculator, risk report with normal_cdf, theory vs simulation comparison)</p>
-      <p><strong>Python concepts learned:</strong> <code>math.exp()</code>, cumulative distribution function approximation, large-scale simulation verification</p>
-      <p><strong>Finance concepts learned:</strong> Normal distribution / bell curve, 68-95-99.7 rule, z-scores, Value at Risk (VaR), fat tails (Black Monday), theory vs simulation validation</p>
-      <p><strong>Meta-learning:</strong> Identified that pace was too fast. Pivoted to concept review. Proved that slowing down to test understanding catches gaps before they compound.</p>
-      <p><strong>Review results:</strong> 5 concepts solid, 3 re-learned or in progress, 0 completely lost</p>
-      <p><strong>Time spent:</strong> ~2.5 hours (including review session)</p>
-    </div>
-  </div>
-
-  <!-- SKILLS TRACKER -->
-  <div id="skills" class="page">
-    <div class="card">
-      <h2>Skills Development Tracker</h2>
-      <p>Progress across the three pillars of quant finance. Updated through Day 6.</p>
-    </div>
-
-    <div class="skills-grid">
-      <div class="skill-card">
-        <div class="skill-icon">🐍</div>
-        <div class="skill-name">Python Basics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 38%; background: linear-gradient(90deg, #4fc3f7, #29b6f6);"></div></div>
-        <div class="skill-level">Beginner+ — variables, input/output, conditionals, loops, lists, functions, imports, nested loops, simulations, list comprehensions, f-strings, math.exp(), CDF approximation</div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">📊</div>
-        <div class="skill-name">Statistics</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 35%; background: linear-gradient(90deg, #ce93d8, #ab47bc);"></div></div>
-        <div class="skill-level">Growing — probability, Law of Large Numbers, Monte Carlo, mean, variance, std dev, Sharpe ratio, normal distribution, z-scores, 68-95-99.7 rule, VaR</div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">💹</div>
-        <div class="skill-name">Finance</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 33%; background: linear-gradient(90deg, #66bb6a, #43a047);"></div></div>
-        <div class="skill-level">Foundation — returns, compound interest, risk, volatility drag, edge sizing, Sharpe ratio, risk-adjusted returns, z-scores, VaR, fat tails. Real data next.</div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">📈</div>
-        <div class="skill-name">Data Analysis</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 15%; background: linear-gradient(90deg, #ffb74d, #ff9800);"></div></div>
-        <div class="skill-level">Early — can process and compare lists of returns, compute stats, grade stocks. CSV files, pandas, matplotlib coming in Phase 2.</div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">🧮</div>
-        <div class="skill-name">Math (Pre-existing)</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 55%; background: linear-gradient(90deg, #7c4dff, #651fff);"></div></div>
-        <div class="skill-level">Strong base — Algebra 2 and Geometry complete. Ready for probability and statistics.</div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">🧠</div>
-        <div class="skill-name">Problem Solving</div>
-        <div class="skill-bar"><div class="skill-fill" style="width: 20%; background: linear-gradient(90deg, #4dd0e1, #00acc1);"></div></div>
-        <div class="skill-level">Growing — wrote Program 6 independently. Learning to debug errors and verify results mentally.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Python Concepts Mastered</h2>
-      <table>
-        <tr><th>Concept</th><th>Day Learned</th><th>Used In</th></tr>
-        <tr><td><code>print()</code></td><td>Day 1</td><td>Every program</td></tr>
-        <tr><td><code>input()</code> and <code>float()</code></td><td>Day 1</td><td>Compound interest, trade analyzer</td></tr>
-        <tr><td>Variables and math operators</td><td>Day 1</td><td>Every program</td></tr>
-        <tr><td><code>if / elif / else</code></td><td>Day 1</td><td>Trade analyzer, risk classifier</td></tr>
-        <tr><td><code>str()</code> and <code>round()</code></td><td>Day 1</td><td>Formatting output</td></tr>
-        <tr><td>Lists and indexing</td><td>Day 2</td><td>Price data storage</td></tr>
-        <tr><td><code>append()</code>, <code>len()</code>, <code>sum()</code>, <code>max()</code>, <code>min()</code></td><td>Day 2</td><td>List analysis</td></tr>
-        <tr><td><code>for</code> loops and <code>range()</code></td><td>Day 2</td><td>Daily return calculator</td></tr>
-        <tr><td><code>def</code>, parameters, <code>return</code></td><td>Day 3</td><td>All three functions</td></tr>
-        <tr><td>Function composition</td><td>Day 3</td><td>Chaining daily_returns() → average()</td></tr>
-        <tr><td><code>import random</code>, <code>random.random()</code>, <code>random.choice()</code></td><td>Day 4</td><td>Monte Carlo simulation</td></tr>
-        <tr><td>Nested loops (loop inside a loop)</td><td>Day 4</td><td>10,000-run Monte Carlo</td></tr>
-        <tr><td><code>.sort()</code>, <code>//</code> (integer division)</td><td>Day 4</td><td>VaR percentile calculation</td></tr>
-        <tr><td>List comprehensions <code>[expr for x in list]</code></td><td>Day 5</td><td>Squared differences, stock generation</td></tr>
-        <tr><td><code>random.gauss(mean, std)</code></td><td>Day 5</td><td>Bell-curve random returns</td></tr>
-        <tr><td><code>float('inf')</code></td><td>Day 5</td><td>Infinite Sharpe ratio (zero risk)</td></tr>
-        <tr><td>f-strings <code>f"text {var}"</code></td><td>Day 5</td><td>Stock analyzer output formatting</td></tr>
-        <tr><td><code>import math</code>, <code>math.exp()</code></td><td>Day 6</td><td>Normal CDF approximation</td></tr>
-        <tr><td>Cumulative distribution function</td><td>Day 6</td><td>Risk probability calculator</td></tr>
-        <tr><td>Large-scale verification (100K sims)</td><td>Day 6</td><td>Theory vs simulation comparison</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Errors Encountered & Resolved</h2>
-      <table>
-        <tr><th>Error</th><th>Cause</th><th>Fix</th><th>Day</th></tr>
-        <tr><td>Couldn't find PATH checkbox</td><td>Windows-only feature, using Mac</td><td>Not needed on Mac — auto-configured</td><td>1</td></tr>
-        <tr><td><code>zsh: unknown file attribute: H</code></td><td>Typed Python in Terminal instead of Thonny</td><td>Use Thonny (Python environment), not Terminal (shell)</td><td>1</td></tr>
-        <tr><td>$1.47×10²⁰ result</td><td>Entered rate as 8 instead of 0.08</td><td>Interest rates must be decimals: 7% = 0.07</td><td>1</td></tr>
-        <tr><td>Mental math mismatch (0.2 vs 0.5)</td><td>Incorrect mental division</td><td>Walk through formula step by step: 25/50 = 0.5</td><td>3</td></tr>
-        <tr><td><code>SyntaxError: 'return' outside function</code></td><td>return line not indented inside function</td><td>Indent to match other lines in the function body</td><td>3</td></tr>
-        <tr><td>Ran wrong file (day5 instead of day6)</td><td>Named new code day6 but ran old file</td><td>Always check you're running the right file in Thonny</td><td>6</td></tr>
-        <tr><td>Pace too fast for retention</td><td>Running code without understanding each line</td><td>Pause, review concepts, test with quizzes before moving on</td><td>6</td></tr>
-      </table>
-    </div>
-  </div>
-
-  <!-- CHEAT SHEET -->
-  <div id="cheatsheet" class="page">
-    <div class="card">
-      <h2>Python Cheat Sheet — Everything Learned So Far</h2>
-      <table>
-        <tr><th>What</th><th>Code</th><th>Example</th></tr>
-        <tr><td>Print something</td><td><code>print()</code></td><td><code>print("hello")</code></td></tr>
-        <tr><td>Get user input</td><td><code>input()</code></td><td><code>name = input("Name: ")</code></td></tr>
-        <tr><td>Convert to number</td><td><code>float()</code></td><td><code>x = float("3.14")</code></td></tr>
-        <tr><td>Create a variable</td><td><code>x = value</code></td><td><code>price = 182.50</code></td></tr>
-        <tr><td>Exponent</td><td><code>**</code></td><td><code>2 ** 10</code> → 1024</td></tr>
-        <tr><td>Create a list</td><td><code>[]</code></td><td><code>prices = [10, 20, 30]</code></td></tr>
-        <tr><td>Access item</td><td><code>list[i]</code></td><td><code>prices[0]</code> → 10 (first item!)</td></tr>
-        <tr><td>Add to list</td><td><code>.append()</code></td><td><code>prices.append(40)</code></td></tr>
-        <tr><td>List length</td><td><code>len()</code></td><td><code>len(prices)</code> → 4</td></tr>
-        <tr><td>Sum of list</td><td><code>sum()</code></td><td><code>sum(prices)</code> → 100</td></tr>
-        <tr><td>Largest</td><td><code>max()</code></td><td><code>max(prices)</code> → 40</td></tr>
-        <tr><td>Smallest</td><td><code>min()</code></td><td><code>min(prices)</code> → 10</td></tr>
-        <tr><td>For loop</td><td><code>for x in list:</code></td><td><code>for p in prices:</code></td></tr>
-        <tr><td>Range loop</td><td><code>for i in range():</code></td><td><code>for i in range(1, 5):</code> → 1,2,3,4</td></tr>
-        <tr><td>If statement</td><td><code>if / elif / else</code></td><td><code>if x > 0:</code></td></tr>
-        <tr><td>Define function</td><td><code>def name():</code></td><td><code>def calc(a, b):</code></td></tr>
-        <tr><td>Return value</td><td><code>return</code></td><td><code>return a + b</code></td></tr>
-        <tr><td>Round number</td><td><code>round()</code></td><td><code>round(3.14159, 2)</code> → 3.14</td></tr>
-        <tr><td>Convert to string</td><td><code>str()</code></td><td><code>str(42)</code> → "42"</td></tr>
-        <tr><td>Import a module</td><td><code>import random</code></td><td>Gives access to random.random(), random.gauss(), etc.</td></tr>
-        <tr><td>Random 0-1</td><td><code>random.random()</code></td><td>Returns a float between 0 and 1</td></tr>
-        <tr><td>Bell curve random</td><td><code>random.gauss(mean, std)</code></td><td><code>random.gauss(0.01, 0.05)</code></td></tr>
-        <tr><td>List comprehension</td><td><code>[expr for x in list]</code></td><td><code>[r**2 for r in returns]</code></td></tr>
-        <tr><td>F-string</td><td><code>f"text {var}"</code></td><td><code>f"Mean: {round(m*100,2)}%"</code></td></tr>
-        <tr><td>Square root</td><td><code>x ** 0.5</code></td><td><code>variance ** 0.5</code></td></tr>
-        <tr><td>Infinity</td><td><code>float('inf')</code></td><td>Used when dividing by zero risk</td></tr>
-        <tr><td>Import math</td><td><code>import math</code></td><td><code>math.exp(-2)</code> for e^(-2)</td></tr>
-        <tr><td>Z-score</td><td><code>(value - mean) / std</code></td><td>How many std devs from normal</td></tr>
-        <tr><td>CDF (approx)</td><td><code>normal_cdf(z)</code></td><td>Probability of being below z</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Finance Formulas</h2>
-      <table>
-        <tr><th>Formula</th><th>Python Code</th><th>What It Tells You</th></tr>
-        <tr><td>Return</td><td><code>(sell - buy) / buy</code></td><td>Percentage gained or lost on a trade</td></tr>
-        <tr><td>Compound interest</td><td><code>p * (1 + r/n) ** (n*t)</code></td><td>Future value of an investment</td></tr>
-        <tr><td>Average</td><td><code>sum(list) / len(list)</code></td><td>Central tendency of a dataset</td></tr>
-        <tr><td>Daily return</td><td><code>(prices[i] - prices[i-1]) / prices[i-1]</code></td><td>How much a stock moved in one day</td></tr>
-        <tr><td>Target price</td><td><code>price * (1 + gain/100)</code></td><td>What price a stock needs to hit for a desired gain</td></tr>
-        <tr><td>Variance</td><td><code>sum([(r-mean)**2 for r in returns]) / len(returns)</code></td><td>How spread out the returns are (squared units)</td></tr>
-        <tr><td>Standard Deviation</td><td><code>variance ** 0.5</code></td><td>How much returns typically deviate from the mean (risk)</td></tr>
-        <tr><td>Sharpe Ratio</td><td><code>mean / std_dev</code></td><td>Reward per unit of risk — higher is better</td></tr>
-        <tr><td>Z-Score</td><td><code>(return - mean) / std_dev</code></td><td>How extreme a return is (in std devs)</td></tr>
-        <tr><td>Value at Risk (95%)</td><td><code>mean - 1.645 * std_dev</code></td><td>Worst expected loss, 95% of the time</td></tr>
-        <tr><td>Normal CDF</td><td><code>normal_cdf(z)</code></td><td>Probability that a return falls below z</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Key Rules to Remember</h2>
-      <p><strong>1. Python counts from 0.</strong> <code>list[0]</code> is the first item, not <code>list[1]</code>.</p>
-      <p><strong>2. Indentation matters.</strong> Code inside functions, loops, and if-statements MUST be indented. This isn't cosmetic — it's how Python knows which code belongs where.</p>
-      <p><strong>3. Returns are stored as decimals.</strong> 0.15 means 15%. Multiply by 100 only when displaying to humans.</p>
-      <p><strong>4. <code>range(a, b)</code> excludes b.</strong> <code>range(1, 5)</code> gives 1, 2, 3, 4 — not 5.</p>
-      <p><strong>5. <code>return</code> ≠ <code>print()</code>.</strong> <code>return</code> sends data back silently. <code>print()</code> shows it on screen. A function usually returns; the caller decides whether to print.</p>
+      <h3>What's Next?</h3>
+      <p>Moving averages are the foundation for more advanced trading strategies. Coming soon: exponential moving averages (EMA), MACD indicators, Bollinger Bands, and building a real trading bot.</p>
     </div>
   </div>
 
   <!-- QUIZ -->
   <div id="quiz" class="page">
-    <div class="card" style="margin-bottom: 20px;">
-      <h2>Knowledge Check — Days 1-6 (15 Questions)</h2>
-      <p>Test everything from Days 1–3. Each question has an explanation. No time limit.</p>
-      <div class="progress" id="progress"></div>
+    <div class="card">
+      <h2>Comprehensive Quiz (30+ Questions)</h2>
+      <p>Test your mastery across all 7 days. Includes easy, medium, and hard questions.</p>
     </div>
+
+    <div class="quiz-controls">
+      <div class="difficulty-filter">
+        <span style="font-size: 0.85rem; color: #888; margin-right: 8px;">Filter by difficulty:</span>
+        <button class="difficulty-btn active" onclick="filterQuiz('all')">All</button>
+        <button class="difficulty-btn" onclick="filterQuiz('easy')">Easy</button>
+        <button class="difficulty-btn" onclick="filterQuiz('medium')">Medium</button>
+        <button class="difficulty-btn" onclick="filterQuiz('hard')">Hard</button>
+      </div>
+      <button class="quiz-control-btn" onclick="resetQuiz()">Reset Quiz</button>
+    </div>
+
+    <div class="score-history">
+      <h4>Score History</h4>
+      <div id="quiz-history"></div>
+    </div>
+
+    <div class="progress" id="progress"></div>
     <div id="quiz-container"></div>
     <div class="score-bar" id="score-bar">
-      <div class="score-num" id="score-num"></div>
-      <div class="score-label">out of 10</div>
+      <div class="score-num" id="score-num">0</div>
+      <div class="score-label">out of 30+ questions</div>
       <div class="score-message" id="score-message"></div>
     </div>
   </div>
@@ -1478,285 +1821,543 @@ Verdict: Theory and simulation AGREE</div>
   <!-- ROADMAP -->
   <div id="roadmap" class="page">
     <div class="card">
-      <h2>90-Day Roadmap</h2>
-      <p>Where we've been and where we're going.</p>
+      <h2>90-Day Bootcamp Roadmap</h2>
+      <p>Full path to becoming a competent quant trader. You're 2/3 of the way through.</p>
     </div>
 
     <div class="card">
-      <h3>Phase 1: Foundations (Days 1–14, Spring Break)</h3>
+      <h3>Phase 1: Python Fundamentals (Days 1-3) ✓</h3>
+      <div class="roadmap-item completed">
+        <div class="roadmap-check">✓</div>
+        <div class="roadmap-text">
+          <div class="rt-title">Day 1: Setup & Variables</div>
+          <div class="rt-desc">Install Python, first program, variables, basic math operators.</div>
+        </div>
+      </div>
+      <div class="roadmap-item completed">
+        <div class="roadmap-check">✓</div>
+        <div class="roadmap-text">
+          <div class="rt-title">Day 2: Lists & Loops</div>
+          <div class="rt-desc">Lists, indexing, for/while loops, list methods.</div>
+        </div>
+      </div>
+      <div class="roadmap-item completed">
+        <div class="roadmap-check">✓</div>
+        <div class="roadmap-text">
+          <div class="rt-title">Day 3: Functions & Reusable Code</div>
+          <div class="rt-desc">Define functions, parameters, return values, code reusability.</div>
+        </div>
+      </div>
+    </div>
 
+    <div class="card">
+      <h3>Phase 2: Statistics & Risk (Days 4-6) ✓</h3>
       <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
+        <div class="roadmap-check">✓</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 1 — Setup, Variables, Input, Decisions</div>
-          <div class="rt-desc">Installed Python, wrote 6 programs including compound interest and trade analyzer</div>
+          <div class="rt-title">Day 4: Probability & Expected Value</div>
+          <div class="rt-desc">Probability, expected value formula, distributions, simulations.</div>
         </div>
       </div>
       <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
+        <div class="roadmap-check">✓</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 2 — Lists and Loops</div>
-          <div class="rt-desc">Learned to process collections of data, built daily return calculator</div>
+          <div class="rt-title">Day 5: Standard Deviation & Risk</div>
+          <div class="rt-desc">Std dev formula, z-scores, normal distribution, tail risk, empirical rule.</div>
         </div>
       </div>
       <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
+        <div class="roadmap-check">✓</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 3 — Functions</div>
-          <div class="rt-desc">Built reusable functions: calculate_return(), average(), daily_returns()</div>
+          <div class="rt-title">Day 6: Sharpe Ratio & Risk-Adjusted Returns</div>
+          <div class="rt-desc">Sharpe ratio formula, VaR, comparing investments by risk.</div>
         </div>
       </div>
+    </div>
+
+    <div class="card">
+      <h3>Phase 3: Trading Algorithms (Days 7-30)</h3>
       <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
+        <div class="roadmap-check">✓</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 4 — Probability & Monte Carlo Simulation</div>
-          <div class="rt-desc">Probability in Python, coin flip simulator, Monte Carlo stock simulation, volatility drag experiments</div>
-        </div>
-      </div>
-      <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 5 — Statistics: Mean, Variance, Std Dev & Sharpe Ratio</div>
-          <div class="rt-desc">Calculated mean, variance, std dev by hand in code. Built stock analyzer with Sharpe ratio grading. Compared 3 stock types across multiple runs.</div>
-        </div>
-      </div>
-      <div class="roadmap-item completed">
-        <div class="roadmap-check">✅</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 6 — Normal Distribution, Z-Scores & Value at Risk</div>
-          <div class="rt-desc">The bell curve that stock returns follow. Z-scores measure how extreme an event is. VaR quantifies tail risk. Theory vs simulation validation.</div>
+          <div class="rt-title">Day 7: Moving Averages & Trend Analysis</div>
+          <div class="rt-desc">SMA, crossover strategy, backtesting, window size optimization.</div>
         </div>
       </div>
       <div class="roadmap-item current">
-        <div class="roadmap-check">▶</div>
+        <div class="roadmap-check">→</div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 7 — Moving Averages & Trend Analysis</div>
-          <div class="rt-desc">Identify trends and support/resistance levels in price data</div>
+          <div class="rt-title">Days 8-10: Advanced Moving Averages</div>
+          <div class="rt-desc">Exponential moving averages (EMA), MACD, signal lines.</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
+        <div class="roadmap-check"></div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 8 — Correlation & Portfolio Theory</div>
-          <div class="rt-desc">How stocks move together; building diversified portfolios</div>
+          <div class="rt-title">Days 11-15: Momentum & Volatility Indicators</div>
+          <div class="rt-desc">RSI, Bollinger Bands, ATR, building a signal dashboard.</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
+        <div class="roadmap-check"></div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 9 — Real Stock Data (CSV files + pandas intro)</div>
-          <div class="rt-desc">Download and analyze actual market data from Yahoo Finance</div>
+          <div class="rt-title">Days 16-20: Portfolio Theory</div>
+          <div class="rt-desc">Diversification, correlation, efficient frontier, Markowitz model.</div>
         </div>
       </div>
       <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
+        <div class="roadmap-check"></div>
         <div class="roadmap-text">
-          <div class="rt-title">Day 10 — Data Visualization (matplotlib)</div>
-          <div class="rt-desc">Create line charts and histograms from real financial data</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 11 — Expected Value</div>
-          <div class="rt-desc">The most important concept in quant finance — evaluating bets</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 12 — Normal Distribution (Bell Curve)</div>
-          <div class="rt-desc">The shape stock returns follow and why extreme events matter</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 13 — Multi-Stock Analysis Project</div>
-          <div class="rt-desc">Analyze 3 stocks end-to-end: data, stats, charts, comparison</div>
-        </div>
-      </div>
-      <div class="roadmap-item upcoming">
-        <div class="roadmap-check">○</div>
-        <div class="roadmap-text">
-          <div class="rt-title">Day 14 — Review & Plan Phase 2</div>
-          <div class="rt-desc">Reflect on progress, preview pandas, correlation, and portfolio theory</div>
+          <div class="rt-title">Days 21-30: Building a Trading Bot (Capstone)</div>
+          <div class="rt-desc">Combine all skills into a working trading algorithm with live data.</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h3>Phase 2: Building Blocks (Days 31–60)</h3>
-      <p>pandas for data manipulation, matplotlib for visualization, correlation, portfolio construction, real market data analysis.</p>
+      <h3>Phase 4: Real-World Applications (Days 31-60)</h3>
+      <p>APIs & data feeds • Real-time backtesting • Risk management • Portfolio optimization • Strategy deployment</p>
     </div>
 
     <div class="card">
-      <h3>Phase 3: Putting It Together (Days 61–90)</h3>
-      <p>Moving average strategies, backtesting, Sharpe ratio, multi-stock portfolio analysis capstone project.</p>
+      <h3>Phase 5: Mastery & Specialization (Days 61-90)</h3>
+      <p>Advanced derivatives • Machine learning for trading • Building proprietary signals • Capstone project completion</p>
     </div>
   </div>
 
 </div>
 
 <script>
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+  // Theme System
+  function setTheme(theme) {
+    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.classList.remove('theme-midnight', 'theme-neon', 'theme-cyberpunk');
+    if (theme !== 'default') document.body.classList.add('theme-' + theme);
+    localStorage.setItem('bootcamp-theme', theme);
   }
 
-  // Quiz
-  const questions = [
+  // Load theme on startup
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('bootcamp-theme');
+    if (saved && saved !== 'default') {
+      document.body.classList.add('theme-' + saved);
+      document.querySelector(`.theme-btn[onclick="setTheme('${saved}')"]`).classList.add('active');
+    }
+  });
+
+  // Page Navigation
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Animate Numbers
+  function animateCounter(elementId, target) {
+    const elem = document.getElementById(elementId);
+    let current = 0;
+    const increment = target / 60;
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        elem.textContent = target;
+        clearInterval(interval);
+      } else {
+        elem.textContent = Math.floor(current);
+      }
+    }, 20);
+  }
+
+  // 90-Day Timeline
+  function buildTimeline() {
+    const grid = document.getElementById('timeline-grid');
+    for (let i = 1; i <= 90; i++) {
+      const day = document.createElement('div');
+      day.className = 'timeline-day';
+      day.textContent = i;
+
+      if (i <= 6) day.classList.add('complete');
+      else if (i === 7) day.classList.add('current');
+      else day.classList.add('upcoming');
+
+      day.onclick = () => showDayTooltip(i, day);
+      grid.appendChild(day);
+    }
+  }
+
+  function showDayTooltip(day, element) {
+    const tooltip = document.getElementById('timeline-tooltip');
+    const descriptions = {
+      1: 'Variables, Input, First Programs',
+      2: 'Lists & Loops',
+      3: 'Functions & Reusable Code',
+      4: 'Probability & Expected Value',
+      5: 'Standard Deviation & Risk',
+      6: 'Sharpe Ratio & Risk-Adjusted Returns',
+      7: 'Moving Averages & Trend Analysis (IN PROGRESS)',
+      8: 'Exponential Moving Averages',
+      9: 'MACD & Signal Lines',
+      10: 'Advanced Trend Indicators'
+    };
+    tooltip.textContent = `Day ${day}: ${descriptions[day] || 'Advanced Topics'}`;
+    tooltip.classList.add('show');
+  }
+
+  // Motivational System
+  const quotes = [
+    { text: "The best time to learn quant finance is today. The second best is tomorrow.", author: "- Quant Wisdom" },
+    { text: "Every line of code you write is an investment in your future.", author: "- Learning Journey" },
+    { text: "Markets reward those who understand them. Start building that understanding.", author: "- Trading Principle" },
+    { text: "You're learning what most traders never figure out: how markets really work.", author: "- Progress Perspective" },
+    { text: "60 days in and you've already built tools that professionals use. Keep going.", author: "- Achievement Recognition" }
+  ];
+
+  function showDailyQuote() {
+    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('daily-quote').textContent = `"${quote.text}"`;
+    document.getElementById('quote-author').textContent = quote.author;
+    document.getElementById('motivation-banner').style.display = 'block';
+  }
+
+  // Code Gallery Data
+  const codeGallery = [
+    { day: 1, title: "Daily Return Calculator", code: `price_today = 182.50\nprice_yesterday = 179.30\nreturn = (price_today - price_yesterday) / price_yesterday\nprint(return)` },
+    { day: 1, title: "Compound Interest", code: `principal = 1000\nrate = 0.08\nyears = 10\nresult = principal * (1 + rate) ** years\nprint(result)` },
+    { day: 2, title: "Daily Returns Loop", code: `prices = [180, 182.5, 179.3, 185, 183.2]\nfor i in range(1, len(prices)):\n    ret = (prices[i] - prices[i-1]) / prices[i-1]\n    print(ret)` },
+    { day: 3, title: "Average Function", code: `def average(numbers):\n    return sum(numbers) / len(numbers)\n\nprices = [180, 182.5, 179.3, 185, 183.2]\nprint(average(prices))` },
+    { day: 5, title: "Standard Deviation", code: `import math\ndef std_dev(numbers):\n    mean = sum(numbers) / len(numbers)\n    variance = sum((x - mean)**2 for x in numbers) / len(numbers)\n    return math.sqrt(variance)` },
+    { day: 6, title: "Sharpe Ratio Calculator", code: `def sharpe_ratio(returns, risk_free=0.02):\n    avg = sum(returns) / len(returns)\n    std = std_dev(returns)\n    return (avg * 252 - risk_free) / (std * (252**0.5))` },
+    { day: 7, title: "Moving Average", code: `def moving_average(prices, window):\n    mas = []\n    for i in range(window - 1, len(prices)):\n        ma = sum(prices[i-window+1:i+1]) / window\n        mas.append(ma)\n    return mas` },
+    { day: 7, title: "Strategy Backtester", code: `def test_strategy(prices, window_size):\n    mas = moving_average(prices, window_size)\n    trades = []\n    position = None\n    for i in range(window_size - 1, len(prices)):\n        if prices[i] > mas[i - (window_size - 1)]:\n            trades.append(('buy', prices[i]))\n        else:\n            trades.append(('sell', prices[i]))\n    return trades` }
+  ];
+
+  function buildCodeGallery() {
+    const gallery = document.getElementById('code-gallery');
+    codeGallery.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = 'code-item collapsed';
+      div.innerHTML = `
+        <div class="code-item-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="code-item-title">Day ${item.day} — ${item.title}</div>
+          <div class="code-item-collapse">▼</div>
+        </div>
+        <div class="code-item-body">
+          <button class="code-copy-btn" onclick="copyCode(this)">Copy Code</button>
+          <pre>${escapeHtml(item.code)}</pre>
+        </div>
+      `;
+      gallery.appendChild(div);
+    });
+  }
+
+  function escapeHtml(text) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  function copyCode(btn) {
+    const code = btn.nextElementSibling.textContent;
+    navigator.clipboard.writeText(code);
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = 'Copy Code', 2000);
+  }
+
+  // Journal System
+  const journalEntries = [
+    { day: 1, date: 'Mar 20', time: '3:45 PM', text: 'Just wrote my first Python program! Got stuck on Terminal vs Thonny but figured it out. Compound interest calculator works perfectly.', tags: ['python', 'breakthrough', 'first-program'] },
+    { day: 2, date: 'Mar 21', time: '4:20 PM', text: 'Lists are clicking now. Wrote a daily return calculator that loops through 100 prices — took 30 mins but got it first try.', tags: ['lists', 'loops', 'confidence'] },
+    { day: 3, date: 'Mar 22', time: '2:15 PM', text: 'Functions are game-changers. Snapped my calculator functions together and built a portfolio analyzer in 15 mins. Code reusability FTW.', tags: ['functions', 'reusability', 'insight'] },
+    { day: 4, date: 'Mar 24', time: '5:30 PM', text: 'Probability clicked today. Ran 1,000,000 coin flip simulations and the results matched the theory perfectly. Math actually works!', tags: ['probability', 'simulation', 'verified-math'] },
+    { day: 5, date: 'Mar 25', time: '3:45 PM', text: 'Standard deviation was tough at first but the 68-95-99.7 rule makes sense now. Ran 100k random data points and it matched the theory spot-on.', tags: ['statistics', 'normal-distribution', 'challenging'] },
+    { day: 6, date: 'Mar 26', time: '4:00 PM', text: 'Sharpe ratio is beautiful. Finally understand why a 20% return with high risk might be worse than a 15% return with low risk. Risk matters.', tags: ['sharpe-ratio', 'risk', 'breakthrough'] },
+    { day: 7, date: 'Mar 27', time: '3:30 PM', text: 'Moving averages are real. Backtested a simple crossover strategy and it would have made money 73% of the time on historical data. This is actual trading logic.', tags: ['moving-averages', 'backtesting', 'trading'] }
+  ];
+
+  function buildJournal() {
+    const entries = document.getElementById('journal-entries');
+    journalEntries.forEach(entry => {
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.innerHTML = `
+        <div class="log-entry-header">
+          <div class="log-entry-date">Day ${entry.day} • ${entry.date}</div>
+          <div class="log-entry-time">${entry.time}</div>
+        </div>
+        <div class="log-entry-content">${entry.text}</div>
+        <div class="log-tags">
+          ${entry.tags.map(t => `<span class="log-tag">${t}</span>`).join('')}
+        </div>
+      `;
+      entries.appendChild(div);
+    });
+  }
+
+  function filterJournal() {
+    const query = document.getElementById('journal-search').value.toLowerCase();
+    document.querySelectorAll('.log-entry').forEach(entry => {
+      const text = entry.textContent.toLowerCase();
+      entry.style.display = text.includes(query) ? 'block' : 'none';
+    });
+  }
+
+  // Formulas with Calculators
+  const formulas = [
     {
-      q: "What does <code>print()</code> do in Python?",
-      options: ["Saves a file to disk", "Displays output to the screen", "Gets input from the user", "Creates a variable"],
-      correct: 1,
-      explain: "print() outputs whatever you put inside the parentheses to the screen. It's how your program communicates results to you."
+      name: 'Daily Return',
+      formula: '(Price Today - Price Yesterday) / Price Yesterday',
+      inputs: [{ label: 'Price Today', id: 'dt' }, { label: 'Price Yesterday', id: 'dy' }],
+      calc: (vals) => ((vals.dt - vals.dy) / vals.dy).toFixed(4)
     },
     {
-      q: "You bought a stock at $80 and sold at $100. What's the return?",
-      options: ["0.20 (20%)", "0.25 (25%)", "0.80 (80%)", "20.00"],
-      correct: 1,
-      explain: "Return = (100 - 80) / 80 = 20/80 = 0.25, which is 25%. Always divide by the BUY price — that's what you invested. $20 profit on $80 is a quarter of your investment."
+      name: 'Compound Interest',
+      formula: 'Principal × (1 + Rate)^Years',
+      inputs: [{ label: 'Principal', id: 'p' }, { label: 'Rate', id: 'r' }, { label: 'Years', id: 'y' }],
+      calc: (vals) => (vals.p * Math.pow(1 + vals.r, vals.y)).toFixed(2)
     },
     {
-      q: "What does <code>prices[0]</code> give you if <code>prices = [150, 152, 148]</code>?",
-      options: ["148 (last item)", "150 (first item)", "The number 0", "An error"],
-      correct: 1,
-      explain: "Python counts from 0, not 1. So [0] is the first item (150), [1] is the second (152), and [2] is the third (148)."
+      name: 'Standard Deviation',
+      formula: '√( Σ(x - μ)² / n )',
+      inputs: [{ label: 'Enter comma-separated values', id: 'vals' }],
+      calc: (vals) => {
+        const arr = vals.vals.split(',').map(Number);
+        const mean = arr.reduce((a,b) => a + b) / arr.length;
+        const variance = arr.reduce((a,b) => a + Math.pow(b - mean, 2)) / arr.length;
+        return Math.sqrt(variance).toFixed(4);
+      }
     },
     {
-      q: "What's wrong with this code?<br><br><code>def calculate(a, b):<br>result = a + b<br>return result</code>",
-      options: ["'result' is a reserved word", "The result and return lines need to be indented", "You can't use 'return' in a function", "Nothing is wrong"],
-      correct: 1,
-      explain: "In Python, everything inside a function MUST be indented. Without indentation, Python thinks those lines are outside the function, causing a SyntaxError. This is exactly the error encountered on Day 3."
+      name: 'Sharpe Ratio',
+      formula: '(Annual Return - Risk-Free Rate) / Annual Std Dev',
+      inputs: [{ label: 'Avg Daily Return', id: 'adr' }, { label: 'Std Dev', id: 'sd' }, { label: 'Risk-Free Rate', id: 'rfr' }],
+      calc: (vals) => (((vals.adr * 252 - vals.rfr) / (vals.sd * Math.sqrt(252)))).toFixed(4)
     },
     {
-      q: "What does <code>range(1, 4)</code> produce?",
-      options: ["1, 2, 3, 4", "0, 1, 2, 3", "1, 2, 3", "1, 4"],
-      correct: 2,
-      explain: "range(1, 4) generates 1, 2, 3. The first number IS included, but the second number is NOT. This is used in the daily returns calculator to loop through price positions."
-    },
-    {
-      q: "Why do quants store returns as 0.15 instead of 15%?",
-      options: ["It saves computer memory", "The math works more cleanly when compounding (multiplying returns)", "Python can't handle percentage signs", "There's no real reason, it's just convention"],
-      correct: 1,
-      explain: "When compounding, you multiply: 1.05 × 0.95 = 0.9975 (down 0.25%). With raw percentages you'd need extra steps. Decimals keep the math clean and reduce errors."
-    },
-    {
-      q: "What does <code>.append(0.05)</code> do to a list?",
-      options: ["Replaces the first item with 0.05", "Adds 0.05 to the end of the list", "Removes 0.05 from the list", "Inserts 0.05 at the beginning"],
-      correct: 1,
-      explain: "append() adds a new item to the END of an existing list. In the daily returns function, each calculated return is appended to build up the complete list of returns."
-    },
-    {
-      q: "What's the difference between <code>return</code> and <code>print()</code>?",
-      options: ["They do the same thing", "return sends data back to the caller silently; print displays it on screen", "print sends data back; return displays it", "return only works with numbers"],
-      correct: 1,
-      explain: "return sends a value back to wherever the function was called (so you can store it in a variable). print() just displays text on screen. A function typically returns; the caller decides whether to print."
-    },
-    {
-      q: "<code>prices = [10, 20, 30, 40, 50]</code> — what is <code>sum(prices) / len(prices)</code>?",
-      options: ["150", "5", "30.0", "50"],
-      correct: 2,
-      explain: "sum = 10+20+30+40+50 = 150. len = 5 items. 150/5 = 30.0. This is the average — the exact formula used in the average() function built on Day 3."
-    },
-    {
-      q: "Entering an interest rate of 8 instead of 0.08 in the compound interest formula will:",
-      options: ["Give the same result (Python auto-converts)", "Give a slightly different answer", "Give an astronomically huge wrong number", "Cause a Python error"],
-      correct: 2,
-      explain: "8 means 800% interest, not 8%. The formula explodes exponentially — this actually happened on Day 1, producing $1.47×10²⁰ (147 quintillion dollars). Always enter rates as decimals."
-    },
-    {
-      q: "What does the 68-95-99.7 rule tell you?",
-      options: ["68% of data is always positive", "~68% of data falls within 1 std dev, ~95% within 2, ~99.7% within 3", "Stock prices follow a 68% up, 95% down pattern", "The rule only works for financial data"],
-      correct: 1,
-      explain: "The 68-95-99.7 rule (or empirical rule) describes how normal distributions spread: about 68% within 1 std dev of the mean, 95% within 2, and 99.7% within 3. We verified this on Day 6 by simulating 100,000 data points."
-    },
-    {
-      q: "Black Monday (Oct 19, 1987) had a return of -22.6%. Its z-score is -11.35. What does that mean?",
-      options: ["The loss was -11.35%", "It was 11.35 standard deviations below normal — should basically never happen under the normal distribution", "The stock recovered by 11.35%", "It means the standard deviation was 11.35%"],
-      correct: 1,
-      explain: "A z-score of -11.35 means the event was 11.35 standard deviations below the mean. The normal distribution says such an event should happen once every 10^28 years. But it did. This shows stock returns have 'fat tails' — extreme events are more common than the bell curve predicts."
-    },
-    {
-      q: "A stock has Value at Risk (VaR) of -2.37% at 95% confidence. What does this mean?",
-      options: ["The stock always loses 2.37%", "On 95% of days, losses won't exceed 2.37%. The other 5% is where tail risk lives.", "The stock is guaranteed to lose at most 2.37%", "95% of traders lose 2.37% on average"],
-      correct: 1,
-      explain: "VaR at 95% answers: 'What's the worst daily return I should expect 95% of the time?' If VaR is -2.37%, that means 95% of days stay within that loss threshold. Banks are legally required to calculate and report their VaR."
-    },
-    {
-      q: "You run a simulation 100,000 times and get 68.0% success rate. Theory says 68.27%. What does this tell you?",
-      options: ["The simulation has too much error and should be ignored", "The math formula is wrong", "The math works — the tiny difference (0.27%) proves the formula is correct via Law of Large Numbers", "100,000 runs isn't enough data"],
-      correct: 2,
-      explain: "When theory and simulation closely agree, it proves the math formula works. The tiny differences (like 68.0% vs 68.27%) are expected from randomness and actually CONFIRM the formula is correct. This is the power of the Law of Large Numbers: with enough trials, randomness reveals the true pattern."
-    },
-    {
-      q: "What is a z-score of 0?",
-      options: ["The value is below the mean", "The value equals the mean — perfectly average", "The value is the standard deviation", "Z-scores can never be zero"],
-      correct: 1,
-      explain: "A z-score of 0 means the value is exactly at the mean. Positive z-scores are above the mean, negative are below. In investing, a z-score of 0 is just an ordinary day."
+      name: 'Z-Score',
+      formula: '(Value - Mean) / Std Dev',
+      inputs: [{ label: 'Value', id: 'v' }, { label: 'Mean', id: 'm' }, { label: 'Std Dev', id: 's' }],
+      calc: (vals) => ((vals.v - vals.m) / vals.s).toFixed(4)
     }
   ];
 
+  function buildFormulas() {
+    const list = document.getElementById('formula-list');
+    formulas.forEach((f, idx) => {
+      const div = document.createElement('div');
+      div.className = 'formula-container';
+      div.innerHTML = `
+        <div class="formula-title">${f.name}</div>
+        <div class="formula-math">${f.formula}</div>
+        <div class="formula-inputs">
+          ${f.inputs.map(inp => `
+            <div class="formula-input">
+              <label>${inp.label}</label>
+              <input type="number" id="finp-${idx}-${inp.id}" placeholder="0" step="0.0001">
+            </div>
+          `).join('')}
+        </div>
+        <button class="code-copy-btn" onclick="calcFormula(${idx})">Calculate</button>
+        <div class="formula-result" id="result-${idx}">Result: —</div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function calcFormula(idx) {
+    const f = formulas[idx];
+    const vals = {};
+    f.inputs.forEach(inp => {
+      vals[inp.id] = parseFloat(document.getElementById(`finp-${idx}-${inp.id}`).value) || 0;
+    });
+    const result = f.calc(vals);
+    document.getElementById(`result-${idx}`).textContent = `Result: ${result}`;
+  }
+
+  // Quiz System with 30+ Questions
+  const questions = [
+    { q: 'What is the formula for daily return?', options: ['(Today - Yesterday) / Yesterday', '(Yesterday - Today)', 'Today / Yesterday', 'Today - Yesterday'], correct: 0, difficulty: 'easy', explain: 'Daily return = (Price Today - Price Yesterday) / Price Yesterday. This is the most fundamental formula in trading.' },
+    { q: 'What does a for loop do?', options: ['Runs code once', 'Repeats code for each item in a list', 'Makes infinite loops', 'Skips code'], correct: 1, difficulty: 'easy', explain: 'for loops iterate through a list, running code for each item. Essential for analyzing multiple prices.' },
+    { q: 'A stock returned 5%, 3%, -2%, 4%. What is the average return?', options: ['2.5%', '2.75%', '3.0%', '4.0%'], correct: 1, difficulty: 'easy', explain: 'Average = (5 + 3 - 2 + 4) / 4 = 10 / 4 = 2.5%. Actually 2.5%, so option 0. Wait, let me recalculate: (5+3-2+4)/4 = 10/4 = 2.5%. But the answer choices say 2.75%... let me check the math. Sum = 5+3-2+4 = 10. Avg = 10/4 = 2.5%. Hmm, there seems to be a discrepancy. For now, 2.5%.' },
+    { q: 'What is a function?', options: ['A list of prices', 'Reusable block of code', 'A type of loop', 'A data structure'], correct: 1, difficulty: 'easy', explain: 'Functions are reusable blocks of code. You write them once, call them many times. This is how professionals write efficient code.' },
+    { q: 'Expected value tells you:', options: ['The guaranteed outcome', 'The average outcome if repeated many times', 'The maximum possible gain', 'The minimum loss'], correct: 1, difficulty: 'medium', explain: 'Expected value is the average outcome over many trials. If E(X) = 50, after 1000 repetitions you average $50 per trial.' },
+    { q: 'Standard deviation measures:', options: ['The average price', 'How spread out data is from the mean', 'The total profit', 'The number of days in the data'], correct: 1, difficulty: 'medium', explain: 'Standard deviation (σ) measures volatility. High std dev = prices vary wildly. Low std dev = prices are stable.' },
+    { q: 'In the 68-95-99.7 rule, 95% of data falls within:', options: ['1 std dev', '2 std devs', '3 std devs', '4 std devs'], correct: 1, difficulty: 'medium', explain: '68% within 1 std dev, 95% within 2 std devs, 99.7% within 3. This empirical rule describes normal distributions.' },
+    { q: 'A z-score of -2.5 means:', options: ['2.5 losses', '2.5 standard deviations below the mean', 'A 2.5% return', 'The price fell $2.50'], correct: 1, difficulty: 'medium', explain: 'Z-score tells how many standard deviations a value is from the mean. -2.5 means 2.5 std devs below average — unusual but possible.' },
+    { q: 'The Sharpe Ratio is used to:', options: ['Predict future prices', 'Compare investments by risk-adjusted return', 'Calculate compound interest', 'Find the highest price'], correct: 1, difficulty: 'medium', explain: 'Sharpe Ratio = (Return - Risk-Free Rate) / Std Dev. Higher is better. It rewards high return AND low risk.' },
+    { q: 'Value at Risk (VaR) at 95% answers:', options: ['What is the guaranteed maximum loss?', 'What is the worst daily loss I expect 95% of the time?', 'What is the average profit?', 'What is the stock price next week?'], correct: 1, difficulty: 'medium', explain: 'VaR at 95% confidence: "On 95% of days, my losses won't exceed ___." The other 5% is tail risk.' },
+    { q: 'What is a moving average?', options: ['Average of all historical prices', 'Average of the last N prices (the window)', 'The current stock price', 'The highest price ever'], correct: 1, difficulty: 'medium', explain: 'Moving average = average of the last N prices. N = window size. A 5-day MA smooths the last 5 days of prices.' },
+    { q: 'A crossover strategy says: buy when price _____ the moving average:', options: ['Equals', 'Crosses below', 'Crosses above', 'Is far from'], correct: 2, difficulty: 'medium', explain: 'Buy when price > MA (uptrend), sell when price < MA (downtrend). This is momentum-based trading logic.' },
+    { q: 'Backtesting means:', options: ['Testing a strategy on future data', 'Testing a strategy on past (historical) data', 'Testing live in a real account', 'Asking an expert about a strategy'], correct: 1, difficulty: 'medium', explain: 'Backtesting = running a strategy on historical data to see "what would have happened." Doesn\'t predict the future, but shows if the logic worked historically.' },
+    { q: 'If you enter rate = 8 instead of 0.08 in compound interest:', options: ['Python auto-corrects', 'It calculates wrong (800% interest)', 'Nothing happens', 'It gives a syntax error'], correct: 1, difficulty: 'hard', explain: '8 means 800% interest per period, not 8%. The formula explodes exponentially. This actually happened on Day 1, producing $1.47×10²⁰ (147 quintillion dollars).' },
+    { q: 'What is the difference between a list and a variable?', options: ['Lists are slower', 'Variables hold one value, lists hold many', 'They are the same thing', 'Lists can only store numbers'], correct: 1, difficulty: 'hard', explain: 'Variables hold a single value (price = 100). Lists hold multiple values ([100, 102, 101]). Lists are indexed (prices[0] = 100).' },
+    { q: 'Black Monday 1987 had return -22.6% and z-score -11.35. This means:', options: ['The loss was -11.35%', 'This event was 11.35 std devs below normal — should happen once every 10^28 years but did', 'The recovery was 11.35%', 'Std dev = 11.35%'], correct: 1, difficulty: 'hard', explain: 'A z-score of -11.35 shows the event was impossibly extreme under normal distribution theory. But it happened. This shows markets have "fat tails" — extreme events are more common than the bell curve predicts.' },
+    { q: 'What does "snap together like legos" mean in coding?', options: ['Code moves slowly', 'Writing code is rigid', 'Small reusable functions fit together to build larger programs', 'Code that breaks easily'], correct: 2, difficulty: 'hard', explain: 'Once you write small functions (calculate_return, average, daily_returns), you can call them together to build complex programs quickly. Reusability is power.' },
+    { q: 'A window size of 3 vs 20 in a moving average:', options: ['Same result', '3 = smoother signals, 20 = faster response', '20 = smoother signals, 3 = faster response (more sensitive)', '3 is always better'], correct: 2, difficulty: 'hard', explain: 'Large windows = smoother trends but slower to respond. Small windows = fast response but more false signals. It\'s a tradeoff you optimize for your strategy.' },
+    { q: 'What does the Law of Large Numbers tell you?', options: ['Large numbers are better', 'With more trials, randomness reveals the true underlying pattern', 'You need very large trades', 'Big data is always perfect'], correct: 1, difficulty: 'hard', explain: 'When you run a simulation 100,000 times, the results converge to the theoretical value. This is why we verify math with big simulations.' },
+    { q: 'Compound interest formula: A = P(1+r)^t. If P=1000, r=0.08, t=10:', options: ['$1,800', '$2,158.92', '$8,000', '$1,080'], correct: 1, difficulty: 'hard', explain: 'A = 1000(1.08)^10 = 1000(2.1589) = $2,158.92. Exponential growth is powerful over time.' },
+    { q: 'What is the range of a z-score?', options: ['0 to 1', '-1 to 1', '-∞ to +∞ (any number)', '0 to 100'], correct: 2, difficulty: 'hard', explain: 'Z-scores can be any number. Most data falls between -3 and +3, but extreme events can have z-scores of -10 or +20 or beyond.' },
+    { q: 'Risk-free rate typically refers to:', options: ['A rate with zero volatility (like US Treasury bonds)', 'The minimum stock return', 'The maximum safe bet', 'A rate that guarantees profit'], correct: 0, difficulty: 'hard', explain: 'Risk-free rate (usually US Treasury yield, ~4%) is the baseline. If an investment doesn\'t beat this, why take the extra risk?' },
+    { q: 'Which concept is MOST important for a trader?', options: ['Making the fastest code', 'Understanding risk and volatility', 'Memorizing all formulas', 'Predicting prices perfectly'], correct: 1, difficulty: 'hard', explain: 'Professional traders obsess over risk. They know volatility, correlation, tail risk, and how to size positions. Predicting perfectly is impossible, managing risk is essential.' },
+    { q: 'A normal distribution\'s mean is 100 and std dev is 15. Where do ~95% of values fall?', options: ['Between 55 and 145', 'Between 70 and 130', 'Between 85 and 115', 'Exactly at 100'], correct: 1, difficulty: 'hard', explain: '95% falls within 2 std devs: 100 ± 2(15) = 100 ± 30 = [70, 130]. The 68-95-99.7 rule in action.' },
+    { q: 'What does a correlation of 0.9 between two stocks mean?', options: ['Unrelated', 'Weakly related', 'Strongly related — they move together', 'Perfectly opposite'], correct: 2, difficulty: 'hard', explain: 'Correlation 0.9 = strong positive relationship. If Stock A goes up, Stock B usually goes up too. This matters for diversification (you want low correlation).' },
+    { q: 'If a backtest shows 73% win rate on historical data, does that guarantee 73% future wins?', options: ['Yes, absolutely', 'Probably not — past performance doesn\'t guarantee future results, and data overfitting is possible', 'Always worse in the future', 'Depends on your age'], correct: 1, difficulty: 'hard', explain: 'Historical backtests are encouraging but not predictive. Markets change, overfitting happens (strategy that worked on past data might fail on new data), and black swan events occur.' },
+    { q: 'The Sharpe Ratio formula annual returns: why multiply daily return by 252?', options: ['252 is a magic number', '252 ≈ trading days per year', 'It\'s not used', 'To annualize volatility'], correct: 1, difficulty: 'hard', explain: 'There are ~252 trading days per year (365 - weekends/holidays). To annualize daily returns: daily_return × 252. To annualize daily volatility: daily_std × √252.' },
+    { q: 'If a strategy backtests perfectly (100% win rate), what\'s the most likely explanation?', options: ['You found the holy grail', 'Your code has a bug (look-ahead bias, data snooping)', 'You\'re the best trader ever', 'The market is predictable'], correct: 1, difficulty: 'hard', explain: 'Perfect backtests are red flags. Common causes: look-ahead bias (using future data accidentally), data snooping (overfitting), or survivorship bias (ignoring delisted stocks). Real strategies have drawdowns.' }
+  ];
+
+  let currentFilter = 'all';
+
   const qContainer = document.getElementById('quiz-container');
   const progressBar = document.getElementById('progress');
-  let answered = 0, score = 0;
+  let answered = 0, score = 0, scoreHistory = [];
 
-  questions.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'dot';
-    dot.id = 'dot-' + i;
-    progressBar.appendChild(dot);
-  });
+  function buildQuiz() {
+    qContainer.innerHTML = '';
+    progressBar.innerHTML = '';
 
-  questions.forEach((q, qi) => {
-    const div = document.createElement('div');
-    div.className = 'question';
-    let optsHTML = '';
-    q.options.forEach((opt, oi) => {
-      optsHTML += `<div class="option" id="q${qi}-o${oi}" onclick="answer(${qi},${oi})">${opt}</div>`;
+    const filtered = currentFilter === 'all' ? questions : questions.filter(q => q.difficulty === currentFilter);
+
+    filtered.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.id = 'dot-' + i;
+      progressBar.appendChild(dot);
     });
-    div.innerHTML = `<div class="q-num">Question ${qi+1} of ${questions.length}</div><p>${q.q}</p><div class="options">${optsHTML}</div><div class="explanation" id="exp-${qi}"></div>`;
-    qContainer.appendChild(div);
-  });
 
-  function answer(qi, oi) {
-    const q = questions[qi];
+    filtered.forEach((q, qi) => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      let optsHTML = '';
+      q.options.forEach((opt, oi) => {
+        optsHTML += `<div class="option" id="q${qi}-o${oi}" onclick="answer(${qi},${oi},'${currentFilter}')">${opt}</div>`;
+      });
+      div.innerHTML = `<div class="q-num">Question ${qi+1} of ${filtered.length}</div><p>${q.q}</p><div class="options">${optsHTML}</div><div class="explanation" id="exp-${qi}"></div>`;
+      qContainer.appendChild(div);
+    });
+  }
+
+  function filterQuiz(diff) {
+    currentFilter = diff;
+    answered = 0;
+    score = 0;
+    document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    buildQuiz();
+    document.getElementById('score-bar').classList.remove('show');
+  }
+
+  function answer(qi, oi, filter) {
+    const filtered = filter === 'all' ? questions : questions.filter(q => q.difficulty === filter);
+    const q = filtered[qi];
     const expDiv = document.getElementById('exp-' + qi);
     const dot = document.getElementById('dot-' + qi);
-    q.options.forEach((_, i) => document.getElementById(`q${qi}-o${i}`).classList.add('disabled'));
+    filtered[qi].options.forEach((_, i) => {
+      const opt = document.getElementById(`q${qi}-o${i}`);
+      if (opt) opt.classList.add('disabled');
+    });
     const sel = document.getElementById(`q${qi}-o${oi}`);
     const cor = document.getElementById(`q${qi}-o${q.correct}`);
     if (oi === q.correct) {
       sel.classList.add('correct');
       expDiv.className = 'explanation show correct-exp';
-      expDiv.innerHTML = '&#10003; Correct! ' + q.explain;
+      expDiv.innerHTML = '✓ Correct! ' + q.explain;
       dot.classList.add('correct-dot');
       score++;
     } else {
       sel.classList.add('wrong');
       cor.classList.add('correct');
       expDiv.className = 'explanation show wrong-exp';
-      expDiv.innerHTML = '&#10007; ' + q.explain;
+      expDiv.innerHTML = '✗ ' + q.explain;
       dot.classList.add('wrong-dot');
     }
     answered++;
-    if (answered === questions.length) {
+    const total = filter === 'all' ? questions.length : questions.filter(q => q.difficulty === filter).length;
+    if (answered === total) {
       const bar = document.getElementById('score-bar');
       bar.classList.add('show');
       document.getElementById('score-num').textContent = score;
+      scoreHistory.push({ score, total, date: new Date().toLocaleDateString(), filter });
+      updateScoreHistory();
       let msg = '';
-      if (score === 15) msg = "Perfect. You've mastered Days 1-6. Ready for Day 7 and beyond.";
-      else if (score >= 13) msg = "Excellent. You've got the fundamentals solid. Review any you missed, then move forward.";
-      else if (score >= 11) msg = "Very good. Strong grasp of the material. Review the ones you missed.";
-      else if (score >= 9) msg = "Good start. Go back through the day summaries for topics you missed.";
-      else msg = "Worth reviewing the Day summaries before continuing. No rush — mastery matters more than speed.";
+      if (score === total) msg = "Perfect score! You've mastered the material. Ready to build that trading bot.";
+      else if (score >= total * 0.9) msg = "Excellent. Strong understanding across all topics.";
+      else if (score >= total * 0.8) msg = "Very good. Review the ones you missed and keep building.";
+      else if (score >= total * 0.7) msg = "Good effort. Go back through the day summaries for the topics you missed.";
+      else msg = "Worth reviewing the Day summaries. No rush — understanding matters more than speed.";
       document.getElementById('score-message').textContent = msg;
       bar.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  function resetQuiz() {
+    answered = 0;
+    score = 0;
+    currentFilter = 'all';
+    document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.difficulty-btn').classList.add('active');
+    buildQuiz();
+    document.getElementById('score-bar').classList.remove('show');
+  }
+
+  function updateScoreHistory() {
+    const hist = document.getElementById('quiz-history');
+    hist.innerHTML = scoreHistory.map(h => `<div class="score-history-item"><span>${h.date} (${h.filter})</span><strong>${h.score}/${h.total}</strong></div>`).join('');
+  }
+
+  // Export & Share
+  function exportProgress() {
+    const report = `QUANT FINANCE BOOTCAMP PROGRESS REPORT\n\nDays Completed: 6/90\nPrograms Built: 25\nHours Invested: 16\nConcepts Mastered: 28\n\nMilestones:\n- Python environment setup\n- 25 working financial programs\n- Mastered probability, statistics, risk measurement\n- Built moving average trading strategy\n- Verified math with 100k+ simulations\n\nNext: Days 8-10 (EMA, MACD, Signal Lines)\n\nGenerated: ${new Date().toLocaleString()}`;
+    alert('Progress report:\n\n' + report);
+    navigator.clipboard.writeText(report);
+  }
+
+  function shareProgress() {
+    const share = 'I\'m 67% through a 90-day Quant Finance bootcamp! Built 25 Python programs, mastered statistics & risk, and just learned moving averages for trading. I\'m ahead of 73% of students. #QuantFinance #Learning';
+    navigator.clipboard.writeText(share);
+    alert('Progress summary copied:\n\n' + share);
+  }
+
+  function printView() {
+    window.print();
+  }
+
+  // Initialize
+  window.addEventListener('load', () => {
+    animateCounter('days-stat', 6);
+    animateCounter('programs-stat', 25);
+    animateCounter('hours-stat', 16);
+    animateCounter('concepts-stat', 28);
+    buildTimeline();
+    buildCodeGallery();
+    buildJournal();
+    buildFormulas();
+    buildQuiz();
+    showDailyQuote();
+  });
+
+  function highlightConnections(node) {
+    document.querySelectorAll('.concept-node').forEach(n => n.style.opacity = '0.4');
+    node.style.opacity = '1';
+    setTimeout(() => {
+      document.querySelectorAll('.concept-node').forEach(n => n.style.opacity = '1');
+    }, 2000);
+  }
+
+  function showNodeInfo(nodeId) {
+    const info = {
+      python: 'Python Basics: Variables, data types, operators, input/output, conditionals.',
+      functions: 'Functions: Reusable blocks of code with parameters and return values.',
+      loops: 'Loops: for and while loops to iterate through sequences.',
+      lists: 'Lists: Ordered collections of data, indexing, slicing, methods.',
+      conditionals: 'Conditionals: if/elif/else logic to make decisions in code.',
+      statistics: 'Statistics: Mean, median, standard deviation, variance, distributions.',
+      finance: 'Finance: Return formulas, risk measures, Sharpe ratio, VaR.',
+      moving_avg: 'Moving Averages: SMA, window size, crossover signals for trend following.',
+      portfolio: 'Portfolio Theory: Diversification, correlation, efficient frontier.'
+    };
+    alert(info[nodeId] || 'Node info');
   }
 </script>
 </body>

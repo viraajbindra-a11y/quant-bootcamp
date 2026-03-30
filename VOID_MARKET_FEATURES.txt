@@ -1,0 +1,283 @@
+================================================================================
+    VOID MARKET - ULTIMATE PAPER TRADING PLATFORM
+================================================================================
+
+Successfully renamed from "VOID TERMINAL" to "VOID MARKET"
+
+FILE: /sessions/determined-clever-tesla/mnt/outputs/trading-app.html
+SIZE: 90 KB (single self-contained HTML file)
+LINES: 1102
+
+================================================================================
+PREMIUM FEATURES ADDED (16 Major Enhancements)
+================================================================================
+
+1. OPTIONS CHAIN VIEWER
+   - Display calls/puts at different strike prices
+   - Real-time bid/ask prices for each strike
+   - Volume data for options contracts
+   - Quick option selection interface
+
+2. CANDLESTICK CHART MODE
+   - Toggle between Line Chart and Candlestick View
+   - Smooth transitions between chart types
+   - Maintains data continuity
+
+3. DRAWING TOOLS ON CHART
+   - Trendline drawing mode
+   - Horizontal support/resistance line tool
+   - Clear all drawings button
+   - Active tool visual indicators
+
+4. MULTI-TIMEFRAME ANALYSIS
+   - 1D (1 Day)
+   - 1W (1 Week)
+   - 1M (1 Month)
+   - 3M (3 Months)
+   - 6M (6 Months)
+   - 1Y (1 Year)
+   - 5Y (5 Years)
+   All with data range adjustments
+
+5. STOCK SCREENER
+   - Filter by price range (min/max)
+   - Filter by % change
+   - Filter by sector/industry
+   - Filter by market cap
+   - Real-time filtering results
+
+6. WATCHLIST PRICE ALERTS
+   - Set custom price alerts for any stock
+   - Alert notifications when prices are hit
+   - Manage multiple alerts simultaneously
+   - Persistent storage (localStorage)
+
+7. TRADE JOURNAL
+   - Log trading rationale for each trade
+   - Track entry/exit prices
+   - Document trade reasoning
+   - Review historical trades
+   - Sort by date, P&L, ticker
+
+8. PERFORMANCE ANALYTICS
+   - Win rate percentage
+   - Average gain/loss per trade
+   - Best trade tracking
+   - Worst trade tracking
+   - Profit factor calculation
+   - Sharpe ratio estimation
+   - Maximum drawdown analysis
+
+9. PAPER TRADING COMPETITIONS
+   - Simulated leaderboard
+   - AI trader competitors
+   - Real-time rank tracking
+   - Performance comparison
+   - Badges and achievements
+
+10. SECTOR HEATMAP
+    - Visual grid of all sectors
+    - Color-coded performance (green/red/yellow)
+    - Real-time sector performance
+    - Interactive sector selection
+    - 8 major sectors included
+
+11. ECONOMIC CALENDAR
+    - Fake economic events (Fed, Jobs, CPI, etc)
+    - Event impact levels (High/Medium/Low)
+    - Expected vs Actual results
+    - Market impact indicators
+    - Calendar navigation
+
+12. ORDER BOOK VISUALIZATION
+    - Bid/ask depth display
+    - Order stack visualization
+    - Spread indicator
+    - Market microstructure view
+    - Real-time updates
+
+13. POSITION CALCULATOR
+    - Entry price input
+    - Stop loss placement
+    - Target price setting
+    - Risk amount allocation
+    - Calculates position size
+    - Risk/reward ratio display
+    - Maximum risk/reward values
+
+14. THREE THEME SYSTEM
+    - Light Mode (clean professional)
+    - Dark Mode (default VOID cyberpunk)
+    - Midnight Mode (ultra dark with adjusted colors)
+    - Per-theme color schemes
+    - Persistent theme preference
+
+15. SOUND EFFECTS & CONFETTI
+    - Buy transaction sound (ascending tones)
+    - Sell transaction sound (descending tones)
+    - Alert chime (high pitch warning)
+    - Success/achievement sound
+    - Confetti animation on profitable trades
+    - Sound toggle control (ON/OFF)
+
+16. KEYBOARD SHORTCUTS GUIDE
+    - Press ? to open shortcuts modal
+    - Ctrl+E / Cmd+E to cycle themes
+    - Quick reference for all hotkeys
+    - In-app shortcuts documentation
+    - Visual shortcuts grid
+
+BONUS FEATURES:
+
+17. IMPORT/EXPORT PORTFOLIO
+    - Export entire portfolio as JSON
+    - Export all alerts and settings
+    - Export complete trade journal
+    - Import from backup files
+    - Timestamped exports
+
+18. DARK CYBERPUNK AESTHETIC MAINTAINED
+    - Gradient pink/magenta logo
+    - Monospace font (SF Mono, Fira Code)
+    - Blue accent highlights
+    - Red/green status indicators
+    - Grid-based layout preserved
+    - All original features intact
+
+================================================================================
+ALL EXISTING FEATURES PRESERVED
+================================================================================
+
+✓ Live Yahoo Finance data integration
+✓ Real paper trading portfolio
+✓ Buy/Sell/Short/Cover actions
+✓ Portfolio tracking and P&L
+✓ AI sentiment analysis
+✓ SMA (Simple Moving Average) overlay
+✓ Real-time price updates
+✓ Watchlist management
+✓ Portfolio statistics display
+✓ Trade execution interface
+
+================================================================================
+USER INTERFACE STRUCTURE
+================================================================================
+
+Top Navigation Bar:
+- VOID MARKET logo
+- Portfolio stats (Cash, Net Worth, P&L)
+- Theme switcher (Light/Dark/Midnight)
+- Sound control toggle
+- API status badge
+
+Left Sidebar:
+- Stock search
+- Watchlist with sorting
+- Add/remove stocks
+- Real-time price updates
+
+Center Area:
+- Chart canvas
+- Timeframe buttons (1D-5Y)
+- Chart mode toggle (Line/Candlestick)
+- Drawing tools (Trendline, H-line, Clear)
+- Trading interface (Buy/Sell/Short/Cover)
+
+Right Panel (Tabbed):
+- Positions (open trades)
+- Options (chain viewer)
+- Alerts (price notifications)
+- Journal (trade logging)
+- Analytics (performance stats)
+- Sectors (heatmap)
+- Calendar (economic events)
+- OrderBook (bid/ask depth)
+- Calculator (position sizing)
+- Export/Import buttons
+
+Modal Dialogs:
+- Keyboard Shortcuts (Press ?)
+- Theme selection
+- Alert management
+
+================================================================================
+DATA PERSISTENCE
+================================================================================
+
+All data stored in browser localStorage:
+- portfolio: Position data and cash
+- voidMarketTheme: User's theme preference
+- voidMarketAlerts: Watchlist price alerts
+- voidMarketJournal: Complete trade history
+- Trading performance metrics (calculated)
+
+Export/Import allows easy backup and restoration.
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+Format: Single self-contained HTML file
+No external dependencies required
+No JavaScript frameworks (vanilla JS)
+Canvas-based charting
+Responsive grid layout
+CSS variables for theming
+LocalStorage for persistence
+Web Audio API for sound effects
+
+Browser Compatibility:
+- Chrome/Chromium 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+File Size: 90 KB (includes all features, styles, and scripts)
+Lines of Code: 1102
+
+================================================================================
+GETTING STARTED
+================================================================================
+
+1. Open trading-app.html in a modern web browser
+2. Add stocks to your watchlist (left sidebar)
+3. Click a stock to view its chart
+4. Execute trades using Buy/Sell/Short/Cover buttons
+5. Set price alerts for notifications
+6. Track your trades in the journal
+7. Review analytics to improve performance
+8. Switch themes with buttons in top nav
+9. Press ? to see all keyboard shortcuts
+10. Export your portfolio before closing
+
+================================================================================
+THEME COLORS
+================================================================================
+
+DARK MODE (Default):
+- Background: #06080F
+- Secondary: #0D1117
+- Text Primary: #C9D1D9
+- Accent Blue: #58A6FF
+- Accent Green: #3FB950
+- Accent Red: #F85149
+
+MIDNIGHT MODE:
+- Background: #0A0E15
+- Secondary: #0F1419
+- Text Primary: #B0BCC4
+- Accent Blue: #4A9EFF
+- Accent Green: #4DFF4D
+- Accent Red: #FF6B6B
+
+LIGHT MODE:
+- Background: #FFFFFF
+- Secondary: #F6F8FB
+- Text Primary: #0D1117
+- Accent Blue: #0969DA
+- Accent Green: #1A7F37
+- Accent Red: #CF222E
+
+================================================================================
+END OF SPECIFICATIONS
+================================================================================

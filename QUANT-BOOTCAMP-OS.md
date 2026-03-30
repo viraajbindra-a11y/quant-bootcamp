@@ -142,6 +142,11 @@ New Python: import math, math.exp(), Abramowitz & Stegun CDF approximation, larg
 - **68-95-99.7 rule** — within 1/2/3 std devs of the mean
 - **Z-score** = (value - mean) / std — how many std devs from normal
 - **Fat tails** — extreme events happen more than the bell curve predicts (Black Monday z = -11.35)
+- **Moving average (SMA)** — average of last N days of prices. Smooths noise to show the trend.
+- **Crossover strategy** — buy when price crosses above MA, sell when it drops below. Simple but powerful.
+- **Window size tradeoff** — short window (5-day) reacts fast but noisy; long window (50-200 day) smooth but slow. No magic number.
+- **200-day MA** — the most-watched indicator on Wall Street. Entire market reacts to it.
+- **Backtesting** — testing a strategy on historical data to see if it would have worked
 - **Python counts from 0** — prices[0] is the first item. Index 2 = 3rd item.
 - **Indentation matters** — it defines code structure
 - **range(a, b) excludes b** — range(1, 5) gives 1, 2, 3, 4. range(3) gives 0, 1, 2.
@@ -160,6 +165,7 @@ New Python: import math, math.exp(), Abramowitz & Stegun CDF approximation, larg
 - Sharpe ratio: `mean / std_dev`
 - Z-score: `(return - mean) / std_dev`
 - Value at Risk (95%): `mean - 1.645 * std_dev`
+- Moving average: `sum(prices[i-window+1:i+1]) / window`
 
 ## PYTHON I CAN WRITE
 
@@ -205,6 +211,13 @@ def normal_cdf(z):  # Abramowitz and Stegun approximation
     p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))))
     if z > 0: return 1 - p
     return p
+
+def moving_average(prices, window):
+    mas = []
+    for i in range(window - 1, len(prices)):
+        chunk = prices[i - window + 1 : i + 1]
+        mas.append(sum(chunk) / len(chunk))
+    return mas
 ```
 
 ## WHAT I HAVEN'T LEARNED YET
